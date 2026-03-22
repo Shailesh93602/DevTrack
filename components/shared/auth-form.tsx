@@ -92,7 +92,7 @@ export function AuthForm({ mode }: AuthFormProps) {
           {...register("email")}
         />
         {errors.email && (
-          <p className="text-sm text-red-600">{errors.email.message}</p>
+          <p className="text-sm text-destructive">{errors.email.message}</p>
         )}
       </div>
 
@@ -106,7 +106,7 @@ export function AuthForm({ mode }: AuthFormProps) {
           {...register("password")}
         />
         {errors.password && (
-          <p className="text-sm text-red-600">{errors.password.message}</p>
+          <p className="text-sm text-destructive">{errors.password.message}</p>
         )}
         {mode === "signup" && !errors.password && (
           <ul className="text-muted-foreground ml-1 space-y-1 text-xs">
@@ -119,7 +119,7 @@ export function AuthForm({ mode }: AuthFormProps) {
       </div>
 
       {serverError && (
-        <div className="rounded-md bg-red-50 p-3 text-sm text-red-600 dark:bg-red-950/50 dark:text-red-400">
+        <div className="bg-destructive/10 text-destructive rounded-md p-3 text-sm">
           {serverError}
         </div>
       )}

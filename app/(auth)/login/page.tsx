@@ -4,11 +4,11 @@ import { Code2 } from "lucide-react";
 
 export default function LoginPage() {
   return (
-    <div className="from-background via-background to-muted/20 flex min-h-screen items-center justify-center bg-gradient-to-br p-4">
+    <div className="bg-background flex min-h-screen items-center justify-center p-4">
       <div className="w-full max-w-md">
-        <div className="bg-card border-border/50 rounded-2xl border p-8 shadow-xl shadow-black/5 sm:p-10">
+        <div className="bg-card border-border rounded-2xl border p-8 shadow-none sm:p-10">
           <div className="mb-8 text-center">
-            <div className="bg-primary/10 text-primary mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl">
+            <div className="bg-muted text-foreground mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl">
               <Code2 className="h-6 w-6" />
             </div>
             <h1 className="text-foreground text-2xl font-bold tracking-tight">
@@ -21,12 +21,12 @@ export default function LoginPage() {
 
           <AuthForm mode="login" />
 
-          <div className="border-border/50 mt-8 border-t pt-6">
+          <div className="border-border mt-8 border-t pt-6">
             <p className="text-muted-foreground text-center text-sm">
               Don&apos;t have an account?{" "}
               <Link
                 href="/signup"
-                className="text-primary hover:text-primary/80 font-semibold transition-colors"
+                className="text-foreground font-semibold underline-offset-4 hover:underline"
               >
                 Sign up
               </Link>

@@ -37,11 +37,11 @@ export async function getDashboardStats(userId: string): Promise<DashboardStats>
     }),
   ]);
 
-  const recentLogs = recentLogsResult.map((log: unknown) => ({
-    id: (log as { id: string }).id,
-    date: (log as { date: Date }).date,
-    problemsSolved: (log as { problemsSolved: number }).problemsSolved,
-    topics: (log as { topics: string[] }).topics ?? [],
+  const recentLogs = recentLogsResult.map((log) => ({
+    id: log.id,
+    date: log.date,
+    problemsSolved: log.problemsSolved,
+    topics: log.topics ?? [],
   }));
 
   return {

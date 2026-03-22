@@ -6,11 +6,11 @@ export default function SignupPage() {
     <div className="min-h-screen flex items-center justify-center bg-background">
       <div className="w-full max-w-sm px-6">
         <div className="mb-8">
-          <h1 className="text-2xl font-semibold text-foreground tracking-tight">
-            DevTrack
+          <h1 className="text-foreground text-2xl font-semibold tracking-tight">
+            Create account
           </h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Create a new account
+          <p className="text-muted-foreground mt-1 text-sm">
+            Start tracking your developer progress
           </p>
         </div>
 

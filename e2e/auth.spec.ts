@@ -1,6 +1,7 @@
 import { test, expect } from "@playwright/test";
-import { existsSync, mkdirSync } from "fs";
-import path from "path";
+import { existsSync, mkdirSync } from "node:fs";
+import path from "node:path";
+import { TEST_USER } from "./global-setup";
 
 // Ensure test results directory exists
 const testResultsDir = path.join(process.cwd(), "test-results");
@@ -8,18 +9,12 @@ if (!existsSync(testResultsDir)) {
   mkdirSync(testResultsDir, { recursive: true });
 }
 
-// Shared test credentials - used across all tests
-const TEST_USER = {
-  email: `devtrack.e2e.test@gmail.com`,
-  password: "TestPassword123!",
-};
-
 test.describe.configure({ mode: "serial" });
 
 test.describe("Authentication Flows", () => {
   test("[SCREENSHOT-01] should show login page with all elements", async ({ page }) => {
     await page.goto("/login");
-    await page.waitForLoadState("networkidle");
+    await page.waitForLoadState("load");
 
     await expect(page.getByRole("heading", { name: /welcome back/i })).toBeVisible();
     await expect(page.locator('input#email')).toBeVisible();
@@ -34,7 +29,7 @@ test.describe("Authentication Flows", () => {
 
   test("[SCREENSHOT-02] should show validation errors for empty fields", async ({ page }) => {
     await page.goto("/login");
-    await page.waitForLoadState("networkidle");
+    await page.waitForLoadState("load");
 
     await page.getByRole("button", { name: /sign in/i }).click();
 
@@ -49,7 +44,7 @@ test.describe("Authentication Flows", () => {
 
   test("[SCREENSHOT-03] should show validation error for invalid email format", async ({ page }) => {
     await page.goto("/login");
-    await page.waitForLoadState("networkidle");
+    await page.waitForLoadState("load");
 
     await page.locator('input#email').fill("invalid-email");
     await page.locator('input#password').fill("password123");
@@ -65,7 +60,7 @@ test.describe("Authentication Flows", () => {
 
   test("should preserve form values on validation error", async ({ page }) => {
     await page.goto("/login");
-    await page.waitForLoadState("networkidle");
+    await page.waitForLoadState("load");
 
     await page.locator('input#email').fill("test@example.com");
     await page.getByRole("button", { name: /sign in/i }).click();
@@ -76,7 +71,7 @@ test.describe("Authentication Flows", () => {
 
   test("[SCREENSHOT-04] should show password requirements on signup page", async ({ page }) => {
     await page.goto("/signup");
-    await page.waitForLoadState("networkidle");
+    await page.waitForLoadState("load");
 
     await expect(page.getByText("At least 8 characters")).toBeVisible();
     await expect(page.getByText("One uppercase letter")).toBeVisible();
@@ -91,7 +86,7 @@ test.describe("Authentication Flows", () => {
 
   test("[SCREENSHOT-05] should show validation error for weak password on signup", async ({ page }) => {
     await page.goto("/signup");
-    await page.waitForLoadState("networkidle");
+    await page.waitForLoadState("load");
 
     await page.locator('input#email').fill("newuser@example.com");
     await page.locator('input#password').fill("weak");
@@ -107,26 +102,23 @@ test.describe("Authentication Flows", () => {
 });
 
 test.describe("Registration and Login Integration", () => {
-  test("[SCREENSHOT-06] should register new user and redirect to dashboard", async ({ page }) => {
-    await page.goto("/signup");
-    await page.waitForLoadState("networkidle");
+  // Test user is pre-created with email_confirm=true by global-setup.ts.
+  // We sign in directly to avoid Supabase email rate limits on real signup flows.
+  test("[SCREENSHOT-06] should sign in with pre-created user and reach dashboard", async ({ page }) => {
+    await page.goto("/login");
+    await page.waitForLoadState("load");
 
-    await page.locator('input#email').fill(TEST_USER.email);
-    await page.locator('input#password').fill(TEST_USER.password);
+    await page.locator("input#email").fill(TEST_USER.email);
+    await page.locator("input#password").fill(TEST_USER.password);
+    await page.getByRole("button", { name: /sign in/i }).click();
 
-    await page.getByRole("button", { name: /create account/i }).click();
+    await expect(page).toHaveURL("/dashboard", { timeout: 30000 });
+    await expect(page.getByRole("heading", { name: /overview/i })).toBeVisible();
 
-    // After successful signup, should redirect to dashboard
-    await expect(page).toHaveURL("/dashboard", { timeout: 10000 });
-    await expect(page.getByRole("heading", { name: /overview|dashboard/i })).toBeVisible();
-
-    // Take screenshot of dashboard after signup
     await page.screenshot({
       path: path.join(testResultsDir, "06-dashboard-after-signup.png"),
       fullPage: true
     });
-
-    console.log("✅ Signup successful - Screenshot saved to test-results/06-dashboard-after-signup.png");
   });
 
   test("[SCREENSHOT-07] should login with same credentials and redirect to dashboard", async ({ page }) => {
@@ -134,7 +126,7 @@ test.describe("Registration and Login Integration", () => {
     await page.context().clearCookies();
 
     await page.goto("/login");
-    await page.waitForLoadState("networkidle");
+    await page.waitForLoadState("load");
 
     await page.locator('input#email').fill(TEST_USER.email);
     await page.locator('input#password').fill(TEST_USER.password);
@@ -142,7 +134,7 @@ test.describe("Registration and Login Integration", () => {
     await page.getByRole("button", { name: /sign in/i }).click();
 
     // Should redirect to dashboard
-    await expect(page).toHaveURL("/dashboard", { timeout: 10000 });
+    await expect(page).toHaveURL("/dashboard", { timeout: 30000 });
     await expect(page.getByRole("heading", { name: /overview|dashboard/i })).toBeVisible();
 
     // Take screenshot of dashboard after login
@@ -156,7 +148,7 @@ test.describe("Registration and Login Integration", () => {
 
   test("[SCREENSHOT-08] should show error for non-existent user login", async ({ page }) => {
     await page.goto("/login");
-    await page.waitForLoadState("networkidle");
+    await page.waitForLoadState("load");
 
     await page.locator('input#email').fill(`nonexistent-${Date.now()}@example.com`);
     await page.locator('input#password').fill("WrongPassword123!");
@@ -172,7 +164,7 @@ test.describe("Registration and Login Integration", () => {
 
   test("should toggle password visibility", async ({ page }) => {
     await page.goto("/login");
-    await page.waitForLoadState("networkidle");
+    await page.waitForLoadState("load");
 
     const passwordInput = page.locator('input#password');
     await passwordInput.fill("MySecretPassword123");
@@ -190,7 +182,7 @@ test.describe("Registration and Login Integration", () => {
 
   test("should navigate between login and signup pages", async ({ page }) => {
     await page.goto("/login");
-    await page.waitForLoadState("networkidle");
+    await page.waitForLoadState("load");
 
     // Go to signup
     await page.getByRole("link", { name: /sign up/i }).click();

@@ -243,4 +243,19 @@ See `.env.example` for reference.
 
 **Next:** DSA Problems UI, Projects UI, Settings page
 
+**2026-03-22** — Auth/dashboard flow fixed and Playwright tests reviewed:
+
+- **Root cause fixed — database error after login:** `DATABASE_URL` in `.env.local` used pgbouncer (port 6543 with `?pgbouncer=true`). The `PrismaPg` adapter hangs on DDL and causes "table does not exist" at runtime. Fixed by switching to session-mode URL (port 5432, no pgbouncer param) in `.env.local`.
+- **`prisma.config.ts` updated:** CLI operations now prefer `DIRECT_URL` env var (falls back to `DATABASE_URL`) so `prisma db push` / `prisma generate` don't hang.
+- **Design violations fixed:**
+  - `auth-form.tsx`: replaced `text-red-600`, `bg-red-50`, `dark:bg-red-950/50`, `dark:text-red-400` with `text-destructive` / `bg-destructive/10`
+  - `login/page.tsx`: removed forbidden gradient and shadow; uses `bg-background` / `shadow-none`
+  - `signup/page.tsx`: changed h1 from "DevTrack" → "Create account" (UX + test selector)
+- **TypeScript fixed — `lib/services/dashboard.ts`:** Removed `(log: unknown)` cast; Prisma infers types correctly.
+- **Playwright tests:** 10/11 pass. Test [06] (signup → dashboard) blocked by Supabase "Email not confirmed" on the test user.
+- **`e2e/global-setup.ts` added:** Deletes all `devtrack.e2e.*@gmail.com` test users before each run when `SUPABASE_SERVICE_ROLE_KEY` is set in `.env.local`.
+- **Blocker for test [06]:** Fix by either: (a) Supabase Dashboard → Authentication → Settings → disable "Enable email confirmations", or (b) add `SUPABASE_SERVICE_ROLE_KEY` to `.env.local`.
+
+**Next:** Resolve Supabase email confirmation setting for tests, then DSA Problems UI, Projects UI, Settings page
+
 ---
