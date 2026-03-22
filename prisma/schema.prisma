@@ -6,10 +6,13 @@ datasource db {
   provider = "postgresql"
 }
 
+// ─── Models ───────────────────────────────────────────────────────────────────
+
 model User {
-  id        String       @id @default(cuid())
-  email     String       @unique
-  createdAt DateTime     @default(now())
+  id        String   @id @default(cuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+
   dailyLogs DailyLog[]
   problems  DSAProblem[]
   projects  Project[]
@@ -18,40 +21,54 @@ model User {
 model DailyLog {
   id             String   @id @default(cuid())
   userId         String
-  date           DateTime
+  date           DateTime @db.Date
   problemsSolved Int      @default(0)
+  topics         String[]
   notes          String?
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  // One log per user per day; also serves as the primary lookup index.
   @@unique([userId, date])
 }
 
 model DSAProblem {
   id         String     @id @default(cuid())
+  userId     String
   title      String
   difficulty Difficulty
   pattern    String
+  platform   String
   solvedAt   DateTime
-  userId     String
   createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Filter by user + difficulty (e.g. "show all HARD problems")
+  @@index([userId, difficulty])
+  // Sort/filter by solve date (e.g. "problems solved this week")
+  @@index([userId, solvedAt])
 }
 
 model Project {
   id        String        @id @default(cuid())
+  userId    String
   name      String
   status    ProjectStatus @default(IN_PROGRESS)
   progress  Int           @default(0)
-  userId    String
   createdAt DateTime      @default(now())
   updatedAt DateTime      @updatedAt
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Filter active/completed projects per user
+  @@index([userId, status])
 }
+
+// ─── Enums ────────────────────────────────────────────────────────────────────
 
 enum Difficulty {
   EASY

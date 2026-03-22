@@ -221,4 +221,15 @@ See `.env.example` for reference.
 
 **Next:** Dashboard feature implementation (DSA problems, projects, daily logs, settings pages)
 
+**2026-03-22** — Prisma schema refactored for DevTrack MVP:
+
+- `DailyLog` — added `topics String[]` (native PostgreSQL array); added `@db.Date` to store date-only values without a time component
+- `DSAProblem` — added `platform String` (kept as `String`, not enum, for flexibility as platforms change); added `updatedAt` for re-review tracking
+- Indexes added: `DSAProblem @@index([userId, difficulty])` and `@@index([userId, solvedAt])`; `Project @@index([userId, status])` — covers the most common filter/sort patterns
+- `DailyLog @@unique([userId, date])` retained — enforces one log per day per user and doubles as the primary lookup index
+- `platform` is `String` not enum — avoids migration churn when new platforms are added
+- All cascades, enums (`Difficulty`, `ProjectStatus`), and audit fields retained
+
+**Next:** Run `prisma generate` + `prisma migrate dev`, then begin dashboard feature implementation
+
 ---
