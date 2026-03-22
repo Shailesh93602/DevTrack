@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/db/prisma";
-import { Prisma } from "@prisma/client";
-import type { CreateDsaProblemInput, DsaProblemQueryParams } from "@/lib/validations/dsa-problem";
+import { Prisma, Difficulty } from "@prisma/client";
+import type { CreateDsaProblemInput, DsaProblemQueryParams, UpdateDsaProblemInput } from "@/lib/validations/dsa-problem";
 
 const defaultSelect = {
   id: true,
@@ -63,6 +63,24 @@ export async function getDsaProblemById(userId: string, id: string) {
   return prisma.dSAProblem.findFirst({
     where: { id, userId },
     select: defaultSelect,
+  });
+}
+
+export async function updateDsaProblem(
+  userId: string,
+  id: string,
+  data: UpdateDsaProblemInput
+) {
+  const updateData: Prisma.DSAProblemUpdateManyMutationInput = {
+    ...(data.title && { title: data.title }),
+    ...(data.difficulty && { difficulty: data.difficulty as Difficulty }),
+    ...(data.pattern && { pattern: data.pattern }),
+    ...(data.platform && { platform: data.platform }),
+  };
+
+  return prisma.dSAProblem.updateMany({
+    where: { id, userId },
+    data: updateData,
   });
 }
 

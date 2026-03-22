@@ -2,11 +2,12 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Trash2 } from "lucide-react";
+import { Trash2, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
+import { DsaProblemForm } from "./DsaProblemForm";
 
 export type DsaProblem = {
   id: string;
@@ -47,12 +48,43 @@ function getDifficultyColor(difficulty: string): string {
 interface ProblemItemProps {
   problem: DsaProblem;
   onDelete: (id: string) => Promise<void>;
+  onEdit: (problem: DsaProblem) => void;
   isDeleting: boolean;
+  isEditing: boolean;
 }
 
-function ProblemItem({ problem, onDelete, isDeleting }: ProblemItemProps) {
+function ProblemItem({
+  problem,
+  onDelete,
+  onEdit,
+  isDeleting,
+  isEditing,
+}: ProblemItemProps) {
   const [isPendingConfirm, setIsPendingConfirm] = useState(false);
   const formattedDate = formatSolvedDate(problem.solvedAt);
+
+  if (isEditing) {
+    return (
+      <div className="py-4">
+        <div className="mb-4 flex items-center justify-between">
+          <h4 className="text-foreground font-medium">Edit Problem</h4>
+          <Button variant="ghost" size="sm" onClick={() => onEdit(problem)}>
+            Cancel
+          </Button>
+        </div>
+        <DsaProblemForm
+          problem={{
+            id: problem.id,
+            title: problem.title,
+            difficulty: problem.difficulty,
+            pattern: problem.pattern,
+            platform: problem.platform,
+          }}
+          onSuccess={() => onEdit(problem)}
+        />
+      </div>
+    );
+  }
 
   function handleDeleteClick() {
     if (!isPendingConfirm) {
@@ -65,13 +97,16 @@ function ProblemItem({ problem, onDelete, isDeleting }: ProblemItemProps) {
   return (
     <div className="flex items-start justify-between gap-4 py-4">
       <div className="min-w-0 flex-1 space-y-1.5">
-        <div className="flex items-center gap-2 flex-wrap">
-          <span className="font-medium text-foreground">{problem.title}</span>
-          <Badge className={cn("text-xs", getDifficultyColor(problem.difficulty))}>
-            {problem.difficulty.charAt(0) + problem.difficulty.slice(1).toLowerCase()}
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-foreground font-medium">{problem.title}</span>
+          <Badge
+            className={cn("text-xs", getDifficultyColor(problem.difficulty))}
+          >
+            {problem.difficulty.charAt(0) +
+              problem.difficulty.slice(1).toLowerCase()}
           </Badge>
         </div>
-        <div className="flex items-center gap-3 text-xs text-muted-foreground">
+        <div className="text-muted-foreground flex items-center gap-3 text-xs">
           <span>{problem.pattern}</span>
           <span>•</span>
           <span>{problem.platform}</span>
@@ -80,10 +115,19 @@ function ProblemItem({ problem, onDelete, isDeleting }: ProblemItemProps) {
         </div>
       </div>
 
-      <div className="flex shrink-0 items-center gap-2">
+      <div className="flex shrink-0 items-center gap-1">
+        <Button
+          variant="ghost"
+          size="icon-sm"
+          onClick={() => onEdit(problem)}
+          aria-label={`Edit ${problem.title}`}
+        >
+          <Pencil className="h-4 w-4" aria-hidden="true" />
+        </Button>
+
         {isPendingConfirm ? (
           <>
-            <span className="text-xs text-muted-foreground">Delete?</span>
+            <span className="text-muted-foreground text-xs">Delete?</span>
             <Button
               variant="destructive"
               size="sm"
@@ -120,15 +164,22 @@ function ProblemItem({ problem, onDelete, isDeleting }: ProblemItemProps) {
 export function DsaProblemList({ problems }: DsaProblemListProps) {
   const router = useRouter();
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [deleteError, setDeleteError] = useState<string | null>(null);
-  const [filter, setFilter] = useState<(typeof difficultyOptions)[number]>("ALL");
+  const [filter, setFilter] =
+    useState<(typeof difficultyOptions)[number]>("ALL");
 
   async function handleDelete(id: string) {
     setDeletingId(id);
     setDeleteError(null);
 
-    const response = await fetch(`/api/dsa-problem/${id}`, { method: "DELETE" });
-    const result = (await response.json()) as { success: boolean; error?: { message?: string } };
+    const response = await fetch(`/api/dsa-problem/${id}`, {
+      method: "DELETE",
+    });
+    const result = (await response.json()) as {
+      success: boolean;
+      error?: { message?: string };
+    };
 
     setDeletingId(null);
 
@@ -140,13 +191,19 @@ export function DsaProblemList({ problems }: DsaProblemListProps) {
     router.refresh();
   }
 
+  function handleEdit(problem: DsaProblem) {
+    setEditingId((current) => (current === problem.id ? null : problem.id));
+  }
+
   const filteredProblems =
-    filter === "ALL" ? problems : problems.filter((p) => p.difficulty === filter);
+    filter === "ALL"
+      ? problems
+      : problems.filter((p) => p.difficulty === filter);
 
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2">
-        <span className="text-sm text-muted-foreground">Filter:</span>
+        <span className="text-muted-foreground text-sm">Filter:</span>
         <div className="flex gap-1">
           {difficultyOptions.map((d) => (
             <Button
@@ -162,15 +219,17 @@ export function DsaProblemList({ problems }: DsaProblemListProps) {
       </div>
 
       {deleteError && (
-        <p role="alert" className="text-xs text-destructive">
+        <p role="alert" className="text-destructive text-xs">
           {deleteError}
         </p>
       )}
 
       {filteredProblems.length === 0 ? (
         <div className="py-12 text-center">
-          <p className="text-sm text-muted-foreground">
-            {problems.length === 0 ? "No problems tracked yet." : "No problems match this filter."}
+          <p className="text-muted-foreground text-sm">
+            {problems.length === 0
+              ? "No problems tracked yet."
+              : "No problems match this filter."}
           </p>
         </div>
       ) : (
@@ -180,7 +239,9 @@ export function DsaProblemList({ problems }: DsaProblemListProps) {
               <ProblemItem
                 problem={problem}
                 onDelete={handleDelete}
+                onEdit={handleEdit}
                 isDeleting={deletingId === problem.id}
+                isEditing={editingId === problem.id}
               />
               {index < filteredProblems.length - 1 && <Separator />}
             </div>

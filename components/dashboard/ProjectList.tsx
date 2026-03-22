@@ -5,7 +5,15 @@ import { useRouter } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { FolderKanban, Trash2, CheckCircle2, Clock, AlertCircle } from "lucide-react";
+import {
+  FolderKanban,
+  Trash2,
+  CheckCircle2,
+  Clock,
+  AlertCircle,
+  Pencil,
+} from "lucide-react";
+import { ProjectForm } from "./ProjectForm";
 
 export interface Project {
   id: string;
@@ -33,6 +41,7 @@ export function ProjectList({ projects }: ProjectListProps) {
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
   const [deleteError, setDeleteError] = useState<string | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
 
   async function handleDelete(projectId: string) {
     setDeletingId(projectId);
@@ -57,11 +66,16 @@ export function ProjectList({ projects }: ProjectListProps) {
     }
   }
 
+  function handleEditSuccess() {
+    setEditingId(null);
+    router.refresh();
+  }
+
   if (projects.length === 0) {
     return (
       <div className="py-8 text-center">
-        <FolderKanban className="mx-auto h-8 w-8 text-muted-foreground" />
-        <p className="mt-2 text-sm text-muted-foreground">
+        <FolderKanban className="text-muted-foreground mx-auto h-8 w-8" />
+        <p className="text-muted-foreground mt-2 text-sm">
           No projects yet. Create your first project to start tracking.
         </p>
       </div>
@@ -71,7 +85,7 @@ export function ProjectList({ projects }: ProjectListProps) {
   return (
     <div className="space-y-4">
       {deleteError && (
-        <p className="text-sm text-destructive" role="alert">
+        <p className="text-destructive text-sm" role="alert">
           {deleteError}
         </p>
       )}
@@ -83,77 +97,120 @@ export function ProjectList({ projects }: ProjectListProps) {
         return (
           <div
             key={project.id}
-            className="flex flex-col gap-3 rounded-lg border border-border p-4"
+            className="border-border flex flex-col gap-3 rounded-lg border p-4"
           >
-            <div className="flex items-start justify-between">
-              <div className="flex items-center gap-2">
-                <div className={`h-2 w-2 rounded-full ${status.color}`} />
-                <h4 className="font-medium text-foreground">{project.name}</h4>
-                <Badge variant="secondary" className="text-xs">
-                  <StatusIcon className="mr-1 h-3 w-3" />
-                  {status.label}
-                </Badge>
-              </div>
-
-              {deleteConfirmId === project.id ? (
-                <div className="flex items-center gap-2">
-                  <span className="text-xs text-muted-foreground">Confirm?</span>
-                  <Button
-                    variant="destructive"
-                    size="sm"
-                    onClick={() => handleDelete(project.id)}
-                    disabled={deletingId === project.id}
-                  >
-                    {deletingId === project.id ? "Deleting..." : "Yes"}
-                  </Button>
+            {editingId === project.id ? (
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-foreground font-medium">Edit Project</h4>
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => setDeleteConfirmId(null)}
+                    onClick={() => setEditingId(null)}
                   >
-                    No
+                    Cancel
                   </Button>
                 </div>
-              ) : (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setDeleteConfirmId(project.id)}
-                  className="text-muted-foreground hover:text-destructive"
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
-              )}
-            </div>
-
-            {project.description && (
-              <p className="text-sm text-muted-foreground">
-                {project.description}
-              </p>
-            )}
-
-            <div className="space-y-1">
-              <div className="flex items-center justify-between text-xs">
-                <span className="text-muted-foreground">Progress</span>
-                <span className="font-medium">{project.progress}%</span>
+                <ProjectForm
+                  project={{
+                    id: project.id,
+                    name: project.name,
+                    description: project.description,
+                    status: project.status,
+                    dueDate: project.dueDate,
+                    techStack: project.techStack,
+                  }}
+                  onSuccess={handleEditSuccess}
+                />
               </div>
-              <Progress value={project.progress} className="h-2" />
-            </div>
+            ) : (
+              <>
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className={`h-2 w-2 rounded-full ${status.color}`} />
+                    <h4 className="text-foreground font-medium">
+                      {project.name}
+                    </h4>
+                    <Badge variant="secondary" className="text-xs">
+                      <StatusIcon className="mr-1 h-3 w-3" />
+                      {status.label}
+                    </Badge>
+                  </div>
 
-            {project.techStack.length > 0 && (
-              <div className="flex flex-wrap gap-1">
-                {project.techStack.map((tech, index) => (
-                  <Badge key={index} variant="outline" className="text-xs">
-                    {tech}
-                  </Badge>
-                ))}
-              </div>
-            )}
+                  <div className="flex items-center gap-1">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setEditingId(project.id)}
+                      className="text-muted-foreground hover:text-foreground"
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </Button>
 
-            {project.dueDate && (
-              <p className="text-xs text-muted-foreground">
-                Due: {new Date(project.dueDate).toLocaleDateString()}
-              </p>
+                    {deleteConfirmId === project.id ? (
+                      <div className="flex items-center gap-2">
+                        <span className="text-muted-foreground text-xs">
+                          Confirm?
+                        </span>
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          onClick={() => handleDelete(project.id)}
+                          disabled={deletingId === project.id}
+                        >
+                          {deletingId === project.id ? "Deleting..." : "Yes"}
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setDeleteConfirmId(null)}
+                        >
+                          No
+                        </Button>
+                      </div>
+                    ) : (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setDeleteConfirmId(project.id)}
+                        className="text-muted-foreground hover:text-destructive"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    )}
+                  </div>
+                </div>
+
+                {project.description && (
+                  <p className="text-muted-foreground text-sm">
+                    {project.description}
+                  </p>
+                )}
+
+                <div className="space-y-1">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-muted-foreground">Progress</span>
+                    <span className="font-medium">{project.progress}%</span>
+                  </div>
+                  <Progress value={project.progress} className="h-2" />
+                </div>
+
+                {project.techStack.length > 0 && (
+                  <div className="flex flex-wrap gap-1">
+                    {project.techStack.map((tech, index) => (
+                      <Badge key={index} variant="outline" className="text-xs">
+                        {tech}
+                      </Badge>
+                    ))}
+                  </div>
+                )}
+
+                {project.dueDate && (
+                  <p className="text-muted-foreground text-xs">
+                    Due: {new Date(project.dueDate).toLocaleDateString()}
+                  </p>
+                )}
+              </>
             )}
           </div>
         );

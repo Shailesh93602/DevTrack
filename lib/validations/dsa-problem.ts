@@ -12,6 +12,8 @@ export const dsaProblemSchema = z.object({
 
 export const createDsaProblemSchema = dsaProblemSchema;
 
+export const updateDsaProblemSchema = dsaProblemSchema.partial();
+
 export const dsaProblemIdSchema = z.object({
   id: z.string().min(1),
 });
@@ -26,5 +28,6 @@ export const dsaProblemQuerySchema = z.object({
 
 export type DsaProblemInput = z.infer<typeof dsaProblemSchema>;
 export type CreateDsaProblemInput = z.infer<typeof createDsaProblemSchema>;
+export type UpdateDsaProblemInput = z.infer<typeof updateDsaProblemSchema>;
 export type DsaProblemIdParams = z.infer<typeof dsaProblemIdSchema>;
 export type DsaProblemQueryParams = z.infer<typeof dsaProblemQuerySchema>;

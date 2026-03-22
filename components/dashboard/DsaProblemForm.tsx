@@ -34,8 +34,21 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-export function DsaProblemForm() {
+interface DsaProblemFormProps {
+  problem?: {
+    id: string;
+    title: string;
+    difficulty: "EASY" | "MEDIUM" | "HARD";
+    pattern: string;
+    platform: string;
+  };
+  onSuccess?: () => void;
+}
+
+export function DsaProblemForm({ problem, onSuccess }: DsaProblemFormProps) {
   const router = useRouter();
+
+  const isEditing = !!problem;
 
   const {
     register,
@@ -47,10 +60,10 @@ export function DsaProblemForm() {
   } = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: "",
-      difficulty: "MEDIUM",
-      pattern: "",
-      platform: "",
+      title: problem?.title ?? "",
+      difficulty: problem?.difficulty ?? "MEDIUM",
+      pattern: problem?.pattern ?? "",
+      platform: problem?.platform ?? "",
     },
   });
 
@@ -66,8 +79,13 @@ export function DsaProblemForm() {
     setSubmitError(null);
     setSubmitSuccess(false);
 
-    const response = await fetch("/api/dsa-problem", {
-      method: "POST",
+    const url = isEditing
+      ? `/api/dsa-problem/${problem.id}`
+      : "/api/dsa-problem";
+    const method = isEditing ? "PATCH" : "POST";
+
+    const response = await fetch(url, {
+      method,
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(values),
     });
@@ -78,12 +96,17 @@ export function DsaProblemForm() {
     };
 
     if (!result.success) {
-      setSubmitError(result.error?.message ?? "Failed to add problem");
+      setSubmitError(result.error?.message ?? "Failed to save problem");
       return;
     }
 
     setSubmitSuccess(true);
-    reset();
+
+    if (!isEditing) {
+      reset();
+    }
+
+    onSuccess?.();
     router.refresh();
 
     setTimeout(() => setSubmitSuccess(false), 3000);
@@ -219,7 +242,13 @@ export function DsaProblemForm() {
 
       <div className="flex justify-end">
         <Button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? "Adding…" : "Add Problem"}
+          {isSubmitting
+            ? isEditing
+              ? "Saving…"
+              : "Adding…"
+            : isEditing
+              ? "Save Changes"
+              : "Add Problem"}
         </Button>
       </div>
     </form>

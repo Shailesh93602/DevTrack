@@ -27,9 +27,10 @@ interface ProjectFormProps {
     dueDate: string | null;
     techStack: string[];
   };
+  onSuccess?: () => void;
 }
 
-export function ProjectForm({ project }: ProjectFormProps) {
+export function ProjectForm({ project, onSuccess }: ProjectFormProps) {
   const router = useRouter();
   const [techInput, setTechInput] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -42,6 +43,7 @@ export function ProjectForm({ project }: ProjectFormProps) {
     handleSubmit,
     setValue,
     watch,
+    reset,
     formState: { errors },
   } = useForm<CreateProjectInput>({
     resolver: zodResolver(createProjectSchema),
@@ -96,8 +98,24 @@ export function ProjectForm({ project }: ProjectFormProps) {
       }
 
       router.refresh();
+
+      // Clear form after successful creation (not in edit mode)
+      if (!isEditing) {
+        reset({
+          name: "",
+          description: undefined,
+          status: "IN_PROGRESS",
+          dueDate: undefined,
+          techStack: [],
+        });
+      }
+
+      // Call onSuccess callback if provided
+      onSuccess?.();
     } catch (err) {
-      setSubmitError(err instanceof Error ? err.message : "Something went wrong");
+      setSubmitError(
+        err instanceof Error ? err.message : "Something went wrong"
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -114,7 +132,7 @@ export function ProjectForm({ project }: ProjectFormProps) {
           aria-describedby={errors.name ? "name-error" : undefined}
         />
         {errors.name && (
-          <p id="name-error" className="text-sm text-destructive" role="alert">
+          <p id="name-error" className="text-destructive text-sm" role="alert">
             {errors.name.message}
           </p>
         )}
@@ -128,7 +146,7 @@ export function ProjectForm({ project }: ProjectFormProps) {
           placeholder="Brief description of the project"
         />
         {errors.description && (
-          <p className="text-sm text-destructive" role="alert">
+          <p className="text-destructive text-sm" role="alert">
             {errors.description.message}
           </p>
         )}
@@ -164,7 +182,7 @@ export function ProjectForm({ project }: ProjectFormProps) {
             })}
           />
           {errors.dueDate && (
-            <p className="text-sm text-destructive" role="alert">
+            <p className="text-destructive text-sm" role="alert">
               {errors.dueDate.message}
             </p>
           )}
@@ -193,7 +211,7 @@ export function ProjectForm({ project }: ProjectFormProps) {
           {techStack.map((tech, index) => (
             <span
               key={index}
-              className="inline-flex items-center gap-1 rounded bg-muted px-2 py-1 text-xs"
+              className="bg-muted inline-flex items-center gap-1 rounded px-2 py-1 text-xs"
             >
               {tech}
               <button
@@ -210,7 +228,7 @@ export function ProjectForm({ project }: ProjectFormProps) {
       </div>
 
       {submitError && (
-        <p className="text-sm text-destructive" role="alert">
+        <p className="text-destructive text-sm" role="alert">
           {submitError}
         </p>
       )}
@@ -221,8 +239,8 @@ export function ProjectForm({ project }: ProjectFormProps) {
             ? "Updating..."
             : "Creating..."
           : isEditing
-          ? "Update Project"
-          : "Create Project"}
+            ? "Update Project"
+            : "Create Project"}
       </Button>
     </form>
   );
