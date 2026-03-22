@@ -51,7 +51,7 @@ export default async function DashboardPage() {
 
       <Separator />
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
         <StatsCard
           title="Total Problems"
           value={stats.totalProblems}
@@ -66,6 +66,18 @@ export default async function DashboardPage() {
           title="Recent Logs"
           value={stats.recentLogs.length}
           description="Latest daily entries"
+        />
+        <StatsCard
+          title="Current Streak"
+          value={stats.currentStreak}
+          description={
+            stats.currentStreak === 1 ? "day in a row" : "days in a row"
+          }
+        />
+        <StatsCard
+          title="Longest Streak"
+          value={stats.longestStreak}
+          description={stats.longestStreak === 1 ? "day" : "days"}
         />
       </div>
 

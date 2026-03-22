@@ -258,4 +258,24 @@ See `.env.example` for reference.
 
 **Next:** Resolve Supabase email confirmation setting for tests, then DSA Problems UI, Projects UI, Settings page
 
+**2026-03-22** — Streak tracking system implemented:
+
+- **New — `lib/services/streak.ts`:** Pure calculation service for streak logic
+  - `toUtcDateString()` — normalizes dates using `toISOString().slice(0, 10)` for UTC-safe comparison
+  - `isNextDay()` — compares date strings with 86,400,000ms diff (exactly 1 day)
+  - `calculateStreaks()` — forward pass for longest streak, backward pass for current streak
+  - Returns `0` for both streaks if user has no logs; streak alive if logged today OR yesterday
+- **Modified — `lib/services/dashboard.ts`:**
+  - Added `calculateStreaks` import
+  - Extended `DashboardStats` interface with `currentStreak`, `longestStreak`
+  - Added `calculateStreaks(userId)` to `Promise.all` batch
+  - Fixed pre-existing `topics` missing from query select
+- **Modified — `app/(dashboard)/dashboard/page.tsx`:**
+  - Added two `StatsCard` entries: "Current Streak" and "Longest Streak"
+  - Updated grid class to `xl:grid-cols-5` to accommodate 5 stat cards
+  - Proper singular/plural handling in descriptions ("day in a row" vs "days in a row")
+- **Compliance verified:** No `any` types, no hardcoded colors, no `dark:` classes, all imports use `@/`, business logic kept out of UI
+
+**Next:** DSA Problems UI, Projects UI, Settings page
+
 ---

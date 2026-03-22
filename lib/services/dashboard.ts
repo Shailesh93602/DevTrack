@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/db/prisma";
+import { calculateStreaks } from "@/lib/services/streak";
 
 export interface DashboardStats {
   totalProblems: number;
@@ -9,33 +10,43 @@ export interface DashboardStats {
     problemsSolved: number;
     topics: string[];
   }[];
+  currentStreak: number;
+  longestStreak: number;
 }
 
 export async function getDashboardStats(userId: string): Promise<DashboardStats> {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  const [totalProblemsResult, todaysLog, recentLogsResult] = await Promise.all([
-    prisma.dSAProblem.count({
-      where: { userId },
-    }),
-    prisma.dailyLog.findFirst({
-      where: {
-        userId,
-        date: {
-          gte: today,
+  const [totalProblemsResult, todaysLog, recentLogsResult, streakStats] =
+    await Promise.all([
+      prisma.dSAProblem.count({
+        where: { userId },
+      }),
+      prisma.dailyLog.findFirst({
+        where: {
+          userId,
+          date: {
+            gte: today,
+          },
         },
-      },
-      select: {
-        problemsSolved: true,
-      },
-    }),
-    prisma.dailyLog.findMany({
-      where: { userId },
-      orderBy: { date: "desc" },
-      take: 5,
-    }),
-  ]);
+        select: {
+          problemsSolved: true,
+        },
+      }),
+      prisma.dailyLog.findMany({
+        where: { userId },
+        orderBy: { date: "desc" },
+        take: 5,
+        select: {
+          id: true,
+          date: true,
+          problemsSolved: true,
+          topics: true,
+        },
+      }),
+      calculateStreaks(userId),
+    ]);
 
   const recentLogs = recentLogsResult.map((log) => ({
     id: log.id,
@@ -48,6 +59,8 @@ export async function getDashboardStats(userId: string): Promise<DashboardStats>
     totalProblems: totalProblemsResult,
     todaysProblems: todaysLog?.problemsSolved ?? 0,
     recentLogs,
+    currentStreak: streakStats.currentStreak,
+    longestStreak: streakStats.longestStreak,
   };
 }
 
