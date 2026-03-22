@@ -60,14 +60,28 @@
 
 ---
 
+## Naming Conventions
+
+> Consistent naming is non-negotiable. Vague names are a bug.
+
+- **Variables & functions** — `camelCase` (e.g. `userId`, `fetchProblems`, `isLoading`)
+- **Components** — `PascalCase` (e.g. `StatsCard`, `AuthForm`, `DashboardLayout`)
+- **Types & interfaces** — `PascalCase` (e.g. `StatsCardProps`, `AuthFormState`)
+- **Files** — `kebab-case` for non-component files (e.g. `supabase-server.ts`); `PascalCase` only for React component files (e.g. `StatsCard.tsx`) — **exception:** Next.js special files (`page.tsx`, `layout.tsx`, `middleware.ts`) stay lowercase
+- **Forbidden names** — never use vague names like `data`, `item`, `obj`, `val`, `temp`, `thing`, `foo`; always name after the domain concept (e.g. `problem`, `project`, `logEntry`)
+- **Booleans** — prefix with `is`, `has`, or `can` (e.g. `isLoading`, `hasError`, `canSubmit`)
+- **Event handlers** — prefix with `handle` (e.g. `handleSubmit`, `handleDelete`)
+- **Server actions** — named as verbs describing the operation (e.g. `createProblem`, `updateProject`, `deleteLog`)
+
+---
+
 ## Coding Rules
 
 > Violations of these rules must be fixed before any feature is considered complete.
 
 - **TypeScript strict mode** — no `any`, no type suppression, no `@ts-ignore`
-- **File size hard limit** — split any file that exceeds 120 lines; no exceptions
+- **File size** — target ≤200 lines per file; split if exceeded. Exceptions: config/generated files up to 500 lines; `schema.prisma` and `globals.css` up to 1000 lines
 - **Separation of concerns** — server actions and data-fetching logic live in `lib/`, never inside components
-- **Server actions use Zod** for all input validation — no raw `req.body` or unvalidated inputs
 - **No dummy data or mock logic** in components — use placeholder values only during development
 - **Absolute imports only** via `@/` — never use relative `../../` paths
 - **`cn()` utility** — always import from `@/lib/utils`; never from `@/lib/utils/cn`
@@ -75,6 +89,18 @@
 - **Supabase client**: use `lib/auth/supabase.ts` (browser) and `lib/auth/supabase-server.ts` (server) — never create ad-hoc clients
 - Always run `prisma generate` after any change to `schema.prisma`
 - **Prisma 7:** datasource URL lives in `prisma.config.ts` (not in `schema.prisma`) — this is a Prisma 7 breaking change
+
+---
+
+## API Rules
+
+> All data flow through the API layer must be validated and isolated.
+
+- **Zod validation always** — every server action and API route must validate its inputs with a Zod schema before any processing; never trust raw input
+- **No direct DB calls in UI** — components must never import from `@/lib/db` or call `prisma.*` directly; all DB access goes through server actions in `lib/`
+- **No direct DB calls in API routes** — API route handlers call service functions in `lib/`, not Prisma directly; keeps routes thin
+- **Return typed responses** — server actions return a typed result object (e.g. `{ data, error }`), never untyped plain objects
+- **Error handling at the boundary** — catch and transform errors in server actions; components receive structured error states, not raw exceptions
 
 ---
 
@@ -97,12 +123,13 @@
 
 > Components must be self-contained, reusable, and free of layout side effects.
 
+- **No business logic in UI** — components render UI only; data fetching, mutations, transformations, and side effects belong in `lib/` server actions or custom hooks
+- **No direct DB or API calls** — a component must never import Prisma, call `fetch`, or invoke server actions outside of a form action or hook; pass data in via props or read from a server component parent
 - **Reusable components only** — if a component is used in more than one place, it lives in `components/shared/`; single-use components live co-located with their feature
 - **No inline styles** — never use the `style={{}}` prop; all styling must go through Tailwind utility classes
 - **No hardcoded layout values** — do not hardcode pixel widths, heights, or margins; use Tailwind spacing scale
 - **Props over internal state** — prefer controlled components that accept props; keep internal state minimal
 - **One responsibility per component** — a component either renders UI or orchestrates logic, not both
-- **No business logic in components** — data mutations, API calls, and transformations belong in `lib/` server actions or hooks
 - **Accessibility** — all interactive elements must have accessible labels (`aria-label`, `aria-describedby`, or visible text)
 
 ---
@@ -182,6 +209,15 @@ See `.env.example` for reference.
 - **Duplicate utility resolved:** `lib/utils/cn.ts` was a copy of `lib/utils.ts`; converted to a re-export so `@/lib/utils` is the single canonical import point (matches shadcn alias)
 - **Metadata updated:** `app/layout.tsx` title/description changed from Create Next App placeholder to "DevTrack"
 - **Canonical import rule added to Coding Rules:** all `cn()` imports must use `@/lib/utils`, never `@/lib/utils/cn`
+
+**Next:** Dashboard feature implementation (DSA problems, projects, daily logs, settings pages)
+
+**2026-03-22** — Rules overhauled to production standard:
+
+- **Naming Conventions** — new section added: camelCase vars, PascalCase components/types, kebab-case non-component files; booleans prefixed `is/has/can`; handlers prefixed `handle`; server actions named as verbs; vague names (`data`, `item`, `obj`) explicitly forbidden
+- **Coding Rules** — file size updated from 120-line hard cap to tiered limit: ≤200 target, ≤500 for config/generated files, ≤1000 for `schema.prisma` and `globals.css`
+- **API Rules** — new section: Zod validation required on all server actions/routes; no direct DB calls in UI or route handlers; typed return shapes; errors caught and transformed at the boundary
+- **Component Rules** — sharpened: explicit ban on business logic and DB/API calls in components; rule order reorganized for clarity
 
 **Next:** Dashboard feature implementation (DSA problems, projects, daily logs, settings pages)
 
