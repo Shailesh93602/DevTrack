@@ -7,11 +7,11 @@ interface HeaderProps {
 
 export function Header({ email }: HeaderProps) {
   return (
-    <header className="flex h-14 items-center justify-between border-b border-gray-100 bg-white px-6">
+    <header className="flex h-14 items-center justify-between border-b border-border bg-background px-6">
       <div />
       <div className="flex items-center gap-4">
         {email && (
-          <span className="text-sm text-gray-500">{email}</span>
+          <span className="text-sm text-muted-foreground">{email}</span>
         )}
         <form action={logout}>
           <Button variant="ghost" size="sm" type="submit">

@@ -12,13 +12,13 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-lg font-semibold text-gray-900">Overview</h2>
-        <p className="text-sm text-gray-500">
+        <h2 className="text-lg font-semibold text-foreground">Overview</h2>
+        <p className="text-sm text-muted-foreground">
           Your developer progress at a glance.
         </p>
       </div>
 
-      <Separator className="bg-gray-100" />
+      <Separator />
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {placeholderStats.map((stat) => (

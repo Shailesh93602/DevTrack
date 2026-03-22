@@ -70,6 +70,7 @@
 - **Server actions use Zod** for all input validation — no raw `req.body` or unvalidated inputs
 - **No dummy data or mock logic** in components — use placeholder values only during development
 - **Absolute imports only** via `@/` — never use relative `../../` paths
+- **`cn()` utility** — always import from `@/lib/utils`; never from `@/lib/utils/cn`
 - **Prisma client** is a singleton via `lib/db/prisma.ts` — never instantiate `PrismaClient` elsewhere
 - **Supabase client**: use `lib/auth/supabase.ts` (browser) and `lib/auth/supabase-server.ts` (server) — never create ad-hoc clients
 - Always run `prisma generate` after any change to `schema.prisma`
@@ -167,5 +168,21 @@ See `.env.example` for reference.
 - AI Rules: new section added — Claude must always read CLAUDE.md first, update Session Notes last, flag violations proactively, and never touch `components/ui/` manually
 
 **Next:** Dashboard feature implementation
+
+**2026-03-22** — Project structure audit and cleanup:
+
+- **Design rule violations fixed:** All hardcoded colors (`bg-white`, `bg-gray-50`, `text-gray-900`, `text-gray-500`, `text-gray-400`, `border-gray-100`) replaced with semantic CSS variable utilities (`bg-background`, `bg-muted`, `text-foreground`, `text-muted-foreground`, `border-border`, `hover:bg-accent`, `hover:text-accent-foreground`) across:
+  - `app/(auth)/login/page.tsx`
+  - `app/(auth)/signup/page.tsx`
+  - `app/(dashboard)/dashboard/layout.tsx`
+  - `app/(dashboard)/dashboard/page.tsx`
+  - `components/dashboard/sidebar.tsx`
+  - `components/dashboard/header.tsx`
+  - `components/dashboard/stats-card.tsx`
+- **Duplicate utility resolved:** `lib/utils/cn.ts` was a copy of `lib/utils.ts`; converted to a re-export so `@/lib/utils` is the single canonical import point (matches shadcn alias)
+- **Metadata updated:** `app/layout.tsx` title/description changed from Create Next App placeholder to "DevTrack"
+- **Canonical import rule added to Coding Rules:** all `cn()` imports must use `@/lib/utils`, never `@/lib/utils/cn`
+
+**Next:** Dashboard feature implementation (DSA problems, projects, daily logs, settings pages)
 
 ---
