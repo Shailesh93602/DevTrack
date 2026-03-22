@@ -10,7 +10,7 @@ if (!existsSync(testResultsDir)) {
 
 // Shared test credentials - used across all tests
 const TEST_USER = {
-  email: `e2e.test.user.${Date.now()}@gmail.com`,
+  email: `devtrack.e2e.test@gmail.com`,
   password: "TestPassword123!",
 };
 
