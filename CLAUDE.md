@@ -232,4 +232,15 @@ See `.env.example` for reference.
 
 **Next:** Run `prisma generate` + `prisma migrate dev`, then begin dashboard feature implementation
 
+**2026-03-22** — DailyLog UI built and backend bugs fixed:
+
+- **Bug fix — `lib/services/daily-log.ts`:** `getDailyLogByDate` used `setHours(0,0,0,0)` (local time) for a `@db.Date` column; fixed to use `Date.UTC` exact equality — timezone-safe in all server environments
+- **Bug fix — `lib/validations/daily-log.ts`:** Topics lacked `.trim()`, per-topic `.max(50)`, and array `.max(20)`; notes lacked `.trim()` — all fixed
+- **New — `components/ui/textarea.tsx`:** Shadcn-style textarea primitive matching `input.tsx` styling; CSS-variable-only, no `dark:` overrides
+- **New — `components/dashboard/DailyLogForm.tsx`:** Create/edit form with React Hook Form + Zod v4; tag-style topic input (add on Enter or button, remove with X); notes char counter (turns destructive at 90%); proper `aria-invalid`, `aria-describedby`, `role="alert"` on errors; create vs edit detected from `log` prop; calls `router.refresh()` on success
+- **New — `components/dashboard/DailyLogList.tsx`:** History list with date formatting (Today/Yesterday/date); topic badges; 2-step delete confirmation (click → confirm/cancel) to prevent accidental deletes; per-item error surfaces; empty state
+- **New — `app/(dashboard)/dashboard/logs/page.tsx`:** Server component; fetches logs via service (not Prisma directly); serializes `Date → string` before passing to client components; splits logs into today vs history; renders form + list in Card layout
+
+**Next:** DSA Problems UI, Projects UI, Settings page
+
 ---

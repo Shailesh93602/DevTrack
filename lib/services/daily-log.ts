@@ -80,19 +80,14 @@ export async function deleteDailyLog(userId: string, id: string) {
 }
 
 export async function getDailyLogByDate(userId: string, date: Date) {
-  const startOfDay = new Date(date);
-  startOfDay.setHours(0, 0, 0, 0);
-  const endOfDay = new Date(date);
-  endOfDay.setHours(23, 59, 59, 999);
+  // @db.Date stores date-only in Postgres. Normalize to UTC midnight so the
+  // comparison is timezone-safe regardless of the server's local timezone.
+  const dateOnly = new Date(
+    Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate())
+  );
 
   return prisma.dailyLog.findFirst({
-    where: {
-      userId,
-      date: {
-        gte: startOfDay,
-        lte: endOfDay,
-      },
-    },
+    where: { userId, date: dateOnly },
     select: defaultSelect,
   });
 }

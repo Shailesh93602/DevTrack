@@ -3,8 +3,8 @@ import { z } from "zod";
 export const dailyLogSchema = z.object({
   date: z.coerce.date(),
   problemsSolved: z.coerce.number().int().min(0).default(0),
-  topics: z.array(z.string().min(1)).default([]),
-  notes: z.string().max(1000).optional(),
+  topics: z.array(z.string().trim().min(1).max(50)).max(20).default([]),
+  notes: z.string().trim().max(1000).optional(),
 });
 
 export const createDailyLogSchema = dailyLogSchema;
