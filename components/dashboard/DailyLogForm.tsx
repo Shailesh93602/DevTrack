@@ -57,6 +57,7 @@ export function DailyLogForm({ log }: DailyLogFormProps) {
     register,
     handleSubmit,
     watch,
+    reset,
     formState: { errors, isSubmitting },
   } = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -108,37 +109,56 @@ export function DailyLogForm({ log }: DailyLogFormProps) {
   async function onSubmit(values: FormValues) {
     setSubmitError(null);
 
-    const body = {
-      date: values.date,
-      problemsSolved: values.problemsSolved,
-      topics,
-      notes: values.notes?.trim() || undefined,
-    };
+    try {
+      const body = {
+        date: values.date,
+        problemsSolved: values.problemsSolved,
+        topics,
+        notes: values.notes?.trim() || undefined,
+      };
 
-    const url = isEditing ? `/api/daily-log/${log.id}` : "/api/daily-log";
-    const method = isEditing ? "PUT" : "POST";
+      const url = isEditing ? `/api/daily-log/${log.id}` : "/api/daily-log";
+      const method = isEditing ? "PUT" : "POST";
 
-    const response = await fetch(url, {
-      method,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
+      const response = await fetch(url, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
 
-    const result = (await response.json()) as {
-      success: boolean;
-      error?: { message?: string; code?: string };
-    };
+      const result = (await response.json()) as {
+        success: boolean;
+        error?: { message?: string; code?: string };
+      };
 
-    if (!result.success) {
-      if (result.error?.code === "DUPLICATE_ENTRY") {
-        setSubmitError("A log for this date already exists.");
-      } else {
-        setSubmitError(result.error?.message ?? "Something went wrong. Please try again.");
+      if (!result.success) {
+        if (result.error?.code === "DUPLICATE_ENTRY") {
+          setSubmitError("A log for this date already exists.");
+        } else {
+          setSubmitError(
+            result.error?.message ?? "Something went wrong. Please try again."
+          );
+        }
+        return;
       }
-      return;
-    }
 
-    router.refresh();
+      // Reset form on success (only for new logs)
+      if (!isEditing) {
+        reset({
+          date: getTodayString(),
+          problemsSolved: 0,
+          notes: "",
+        });
+        setTopics([]);
+      }
+
+      router.refresh();
+    } catch (error) {
+      setSubmitError(
+        "Network error. Please check your connection and try again."
+      );
+      console.error("Daily log submission error:", error);
+    }
   }
 
   return (
@@ -154,7 +174,11 @@ export function DailyLogForm({ log }: DailyLogFormProps) {
             aria-describedby={errors.date ? "log-date-error" : undefined}
           />
           {errors.date && (
-            <p id="log-date-error" role="alert" className="text-xs text-destructive">
+            <p
+              id="log-date-error"
+              role="alert"
+              className="text-destructive text-xs"
+            >
               {errors.date.message}
             </p>
           )}
@@ -168,10 +192,16 @@ export function DailyLogForm({ log }: DailyLogFormProps) {
             min={0}
             {...register("problemsSolved")}
             aria-invalid={!!errors.problemsSolved}
-            aria-describedby={errors.problemsSolved ? "log-problems-error" : undefined}
+            aria-describedby={
+              errors.problemsSolved ? "log-problems-error" : undefined
+            }
           />
           {errors.problemsSolved && (
-            <p id="log-problems-error" role="alert" className="text-xs text-destructive">
+            <p
+              id="log-problems-error"
+              role="alert"
+              className="text-destructive text-xs"
+            >
               {errors.problemsSolved.message}
             </p>
           )}
@@ -197,24 +227,32 @@ export function DailyLogForm({ log }: DailyLogFormProps) {
           </Button>
         </div>
         {topicError && (
-          <p id="log-topic-error" role="alert" className="text-xs text-destructive">
+          <p
+            id="log-topic-error"
+            role="alert"
+            className="text-destructive text-xs"
+          >
             {topicError}
           </p>
         )}
         {topics.length > 0 && (
-          <div className="flex flex-wrap gap-1.5 pt-1" role="list" aria-label="Added topics">
+          <div
+            className="flex flex-wrap gap-1.5 pt-1"
+            role="list"
+            aria-label="Added topics"
+          >
             {topics.map((topic, index) => (
               <span
                 key={topic}
                 role="listitem"
-                className="inline-flex items-center gap-1 rounded-full border border-border bg-muted px-2.5 py-0.5 text-xs text-foreground"
+                className="border-border bg-muted text-foreground inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-xs"
               >
                 {topic}
                 <button
                   type="button"
                   onClick={() => handleRemoveTopic(index)}
                   aria-label={`Remove topic "${topic}"`}
-                  className="ml-0.5 rounded-full opacity-60 transition-opacity hover:opacity-100 focus:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                  className="focus-visible:ring-ring ml-0.5 rounded-full opacity-60 transition-opacity hover:opacity-100 focus:outline-none focus-visible:ring-1"
                 >
                   <X className="h-3 w-3" aria-hidden="true" />
                 </button>
@@ -230,7 +268,9 @@ export function DailyLogForm({ log }: DailyLogFormProps) {
           <span
             className={cn(
               "text-xs tabular-nums",
-              notes.length > NOTES_MAX * 0.9 ? "text-destructive" : "text-muted-foreground"
+              notes.length > NOTES_MAX * 0.9
+                ? "text-destructive"
+                : "text-muted-foreground"
             )}
             aria-live="polite"
             aria-label={`${notes.length} of ${NOTES_MAX} characters used`}
@@ -247,14 +287,18 @@ export function DailyLogForm({ log }: DailyLogFormProps) {
           aria-describedby={errors.notes ? "log-notes-error" : undefined}
         />
         {errors.notes && (
-          <p id="log-notes-error" role="alert" className="text-xs text-destructive">
+          <p
+            id="log-notes-error"
+            role="alert"
+            className="text-destructive text-xs"
+          >
             {errors.notes.message}
           </p>
         )}
       </div>
 
       {submitError && (
-        <p role="alert" className="text-sm text-destructive">
+        <p role="alert" className="text-destructive text-sm">
           {submitError}
         </p>
       )}
