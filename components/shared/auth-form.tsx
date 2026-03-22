@@ -3,7 +3,7 @@
 import { useActionState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { PasswordInput } from "@/components/shared/PasswordInput";
 import { login, signup, type AuthFormState } from "@/lib/auth/actions";
 
 interface AuthFormProps {
@@ -17,9 +17,14 @@ export function AuthForm({ mode }: AuthFormProps) {
   const [state, formAction, pending] = useActionState(action, initialState);
 
   return (
-    <form action={formAction} className="space-y-4">
-      <div className="space-y-1.5">
-        <Label htmlFor="email">Email</Label>
+    <form action={formAction} className="space-y-5">
+      <div className="space-y-2">
+        <label
+          htmlFor="email"
+          className="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        >
+          Email
+        </label>
         <Input
           id="email"
           name="email"
@@ -27,27 +32,46 @@ export function AuthForm({ mode }: AuthFormProps) {
           placeholder="you@example.com"
           required
           autoComplete="email"
+          className="h-11"
         />
       </div>
 
-      <div className="space-y-1.5">
-        <Label htmlFor="password">Password</Label>
-        <Input
+      <div className="space-y-2">
+        <PasswordInput
           id="password"
           name="password"
-          type="password"
+          label={mode === "login" ? "Password" : "Create password"}
           placeholder="••••••••"
           required
           autoComplete={mode === "login" ? "current-password" : "new-password"}
+          className="h-11"
         />
+        {mode === "signup" && (
+          <ul className="text-muted-foreground ml-1 space-y-1 text-xs">
+            <li>• At least 8 characters</li>
+            <li>• One uppercase letter</li>
+            <li>• One lowercase letter</li>
+            <li>• One number</li>
+          </ul>
+        )}
       </div>
 
       {state?.error && (
-        <p className="text-sm text-red-600">{state.error}</p>
+        <div className="rounded-md bg-red-50 p-3 text-sm text-red-600 dark:bg-red-950/50 dark:text-red-400">
+          {state.error}
+        </div>
       )}
 
-      <Button type="submit" className="w-full" disabled={pending}>
-        {pending ? "Loading..." : mode === "login" ? "Sign in" : "Sign up"}
+      <Button
+        type="submit"
+        className="h-11 w-full font-medium"
+        disabled={pending}
+      >
+        {pending
+          ? "Loading..."
+          : mode === "login"
+            ? "Sign in"
+            : "Create account"}
       </Button>
     </form>
   );
