@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 
 const authSchema = z.object({
-  email: z.string().email("Please enter a valid email address"),
+  email: z.string().min(1, "Email is required").email("Please enter a valid email address"),
   password: z
     .string()
     .min(8, "Password must be at least 8 characters")
@@ -55,13 +55,22 @@ export async function signup(
   }
 
   const supabase = await createServerSupabaseClient();
-  const { error } = await supabase.auth.signUp(parsed.data);
 
-  if (error) {
-    return { error: error.message };
+  // Sign up the user
+  const { error: signUpError } = await supabase.auth.signUp(parsed.data);
+
+  if (signUpError) {
+    return { error: signUpError.message };
   }
 
-  return { error: undefined };
+  // Auto-login after signup
+  const { error: signInError } = await supabase.auth.signInWithPassword(parsed.data);
+
+  if (signInError) {
+    return { error: "Account created but sign-in failed. Please sign in manually." };
+  }
+
+  redirect("/dashboard");
 }
 
 export async function logout() {

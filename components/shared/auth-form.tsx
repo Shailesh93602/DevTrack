@@ -10,12 +10,18 @@ import { PasswordInput } from "@/components/shared/PasswordInput";
 import { login, signup } from "@/lib/auth/actions";
 
 const loginSchema = z.object({
-  email: z.string().email("Please enter a valid email address"),
+  email: z
+    .string()
+    .min(1, "Email is required")
+    .email("Please enter a valid email address"),
   password: z.string().min(1, "Password is required"),
 });
 
 const signupSchema = z.object({
-  email: z.string().email("Please enter a valid email address"),
+  email: z
+    .string()
+    .min(1, "Email is required")
+    .email("Please enter a valid email address"),
   password: z
     .string()
     .min(8, "Password must be at least 8 characters")
@@ -78,7 +84,8 @@ export function AuthForm({ mode }: AuthFormProps) {
         </label>
         <Input
           id="email"
-          type="email"
+          type="text"
+          inputMode="email"
           placeholder="you@example.com"
           autoComplete="email"
           className="h-11"
