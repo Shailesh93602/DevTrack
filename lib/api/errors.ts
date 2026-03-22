@@ -1,0 +1,95 @@
+import { NextResponse } from "next/server";
+import { ZodError } from "zod";
+import { Prisma } from "@prisma/client";
+
+export type ApiError = {
+  message: string;
+  code?: string;
+  details?: unknown;
+};
+
+export type ApiResponse<T> =
+  | { success: true; data: T }
+  | { success: false; error: ApiError };
+
+export function successResponse<T>(data: T): NextResponse<ApiResponse<T>> {
+  return NextResponse.json({ success: true, data });
+}
+
+export function errorResponse(
+  message: string,
+  status: number = 500,
+  code?: string,
+  details?: unknown
+): NextResponse<ApiResponse<never>> {
+  return NextResponse.json(
+    { success: false, error: { message, code, details } },
+    { status }
+  );
+}
+
+export function handleApiError(error: unknown): NextResponse<ApiResponse<never>> {
+  if (error instanceof ZodError) {
+    return errorResponse(
+      "Validation failed",
+      400,
+      "VALIDATION_ERROR",
+      error.flatten().fieldErrors
+    );
+  }
+
+  if (error instanceof Prisma.PrismaClientKnownRequestError) {
+    if (error.code === "P2002") {
+      return errorResponse(
+        "A record with this unique constraint already exists",
+        409,
+        "DUPLICATE_ENTRY"
+      );
+    }
+
+    if (error.code === "P2025") {
+      return errorResponse("Record not found", 404, "NOT_FOUND");
+    }
+
+    if (error.code === "P2003") {
+      return errorResponse(
+        "Foreign key constraint failed",
+        400,
+        "FOREIGN_KEY_ERROR"
+      );
+    }
+
+    return errorResponse(
+      `Database error: ${error.message}`,
+      500,
+      `PRISMA_${error.code}`
+    );
+  }
+
+  if (error instanceof Prisma.PrismaClientValidationError) {
+    return errorResponse(
+      "Invalid data provided",
+      400,
+      "PRISMA_VALIDATION_ERROR"
+    );
+  }
+
+  if (error instanceof Error) {
+    return errorResponse(error.message, 500, "INTERNAL_ERROR");
+  }
+
+  return errorResponse("An unexpected error occurred", 500, "UNKNOWN_ERROR");
+}
+
+export function requireAuth(userId: string | null): asserts userId is string {
+  if (!userId) {
+    throw new Error("UNAUTHORIZED");
+  }
+}
+
+export function handleAuthError(error: unknown): NextResponse<ApiResponse<never>> {
+  if (error instanceof Error && error.message === "UNAUTHORIZED") {
+    return errorResponse("Authentication required", 401, "UNAUTHORIZED");
+  }
+  return handleApiError(error);
+}
