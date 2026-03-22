@@ -1,0 +1,37 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - generic [ref=e4]:
+      - heading "DevTrack" [level=1] [ref=e5]
+      - paragraph [ref=e6]: Create a new account
+    - generic [ref=e7]:
+      - generic [ref=e8]:
+        - text: Email
+        - textbox "Email" [ref=e9]:
+          - /placeholder: you@example.com
+          - text: e2e-test-user@example.com
+      - generic [ref=e10]:
+        - generic [ref=e11]:
+          - text: Create password
+          - generic [ref=e12]:
+            - textbox "••••••••" [ref=e13]: TestPassword123!
+            - button "Show password" [ref=e14]:
+              - img
+              - generic [ref=e15]: Show password
+        - list [ref=e16]:
+          - listitem [ref=e17]: • At least 8 characters
+          - listitem [ref=e18]: • One uppercase letter
+          - listitem [ref=e19]: • One lowercase letter
+          - listitem [ref=e20]: • One number
+      - generic [ref=e21]: Email address "e2e-test-user@example.com" is invalid
+      - button "Create account" [ref=e22]
+    - paragraph [ref=e23]:
+      - text: Already have an account?
+      - link "Sign in" [ref=e24] [cursor=pointer]:
+        - /url: /login
+  - button "Open Next.js Dev Tools" [ref=e30] [cursor=pointer]:
+    - img [ref=e31]
+  - alert [ref=e34]
+```
