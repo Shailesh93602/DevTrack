@@ -278,4 +278,57 @@ See `.env.example` for reference.
 
 **Next:** DSA Problems UI, Projects UI, Settings page
 
+**2026-03-22** — Project tracking system (schema + services) implemented:
+
+- **Modified — `prisma/schema.prisma`:**
+  - Extended `Project` model: added `description`, `dueDate`, `techStack`, plus relations to `milestones` and `activityLogs`
+  - Extended `User` model: added `milestones` and `activityLogs` relations
+  - New `Milestone` model: tracks project milestones with `title`, `description`, `dueDate`, `completedAt`, `order`
+  - New `ProjectActivityLog` model: audit trail with `action` (enum), `metadata` (JSON), timestamps
+  - New `ProjectActivityType` enum: `PROJECT_CREATED`, `PROJECT_UPDATED`, `STATUS_CHANGED`, `MILESTONE_ADDED`, `MILESTONE_COMPLETED`, `MILESTONE_DELETED`
+- **New — `lib/validations/project.ts`:** Zod schemas for `createProjectSchema`, `updateProjectSchema`, `projectIdSchema`, `projectQuerySchema` with proper limits
+- **New — `lib/validations/milestone.ts`:** Zod schemas for `createMilestoneSchema`, `updateMilestoneSchema`, `milestoneIdSchema`, `reorderMilestonesSchema`
+- **New — `lib/services/project.ts`:**
+  - `createProject` — creates project + logs `PROJECT_CREATED` in transaction
+  - `getProjects` — paginated list with status filter
+  - `getProjectById` — includes ordered milestones + last 10 activity logs
+  - `updateProject` — detects status changes vs general updates, logs appropriate activity type
+  - `deleteProject` — standard deleteMany
+  - `recalculateProgress` — internal helper (unexported), auto-calculates progress % from completed/total milestones
+- **New — `lib/services/milestone.ts`:**
+  - `createMilestone` — verifies project ownership, logs `MILESTONE_ADDED`, recalculates progress
+  - `completeMilestone` — sets `completedAt`, handles no-op if already completed, logs `MILESTONE_COMPLETED`, recalculates progress
+  - `deleteMilestone` — logs `MILESTONE_DELETED`, recalculates progress
+  - `reorderMilestones` — validates all IDs belong to user/project before updating order values
+  - `recalculateProgress` — duplicated internal helper (unexported) for milestone mutations
+- **Ran `npx prisma generate`** — client updated with new models and enum
+- **Compliance verified:** No `any` types, all imports use `@/`, singleton Prisma used, all mutations with activity logs run in `$transaction`, `recalculateProgress` not exported, edge cases handled
+
+**Next:** DSA Problems UI, Projects UI, Settings page
+
+**2026-03-22** — Projects UI and API routes implemented (fixes 404 on sidebar navigation):
+
+- **New — `components/dashboard/ProjectForm.tsx`:** Create/edit project form
+  - React Hook Form + Zod validation via `createProjectSchema`
+  - Fields: name, description, status (Select dropdown), dueDate (date picker), techStack (tag input)
+  - Tag-style tech stack input: add on Enter or button, remove with X
+  - Handles both create (POST) and edit (PATCH) modes
+  - Proper error handling and loading states
+- **New — `components/dashboard/ProjectList.tsx`:** Project list display
+  - Shows project cards with name, description, status badge, progress bar, tech stack tags, due date
+  - Status icons: Clock (In Progress), CheckCircle2 (Completed), AlertCircle (On Hold)
+  - 2-step delete confirmation (click → confirm/cancel) to prevent accidents
+  - Empty state with icon and message
+- **New — `app/(dashboard)/dashboard/projects/page.tsx`:** Server component
+  - Fetches projects via `getProjects` service
+  - Serializes Date fields to ISO strings for client components
+  - Renders `ProjectForm` + `ProjectList` in Card layout
+- **New — `app/api/project/route.ts`:** API handlers for POST (create) and GET (list)
+- **New — `app/api/project/[id]/route.ts`:** API handler for DELETE
+- **Installed shadcn components:** `select`, `progress`
+- **Fixed sidebar navigation:** `/dashboard/projects` route now exists and works
+- **Compliance verified:** No `any` types, all imports use `@/`, CSS-variable-only styling, semantic color tokens
+
+**Next:** Settings page, milestone management UI (within project detail view)
+
 ---

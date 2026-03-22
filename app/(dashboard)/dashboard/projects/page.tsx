@@ -1,0 +1,83 @@
+import { redirect } from "next/navigation";
+import { Separator } from "@/components/ui/separator";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { createServerSupabaseClient } from "@/lib/auth/supabase-server";
+import { getProjects } from "@/lib/services/project";
+import { ProjectForm } from "@/components/dashboard/ProjectForm";
+import { ProjectList, type Project } from "@/components/dashboard/ProjectList";
+
+type RawProject = {
+  id: string;
+  name: string;
+  description: string | null;
+  status: "IN_PROGRESS" | "COMPLETED" | "ON_HOLD";
+  progress: number;
+  dueDate: Date | null;
+  techStack: string[];
+  createdAt: Date;
+};
+
+function serializeProject(project: RawProject): Project {
+  return {
+    id: project.id,
+    name: project.name,
+    description: project.description,
+    status: project.status,
+    progress: project.progress,
+    dueDate: project.dueDate?.toISOString() ?? null,
+    techStack: project.techStack,
+    createdAt: project.createdAt.toISOString(),
+  };
+}
+
+export default async function ProjectsPage() {
+  const supabase = await createServerSupabaseClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) redirect("/login");
+
+  const { projects } = await getProjects(user.id, { limit: 50, offset: 0 });
+  const serializedProjects = projects.map(serializeProject);
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-lg font-semibold text-foreground">Projects</h2>
+        <p className="text-sm text-muted-foreground">
+          Manage your side projects and track milestones.
+        </p>
+      </div>
+
+      <Separator />
+
+      <Card className="rounded-lg border border-border shadow-none">
+        <CardHeader>
+          <CardTitle className="text-base">Create Project</CardTitle>
+          <CardDescription>Start tracking a new project.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ProjectForm />
+        </CardContent>
+      </Card>
+
+      <div>
+        <h3 className="mb-4 text-sm font-semibold text-foreground">
+          Your Projects
+        </h3>
+        <Card className="rounded-lg border border-border shadow-none">
+          <CardContent className="px-6 py-0">
+            <ProjectList projects={serializedProjects} />
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+}

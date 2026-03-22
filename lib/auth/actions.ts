@@ -1,6 +1,7 @@
 "use server";
 
 import { createServerSupabaseClient } from "@/lib/auth/supabase-server";
+import { prisma } from "@/lib/db/prisma";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 
@@ -57,10 +58,20 @@ export async function signup(
   const supabase = await createServerSupabaseClient();
 
   // Sign up the user
-  const { error: signUpError } = await supabase.auth.signUp(parsed.data);
+  const { data: signUpData, error: signUpError } = await supabase.auth.signUp(parsed.data);
 
   if (signUpError) {
     return { error: signUpError.message };
+  }
+
+  // Create user in local database
+  if (signUpData.user) {
+    await prisma.user.create({
+      data: {
+        id: signUpData.user.id,
+        email: signUpData.user.email!,
+      },
+    });
   }
 
   // Auto-login after signup
