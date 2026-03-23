@@ -51,10 +51,10 @@
 
 ### Pattern Intelligence
 
-- [ ] Analyze user's most practiced patterns from DSA problems
-- [ ] Recommend weak patterns based on low solve count or difficulty struggles
-- [ ] Show pattern mastery progress bar per category
-- [ ] Suggest next pattern to learn based on interview frequency + current skill gaps
+- [x] Analyze user's most practiced patterns from DSA problems
+- [x] Recommend weak patterns based on low solve count or difficulty struggles
+- [x] Show pattern mastery progress bar per category
+- [x] Suggest next pattern to learn based on interview frequency + current skill gaps
 
 ### Insights & Analytics
 
