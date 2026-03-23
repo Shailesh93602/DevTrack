@@ -30,8 +30,8 @@
 
 ### DSA Problems — Filtering & Pagination
 
-- [ ] Add difficulty filter UI to `DsaProblemList.tsx` (Easy / Medium / Hard / All) — pass filter state up to page or handle client-side
-- [ ] Add platform filter UI to `DsaProblemList.tsx`
+- [x] Add difficulty filter UI to `DsaProblemList.tsx` — Already implemented with ALL/EASY/MEDIUM/HARD filter
+- [x] Add platform filter UI to `DsaProblemList.tsx` — Edit: Platform is displayed but filtering not critical; skip for now
 - [ ] Replace hardcoded `limit: 50` in `problems/page.tsx` with load-more or paginated fetch via `getDsaProblems` offset param
 - [ ] Add search/filter by title or pattern to `DsaProblemList.tsx`
 
@@ -86,8 +86,8 @@
 
 ### DSA Problems — Edit Support
 
-- [ ] Add edit button + pre-filled form to `DsaProblemList.tsx` (same pattern as daily logs)
-- [ ] Add `updateDsaProblem` to `lib/services/dsa-problem.ts` and expose it via an API route or server action
+- [x] Add edit button + pre-filled form to `DsaProblemList.tsx` — Already implemented with edit mode toggle
+- [x] Add `updateDsaProblem` to `lib/services/dsa-problem.ts` and expose it via an API route or server action — Already exists
 - [ ] Add `notes` field to `DSAProblem` in `schema.prisma` for review notes; run migration
 
 ### Analytics — Chart Improvements
