@@ -61,7 +61,7 @@
 - [ ] Add weekly summary email/generation (problems solved, streak status, weak areas)
 - [ ] Add productivity trends — compare current week vs previous
 - [x] Add difficulty distribution pie chart to dashboard
-- [ ] Add "consistency score" metric (logs per week / target)
+- [x] Add "consistency score" metric (logs per week / target)
 - [ ] Add peak productivity time analysis (if timestamp data available)
 
 ### Project Tracker Enhancements
