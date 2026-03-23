@@ -49,6 +49,11 @@ export default defineConfig({
       use: { ...devices["Desktop Safari"] },
       dependencies: ["setup"],
     },
+    {
+      name: "standalone",
+      use: { ...devices["Desktop Chrome"] },
+      testMatch: /.*(debug|validation).*\.spec\.ts/,
+    },
   ],
 
   /* Run local dev server before starting the tests */

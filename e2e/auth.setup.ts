@@ -1,53 +1,18 @@
 import { test as setup, expect } from "@playwright/test";
+import { TEST_USER } from "./global-setup";
 
 const authFile = "playwright/.auth/user.json";
 
-// Test user credentials
-export const TEST_USER = {
-  email: `test-${Date.now()}@example.com`,
-  password: "TestPassword123!",
-  name: "Test User",
-};
-
-setup("create account and login", async ({ page }) => {
-  // Navigate to signup page
-  await page.goto("/signup");
-
-  // Fill in registration form
-  await page.fill('input[name="email"]', TEST_USER.email);
-  await page.fill('input[name="password"]', TEST_USER.password);
-  await page.fill('input[name="confirmPassword"]', TEST_USER.password);
-
-  // Submit form
-  await page.click('button[type="submit"]');
-
-  // Wait for navigation to dashboard or confirmation
-  await page.waitForURL(/.*dashboard.*/, { timeout: 10000 });
-
-  // Verify we're logged in by checking for dashboard elements
-  await expect(page.locator("text=Dashboard")).toBeVisible();
-
-  // Save authentication state
-  await page.context().storageState({ path: authFile });
-});
-
 setup("authenticate", async ({ page }) => {
-  // Navigate to login page
   await page.goto("/login");
+  await page.waitForLoadState("load");
 
-  // Fill in login form
-  await page.fill('input[name="email"]', TEST_USER.email);
-  await page.fill('input[name="password"]', TEST_USER.password);
+  await page.locator("input#email").fill(TEST_USER.email);
+  await page.locator("input#password").fill(TEST_USER.password);
+  await page.getByRole("button", { name: /sign in/i }).click();
 
-  // Submit form
-  await page.click('button[type="submit"]');
+  await page.waitForURL(/.*dashboard.*/, { timeout: 30000 });
+  await expect(page.getByRole("heading", { name: /overview/i })).toBeVisible();
 
-  // Wait for navigation to dashboard
-  await page.waitForURL(/.*dashboard.*/, { timeout: 10000 });
-
-  // Verify we're logged in
-  await expect(page.locator("text=Dashboard")).toBeVisible();
-
-  // Save authentication state
   await page.context().storageState({ path: authFile });
 });

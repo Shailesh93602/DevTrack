@@ -152,6 +152,7 @@ export function DailyLogForm({ log }: DailyLogFormProps) {
         setTopics([]);
       }
 
+      // Trigger server component re-render with fresh data
       router.refresh();
     } catch (error) {
       setSubmitError(
