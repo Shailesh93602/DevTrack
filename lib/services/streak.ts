@@ -192,9 +192,18 @@ export async function calculateStreaks(userId: string): Promise<StreakStats> {
 
   const { current, next, progress } = getMilestonesForStreak(currentStreak);
 
+  // Persist longest streak if new record achieved
+  const effectiveLongest = Math.max(longest, currentStreak);
+  if (effectiveLongest > 0) {
+    await prisma.user.updateMany({
+      where: { id: userId, longestStreak: { lt: effectiveLongest } },
+      data: { longestStreak: effectiveLongest },
+    });
+  }
+
   return {
     currentStreak,
-    longestStreak: longest,
+    longestStreak: effectiveLongest,
     currentStreakWithFreeze,
     freezesAvailable: Math.max(0, 1 - freezesUsedThisWeek),
     freezesUsedThisWeek,
