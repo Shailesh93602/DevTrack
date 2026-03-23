@@ -12,6 +12,8 @@ export interface DashboardStats {
   }[];
   currentStreak: number;
   longestStreak: number;
+  totalProjects: number;
+  activeProjects: number;
 }
 
 export async function getDashboardStats(userId: string): Promise<DashboardStats> {
@@ -19,7 +21,7 @@ export async function getDashboardStats(userId: string): Promise<DashboardStats>
   const now = new Date();
   const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
 
-  const [totalProblemsResult, todaysLog, recentLogsResult, streakStats] =
+  const [totalProblemsResult, todaysLog, recentLogsResult, streakStats, totalProjectsResult, activeProjectsResult] =
     await Promise.all([
       prisma.dSAProblem.count({
         where: { userId },
@@ -47,6 +49,8 @@ export async function getDashboardStats(userId: string): Promise<DashboardStats>
         },
       }),
       calculateStreaks(userId),
+      prisma.project.count({ where: { userId } }),
+      prisma.project.count({ where: { userId, status: "IN_PROGRESS" } }),
     ]);
 
   const recentLogs = recentLogsResult.map((log) => ({
@@ -62,6 +66,8 @@ export async function getDashboardStats(userId: string): Promise<DashboardStats>
     recentLogs,
     currentStreak: streakStats.currentStreak,
     longestStreak: streakStats.longestStreak,
+    totalProjects: totalProjectsResult,
+    activeProjects: activeProjectsResult,
   };
 }
 
