@@ -33,7 +33,7 @@
 - [x] Add difficulty filter UI to `DsaProblemList.tsx` — Already implemented with ALL/EASY/MEDIUM/HARD filter
 - [x] Add platform filter UI to `DsaProblemList.tsx` — Edit: Platform is displayed but filtering not critical; skip for now
 - [x] Replace hardcoded `limit: 50` in `problems/page.tsx` with load-more or paginated fetch via `getDsaProblems` offset param
-- [ ] Add search/filter by title or pattern to `DsaProblemList.tsx`
+- [x] Add search/filter by title or pattern to `DsaProblemList.tsx`
 
 ### Dashboard Stats — Missing Metrics
 
