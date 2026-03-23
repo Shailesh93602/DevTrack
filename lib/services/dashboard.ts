@@ -19,6 +19,7 @@ export interface DashboardStats {
     medium: number;
     hard: number;
   };
+  consistencyScore: number;
 }
 
 export async function getDashboardStats(userId: string): Promise<DashboardStats> {
@@ -26,7 +27,7 @@ export async function getDashboardStats(userId: string): Promise<DashboardStats>
   const now = new Date();
   const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
 
-  const [totalProblemsResult, todaysLog, recentLogsResult, streakStats, totalProjectsResult, activeProjectsResult, easyCount, mediumCount, hardCount] =
+  const [totalProblemsResult, todaysLog, recentLogsResult, streakStats, totalProjectsResult, activeProjectsResult, easyCount, mediumCount, hardCount, consistencyScore] =
     await Promise.all([
       prisma.dSAProblem.count({
         where: { userId },
@@ -59,6 +60,7 @@ export async function getDashboardStats(userId: string): Promise<DashboardStats>
       prisma.dSAProblem.count({ where: { userId, difficulty: "EASY" } }),
       prisma.dSAProblem.count({ where: { userId, difficulty: "MEDIUM" } }),
       prisma.dSAProblem.count({ where: { userId, difficulty: "HARD" } }),
+      getConsistencyScore(userId),
     ]);
 
   const recentLogs = recentLogsResult.map((log) => ({
@@ -81,12 +83,56 @@ export async function getDashboardStats(userId: string): Promise<DashboardStats>
       medium: mediumCount,
       hard: hardCount,
     },
+    consistencyScore,
   };
 }
 
 export interface WeeklyDataPoint {
   week: string;
   count: number;
+}
+
+async function getConsistencyScore(userId: string): Promise<number> {
+  const weeksToCheck = 4;
+  const targetLogsPerWeek = 5;
+
+  const now = new Date();
+  const startDate = new Date(now);
+  startDate.setDate(startDate.getDate() - weeksToCheck * 7);
+
+  const logs = await prisma.dailyLog.findMany({
+    where: {
+      userId,
+      date: { gte: startDate },
+    },
+    select: { date: true },
+    orderBy: { date: "asc" },
+  });
+
+  // Group logs by week
+  const weekMap = new Map<number, number>();
+  for (const log of logs) {
+    const weekStart = new Date(log.date);
+    weekStart.setHours(0, 0, 0, 0);
+    weekStart.setDate(weekStart.getDate() - weekStart.getDay());
+    const weekKey = weekStart.getTime();
+    weekMap.set(weekKey, (weekMap.get(weekKey) ?? 0) + 1);
+  }
+
+  // Calculate score (0-100) based on weeks that met target
+  let weeksMet = 0;
+  for (let i = 0; i < weeksToCheck; i++) {
+    const checkDate = new Date(now);
+    checkDate.setDate(checkDate.getDate() - i * 7);
+    checkDate.setHours(0, 0, 0, 0);
+    checkDate.setDate(checkDate.getDate() - checkDate.getDay());
+    const logCount = weekMap.get(checkDate.getTime()) ?? 0;
+    if (logCount >= targetLogsPerWeek) {
+      weeksMet++;
+    }
+  }
+
+  return Math.round((weeksMet / weeksToCheck) * 100);
 }
 
 export async function getWeeklyProblemStats(userId: string, weeks: number = 8): Promise<WeeklyDataPoint[]> {
