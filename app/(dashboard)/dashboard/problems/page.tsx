@@ -9,8 +9,10 @@ import {
 } from "@/components/ui/card";
 import { createServerSupabaseClient } from "@/lib/auth/supabase-server";
 import { getDsaProblems } from "@/lib/services/dsa-problem";
+import { analyzePatterns } from "@/lib/services/pattern-intelligence";
 import { DsaProblemForm } from "@/components/dashboard/DsaProblemForm";
 import { PaginatedProblemList } from "@/components/dashboard/PaginatedProblemList";
+import { PatternIntelligencePanel } from "@/components/dashboard/PatternIntelligencePanel";
 import type { DsaProblem } from "@/types/dsa-problem";
 
 type RawProblem = {
@@ -45,6 +47,7 @@ export default async function DsaProblemsPage() {
     limit: 10,
     offset: 0,
   });
+  const patternAnalysis = await analyzePatterns(user.id);
 
   const serializedProblems = problems.map(serializeProblem);
 
@@ -69,13 +72,24 @@ export default async function DsaProblemsPage() {
         </CardContent>
       </Card>
 
-      <div>
-        <h3 className="text-foreground mb-4 text-sm font-semibold">Problems</h3>
-        <Card className="border-border rounded-lg border shadow-none">
-          <CardContent className="px-6 py-0">
-            <PaginatedProblemList initialProblems={serializedProblems} />
-          </CardContent>
-        </Card>
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+        <div className="lg:col-span-2">
+          <h3 className="text-foreground mb-4 text-sm font-semibold">
+            Problems
+          </h3>
+          <Card className="border-border rounded-lg border shadow-none">
+            <CardContent className="px-6 py-0">
+              <PaginatedProblemList initialProblems={serializedProblems} />
+            </CardContent>
+          </Card>
+        </div>
+
+        <div>
+          <h3 className="text-foreground mb-4 text-sm font-semibold">
+            Pattern Insights
+          </h3>
+          <PatternIntelligencePanel analysis={patternAnalysis} />
+        </div>
       </div>
     </div>
   );
