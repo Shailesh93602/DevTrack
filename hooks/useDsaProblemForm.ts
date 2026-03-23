@@ -7,7 +7,7 @@ interface DsaProblem {
   difficulty: "EASY" | "MEDIUM" | "HARD";
   pattern: string;
   platform: string;
-  notes?: string;
+  notes?: string | null;
 }
 
 const TITLE_MAX = 200;
@@ -15,7 +15,7 @@ const PATTERN_MAX = 100;
 const PLATFORM_MAX = 50;
 const NOTES_MAX = 1000;
 
-export function useDsaProblemForm(problem?: DsaProblem) {
+export function useDsaProblemForm(problem?: DsaProblem | null) {
   const router = useRouter();
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitSuccess, setSubmitSuccess] = useState(false);
@@ -51,10 +51,10 @@ export function useDsaProblemForm(problem?: DsaProblem) {
 export async function submitDsaProblem(
   values: {
     title: string;
-    difficulty: "EASY" | "MEDIUM" | "HARD";
+    difficulty: any;
     pattern: string;
     platform: string;
-    notes?: string;
+    notes?: string | null;
   },
   isEditing: boolean,
   problemId?: string

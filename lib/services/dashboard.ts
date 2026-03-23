@@ -26,6 +26,7 @@ export interface DashboardStats {
   consistencyScore: number;
   patternAnalysis: PatternAnalysis;
   insights: Insight[];
+  activityData: { date: string; count: number }[];
 }
 
 export async function getDashboardStats(userId: string): Promise<DashboardStats> {
@@ -166,12 +167,21 @@ export async function getDashboardStats(userId: string): Promise<DashboardStats>
     consistencyScore,
     patternAnalysis,
     insights,
+    activityData: logsForInsights.map(log => ({
+      date: log.date.toISOString().slice(0, 10),
+      count: 1 // for now, count 1 if log exists, or I could use problemsSolved if I fetched it
+    }))
   };
 }
 
 export interface WeeklyDataPoint {
   week: string;
   count: number;
+  easy: number;
+  medium: number;
+  hard: number;
+  weekStart?: Date;
+  weekEnd?: Date;
 }
 
 async function getConsistencyScore(userId: string): Promise<number> {
@@ -239,36 +249,78 @@ export async function getWeeklyProblemStats(userId: string, weeks: number = 8): 
     },
     select: {
       solvedAt: true,
+      difficulty: true,
     },
   });
 
-  const weekMap = new Map<string, number>();
+  // Helper to format date range label (e.g., "Jan 1-7", "Jan 8-14")
+  function formatWeekLabel(start: Date, end: Date): string {
+    const startMonth = start.toLocaleDateString("en-US", { month: "short" });
+    const endMonth = end.toLocaleDateString("en-US", { month: "short" });
+    const startDay = start.getDate();
+    const endDay = end.getDate();
 
-  for (let i = 0; i < weeks; i++) {
-    const weekStart = new Date(now);
-    weekStart.setDate(weekStart.getDate() - (weeks - 1 - i) * 7);
-    weekStart.setHours(0, 0, 0, 0);
-    const weekLabel = `Week ${i + 1}`;
-    weekMap.set(weekLabel, 0);
+    if (startMonth === endMonth) {
+      return `${startMonth} ${startDay}-${endDay}`;
+    }
+    return `${startMonth} ${startDay}-${endMonth} ${endDay}`;
   }
 
+  // Initialize week buckets with date range labels
+  const weekBuckets: Array<{ 
+    label: string; 
+    start: Date; 
+    end: Date; 
+    count: number;
+    easy: number;
+    medium: number;
+    hard: number;
+  }> = [];
+
+  for (let i = 0; i < weeks; i++) {
+    const weekEnd = new Date(now);
+    weekEnd.setDate(weekEnd.getDate() - i * 7);
+    weekEnd.setHours(23, 59, 59, 999);
+
+    const weekStart = new Date(weekEnd);
+    weekStart.setDate(weekStart.getDate() - 6);
+    weekStart.setHours(0, 0, 0, 0);
+
+    weekBuckets.unshift({
+      label: formatWeekLabel(weekStart, weekEnd),
+      start: weekStart,
+      end: weekEnd,
+      count: 0,
+      easy: 0,
+      medium: 0,
+      hard: 0,
+    });
+  }
+
+  // Count problems per week
   for (const problem of problems) {
     const solvedDate = new Date(problem.solvedAt);
-    const diffTime = now.getTime() - solvedDate.getTime();
-    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-    const weekIndex = Math.floor(diffDays / 7);
 
-    if (weekIndex >= 0 && weekIndex < weeks) {
-      const weekLabel = `Week ${weeks - weekIndex}`;
-      weekMap.set(weekLabel, (weekMap.get(weekLabel) ?? 0) + 1);
+    // Find which week bucket this problem belongs to
+    for (const bucket of weekBuckets) {
+      if (solvedDate >= bucket.start && solvedDate <= bucket.end) {
+        bucket.count++;
+        if (problem.difficulty === "EASY") bucket.easy++;
+        if (problem.difficulty === "MEDIUM") bucket.medium++;
+        if (problem.difficulty === "HARD") bucket.hard++;
+        break;
+      }
     }
   }
 
-  const result: WeeklyDataPoint[] = [];
-  for (let i = 0; i < weeks; i++) {
-    const weekLabel = `Week ${i + 1}`;
-    result.push({ week: weekLabel, count: weekMap.get(weekLabel) ?? 0 });
-  }
-
-  return result;
+  // Map to WeeklyDataPoint format
+  return weekBuckets.map((bucket) => ({
+    week: bucket.label,
+    count: bucket.count,
+    easy: bucket.easy,
+    medium: bucket.medium,
+    hard: bucket.hard,
+    weekStart: bucket.start,
+    weekEnd: bucket.end,
+  }));
 }

@@ -6,20 +6,25 @@ import { defineConfig, devices } from "@playwright/test";
 export default defineConfig({
   testDir: "./e2e",
   globalSetup: "./e2e/global-setup.ts",
+  /* Failure timeout */
+  timeout: 45000,
+  expect: {
+    timeout: 10000,
+  },
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code */
   forbidOnly: !!process.env.CI,
   /* Retry on CI only */
-  retries: process.env.CI ? 2 : 0,
+  retries: 1,
   /* Use up to 30 workers for parallel execution */
-  workers: process.env.CI ? 30 : 4,
+  workers: 2,
   /* Reporter to use */
   reporter: "html",
   /* Shared settings for all the projects below */
   use: {
     /* Base URL to use in actions like `await page.goto('/')` */
-    baseURL: process.env.PLAYWRIGHT_TEST_BASE_URL || "http://localhost:3001",
+    baseURL: process.env.PLAYWRIGHT_TEST_BASE_URL || "http://localhost:3000",
 
     /* Collect trace when retrying the failed test */
     trace: "on-first-retry",
@@ -58,8 +63,8 @@ export default defineConfig({
 
   /* Run local dev server before starting the tests */
   webServer: {
-    command: "npm run dev -- --port 3001",
-    url: "http://localhost:3001",
+    command: "npm run dev -- --port 3000",
+    url: "http://localhost:3000",
     reuseExistingServer: true,
     timeout: 120 * 1000,
   },

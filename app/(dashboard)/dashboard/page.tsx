@@ -11,6 +11,8 @@ import {
 import { WeeklyProgressChart } from "@/components/dashboard/WeeklyProgressChart";
 import { InsightsList } from "@/components/dashboard/InsightsList";
 import { PatternCard } from "@/components/dashboard/PatternCard";
+import { DifficultyDistribution } from "@/components/dashboard/DifficultyDistribution";
+import { ActivityHeatmap } from "@/components/dashboard/ActivityHeatmap";
 import { formatLogDate } from "@/lib/utils/formatters";
 import { BookOpen } from "lucide-react";
 
@@ -58,14 +60,20 @@ export default async function DashboardPage() {
         />
       </div>
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-4">
         <div className="space-y-4 lg:col-span-2">
           <h3 className="text-foreground text-sm font-semibold">
             Weekly Progress
           </h3>
           <WeeklyProgressChart data={weeklyStats} />
         </div>
-        <div className="space-y-4">
+        <div className="space-y-4 lg:col-span-1">
+          <h3 className="text-foreground text-sm font-semibold">
+            Difficulty
+          </h3>
+          <DifficultyDistribution data={stats.difficultyDistribution} />
+        </div>
+        <div className="space-y-4 lg:col-span-1">
           <h3 className="text-foreground text-sm font-semibold">Insights</h3>
           <InsightsList insights={stats.insights} />
         </div>
@@ -92,6 +100,11 @@ export default async function DashboardPage() {
             </CardContent>
           </Card>
         </div>
+      </div>
+
+      <div className="space-y-4">
+        <h3 className="text-foreground text-sm font-semibold">Activity</h3>
+        <ActivityHeatmap data={stats.activityData} />
       </div>
 
       <div className="space-y-4">

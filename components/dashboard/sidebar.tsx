@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const navItems = [
+export const navItems = [
   { label: "Overview", href: "/dashboard", icon: LayoutDashboard },
   { label: "DSA Problems", href: "/dashboard/problems", icon: Code2 },
   { label: "Projects", href: "/dashboard/projects", icon: FolderKanban },
@@ -19,21 +19,22 @@ const navItems = [
   { label: "Settings", href: "/dashboard/settings", icon: Settings },
 ];
 
-export function Sidebar() {
+export function SidebarContent({ className, onItemClick }: { className?: string, onItemClick?: () => void }) {
   const pathname = usePathname();
 
   return (
-    <aside className="w-56 shrink-0 border-r border-border bg-background">
+    <div className={cn("flex h-full flex-col", className)}>
       <div className="flex h-14 items-center border-b border-border px-4">
         <span className="text-sm font-semibold text-foreground">DevTrack</span>
       </div>
 
-      <nav className="p-2">
+      <nav className="flex-1 overflow-y-auto p-2">
         <ul className="space-y-0.5">
           {navItems.map(({ label, href, icon: Icon }) => (
             <li key={href}>
               <Link
                 href={href}
+                onClick={onItemClick}
                 className={cn(
                   "flex items-center gap-2.5 rounded-md px-3 py-2 text-sm transition-colors",
                   pathname === href
@@ -48,6 +49,14 @@ export function Sidebar() {
           ))}
         </ul>
       </nav>
+    </div>
+  );
+}
+
+export function Sidebar() {
+  return (
+    <aside className="hidden h-full w-56 shrink-0 border-r border-border bg-background lg:block">
+      <SidebarContent />
     </aside>
   );
 }

@@ -5,10 +5,13 @@ test.use({ storageState: "playwright/.auth/user.json" });
 test.describe("Project Milestones", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/dashboard/projects");
-    await expect(page.getByRole("heading", { name: "Projects", exact: true })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Projects", level: 2 })).toBeVisible();
   });
 
   test("should display milestones for a project", async ({ page }) => {
+    // Wait for page load
+    await expect(page.locator("text=Your Projects")).toBeVisible();
+
     // Create a project with milestones
     await page.fill('input#name', "Milestone Test Project");
     await page.click('button[type="submit"]');

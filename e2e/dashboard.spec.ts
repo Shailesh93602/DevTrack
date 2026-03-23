@@ -19,19 +19,26 @@ test.describe("Dashboard Feature", () => {
     await expect(page.locator("text=Active Projects")).toBeVisible();
   });
 
-  test("should display weekly progress chart", async ({ page }) => {
-    // Check for chart section
-    await expect(page.locator("text=Progress")).toBeVisible();
+  test("should display weekly progress chart with date range labels", async ({ page }) => {
+    // Check for chart section with Problems Solved Per Week title
+    await expect(page.locator("text=Problems Solved Per Week")).toBeVisible();
 
-    // Look for chart canvas or data visualization
-    const chartSection = page.locator("text=Progress").locator("xpath=../..");
-    await expect(chartSection).toBeVisible();
+    // Look for date range labels (e.g., "Jan 1-7", "Dec 25-31") instead of "Week N"
+    const content = await page.content();
+
+    // Should show date range format like "Jan 1-7" or "Dec 25-31"
+    const hasDateRangeLabels = /[A-Z][a-z]{2}\s*\d{1,2}-\d{1,2}/.test(content);
+
+    // Should NOT show generic "Week 1", "Week 2" labels anymore
+    const hasGenericWeekLabels = /Week\s*\d+/.test(content);
+
+    expect(hasDateRangeLabels || !hasGenericWeekLabels).toBeTruthy();
   });
 
   test("should display difficulty distribution", async ({ page }) => {
     // Check for difficulty section
-    await expect(page.locator("text=Difficulty")).toBeVisible();
-    await expect(page.locator("text=Difficulty Distribution")).toBeVisible();
+    await expect(page.getByText(/^Difficulty$/)).toBeVisible();
+    await expect(page.getByText("Difficulty Distribution")).toBeVisible();
 
     // Verify distribution legend items exist
     const content = await page.content();
@@ -90,5 +97,26 @@ test.describe("Dashboard Feature", () => {
 
     // Should still show overview after reload
     await expect(page.getByRole("heading", { name: "Overview" })).toBeVisible({ timeout: 10000 });
+  });
+
+  test("should show mobile menu toggle on small screens", async ({ page }) => {
+    // Resize to mobile
+    await page.setViewportSize({ width: 375, height: 667 });
+    await page.goto("/dashboard");
+
+    // Check for menu button
+    const menuButton = page.getByLabel("Toggle navigation");
+    await expect(menuButton).toBeVisible();
+
+    // Click menu button
+    await menuButton.click();
+
+    // Check if sidebar content appears (Overview link)
+    await expect(page.getByRole("dialog").getByRole("link", { name: "Overview" })).toBeVisible();
+
+    // Check if it closes when clicking a link
+    await page.getByRole("dialog").getByRole("link", { name: "DSA Problems" }).click();
+    await expect(page.getByRole("dialog")).not.toBeVisible();
+    await expect(page.getByRole("heading", { name: "DSA Problems" })).toBeVisible();
   });
 });

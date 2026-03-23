@@ -9,6 +9,9 @@ test.describe("Pattern Intelligence on DSA Problems", () => {
   });
 
   test("should display pattern insights panel", async ({ page }) => {
+    // Wait for the panel to be visible to avoid checking skeleton content
+    await expect(page.locator("text=Pattern Insights")).toBeVisible({ timeout: 10000 });
+
     // Look for Pattern Insights section
     const content = await page.content();
     const hasPatternInsights =

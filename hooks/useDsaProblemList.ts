@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import type { DsaProblem } from "@/components/dashboard/DsaProblemList";
+import { type DsaProblem } from "@/types";
 
 export function useDsaProblemList() {
   const router = useRouter();

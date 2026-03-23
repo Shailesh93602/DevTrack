@@ -16,9 +16,13 @@ import {
 } from "@/hooks/useDailyLogForm";
 import type { DailyLogFormProps } from "@/types";
 import { createDailyLogSchema } from "@/lib/validations";
-import type { z } from "zod";
 
-type FormValues = z.infer<typeof createDailyLogSchema>;
+type FormValues = {
+  date: string;
+  problemsSolved: number;
+  topics: string[];
+  notes?: string | null;
+};
 
 export function DailyLogForm({ log }: DailyLogFormProps) {
   const {
@@ -44,18 +48,19 @@ export function DailyLogForm({ log }: DailyLogFormProps) {
     control,
     reset,
     formState: { errors, isSubmitting },
-  } = useForm<FormValues>({
+  } = useForm<any>({
     resolver: zodResolver(createDailyLogSchema),
     defaultValues: {
       date: log ? toDateInputValue(log.date) : getTodayString(),
       problemsSolved: log?.problemsSolved ?? 0,
+      topics: log?.topics ?? [],
       notes: log?.notes ?? "",
     },
   });
 
   const notes = useWatch({ control, name: "notes" }) ?? "";
 
-  async function onSubmit(values: FormValues) {
+  async function onSubmit(values: any) {
     try {
       await submitDailyLog(values, topics, isEditing, log?.id);
 
@@ -105,7 +110,7 @@ export function DailyLogForm({ log }: DailyLogFormProps) {
               role="alert"
               className="text-destructive text-xs"
             >
-              {errors.date.message}
+              {errors.date?.message as string}
             </p>
           )}
         </div>
@@ -128,7 +133,7 @@ export function DailyLogForm({ log }: DailyLogFormProps) {
               role="alert"
               className="text-destructive text-xs"
             >
-              {errors.problemsSolved.message}
+              {errors.problemsSolved?.message as string}
             </p>
           )}
         </div>
@@ -213,7 +218,7 @@ export function DailyLogForm({ log }: DailyLogFormProps) {
             role="alert"
             className="text-destructive text-xs"
           >
-            {errors.notes.message}
+            {errors.notes?.message as string}
           </p>
         )}
       </div>

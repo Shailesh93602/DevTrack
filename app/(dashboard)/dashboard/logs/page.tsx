@@ -11,8 +11,8 @@ import { createServerSupabaseClient } from "@/lib/auth/supabase-server";
 import { getDailyLogs } from "@/lib/services/daily-log";
 import {
   DailyLogForm,
-  type SerializedDailyLog,
 } from "@/components/dashboard/DailyLogForm";
+import { type SerializedDailyLog } from "@/types";
 import { DailyLogList } from "@/components/dashboard/DailyLogList";
 
 type RawLog = {

@@ -70,7 +70,8 @@ export async function submitDailyLog(
   values: {
     date: string;
     problemsSolved: number;
-    notes?: string;
+    topics: string[];
+    notes?: string | null;
   },
   topics: string[],
   isEditing: boolean,

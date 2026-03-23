@@ -3,7 +3,6 @@
 import { useMemo } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -15,7 +14,6 @@ import { dsaProblemSchema } from "@/lib/validations";
 import { DEFAULT_VALUES } from "@/constants";
 import { Textarea } from "@/components/ui/textarea";
 
-type FormValues = z.infer<typeof dsaProblemSchema>;
 
 export function DsaProblemForm({ problem, onSuccess }: DsaProblemFormProps) {
   const {
@@ -31,7 +29,7 @@ export function DsaProblemForm({ problem, onSuccess }: DsaProblemFormProps) {
     NOTES_MAX,
   } = useDsaProblemForm(problem);
 
-  const defaultValues: FormValues = problem
+  const defaultValues: any = problem
     ? { ...DEFAULT_VALUES.DSA_PROBLEM, ...problem, notes: problem.notes ?? "" }
     : DEFAULT_VALUES.DSA_PROBLEM;
 
@@ -42,7 +40,7 @@ export function DsaProblemForm({ problem, onSuccess }: DsaProblemFormProps) {
     control,
     reset,
     formState: { errors, isSubmitting },
-  } = useForm<FormValues>({
+  } = useForm<any>({
     resolver: zodResolver(dsaProblemSchema),
     defaultValues,
   });
@@ -60,7 +58,7 @@ export function DsaProblemForm({ problem, onSuccess }: DsaProblemFormProps) {
     return isEditing ? "Save Changes" : "Add Problem";
   }, [isSubmitting, isEditing]);
 
-  async function onSubmit(values: FormValues) {
+  async function onSubmit(values: any) {
     try {
       await submitDsaProblem(values, isEditing, problem?.id);
 
@@ -101,7 +99,7 @@ export function DsaProblemForm({ problem, onSuccess }: DsaProblemFormProps) {
             role="alert"
             className="text-destructive text-xs"
           >
-            {errors.title.message}
+            {errors.title?.message as string}
           </p>
         )}
       </div>
@@ -112,7 +110,7 @@ export function DsaProblemForm({ problem, onSuccess }: DsaProblemFormProps) {
           id="problem-difficulty"
           value={difficultyValue}
           onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-            setValue("difficulty", e.target.value as FormValues["difficulty"])
+            setValue("difficulty", e.target.value as any)
           }
           className={cn(
             "border-input flex h-9 w-full rounded-md border bg-transparent px-3 py-1 text-sm shadow-sm transition-colors",
@@ -136,7 +134,7 @@ export function DsaProblemForm({ problem, onSuccess }: DsaProblemFormProps) {
             role="alert"
             className="text-destructive text-xs"
           >
-            {errors.difficulty.message}
+            {errors.difficulty?.message as string}
           </p>
         )}
       </div>
@@ -163,7 +161,7 @@ export function DsaProblemForm({ problem, onSuccess }: DsaProblemFormProps) {
             role="alert"
             className="text-destructive text-xs"
           >
-            {errors.pattern.message}
+            {errors.pattern?.message as string}
           </p>
         )}
       </div>
@@ -190,7 +188,7 @@ export function DsaProblemForm({ problem, onSuccess }: DsaProblemFormProps) {
             role="alert"
             className="text-destructive text-xs"
           >
-            {errors.platform.message}
+            {errors.platform?.message as string}
           </p>
         )}
       </div>
@@ -217,7 +215,7 @@ export function DsaProblemForm({ problem, onSuccess }: DsaProblemFormProps) {
             role="alert"
             className="text-destructive text-xs"
           >
-            {errors.notes.message}
+            {errors.notes?.message as string}
           </p>
         )}
       </div>

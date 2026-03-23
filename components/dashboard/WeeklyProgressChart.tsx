@@ -7,13 +7,15 @@ import {
   YAxis,
   Tooltip,
   ResponsiveContainer,
-  Cell,
 } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface WeeklyDataPoint {
   week: string;
   count: number;
+  easy: number;
+  medium: number;
+  hard: number;
 }
 
 interface WeeklyProgressChartProps {
@@ -21,7 +23,6 @@ interface WeeklyProgressChartProps {
 }
 
 export function WeeklyProgressChart({ data }: WeeklyProgressChartProps) {
-  const maxCount = Math.max(...data.map((d) => d.count), 1);
 
   return (
     <Card className="rounded-lg border border-border shadow-none">
@@ -56,18 +57,24 @@ export function WeeklyProgressChart({ data }: WeeklyProgressChartProps) {
                 }}
                 cursor={{ fill: "hsl(var(--muted))", opacity: 0.4 }}
               />
-              <Bar dataKey="count" radius={[4, 4, 0, 0]}>
-                {data.map((entry, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={
-                      entry.count === maxCount
-                        ? "hsl(var(--primary))"
-                        : "hsl(var(--muted-foreground) / 0.5)"
-                    }
-                  />
-                ))}
-              </Bar>
+              <Bar 
+                dataKey="easy" 
+                stackId="a" 
+                fill="oklch(0.70 0.1 142)" // green
+                radius={[0, 0, 0, 0]} 
+              />
+              <Bar 
+                dataKey="medium" 
+                stackId="a" 
+                fill="oklch(0.75 0.12 70)" // amber
+                radius={[0, 0, 0, 0]} 
+              />
+              <Bar 
+                dataKey="hard" 
+                stackId="a" 
+                fill="oklch(0.65 0.18 27)" // red
+                radius={[4, 4, 0, 0]} 
+              />
             </BarChart>
           </ResponsiveContainer>
         </div>

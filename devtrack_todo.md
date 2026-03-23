@@ -71,25 +71,25 @@
 
 - [x] Add edit support to `DailyLogList.tsx`
 - [x] Add `problemsSolved` to the log list row display
-- [ ] Add a date range filter to the logs list (e.g., last 7 days / 30 days / all)
-- [ ] Cap logs list to 10 entries with a "Load more" control
+- [x] Add a date range filter to the logs list (e.g., last 7 days / 30 days / all)
+- [x] Cap logs list to 10 entries with a "Load more" control
 
 ### DSA Problems — Edit Support
 
 - [x] Add edit button + pre-filled form to `DsaProblemList.tsx`
 - [x] Add `updateDsaProblem` to `lib/services/dsa-problem.ts`
-- [ ] Add `notes` field to `DSAProblem` for review notes
+- [x] Add `notes` field to `DSAProblem` for review notes
 
 ### Analytics — Chart Improvements
 
-- [ ] Replace `Week 1 … Week N` labels with actual date ranges
-- [ ] Add difficulty breakdown bar chart per week
-- [ ] Add daily log activity heatmap (GitHub-style) for last 90 days
+- [x] Replace `Week 1 … Week N` labels with actual date ranges
+- [x] Add difficulty breakdown bar chart per week
+- [x] Add daily log activity heatmap (GitHub-style) for last 90 days
 
 ### Navigation & UX
 
 - [x] Add active state highlight to sidebar links
-- [ ] Add mobile-responsive sidebar (collapsible drawer)
+- [x] Add mobile-responsive sidebar (collapsible drawer)
 - [ ] Add loading skeletons to dashboard, logs, and problems pages
 
 ---
@@ -99,27 +99,27 @@
 ### Insights Enhancements
 
 - [ ] Add weekly summary email/generation
-- [ ] Add productivity trends (compare current week vs previous)
-- [ ] Add peak productivity time analysis
+- [x] Add productivity trends (compare current week vs previous)
+- [x] Add peak productivity time analysis
 
 ### Code Quality
 
-- [ ] Extract `formatLogDate` from `dashboard/page.tsx` into `lib/utils.ts`
-- [ ] Add `error.tsx` boundary pages for dashboard routes
-- [ ] Add `not-found.tsx` for the dashboard group
+- [x] Extract `formatLogDate` from `dashboard/page.tsx` into `lib/utils.ts`
+- [x] Add `error.tsx` boundary pages for dashboard routes
+- [x] Add `not-found.tsx` for the dashboard group
 - [ ] Audit all Prisma queries for missing `userId` scoping
 
 ### Auth Improvements
 
 - [ ] Add password reset flow
 - [ ] Add email confirmation handling page
-- [ ] Add `AuthForm` loading state disable on submit
+- [x] Add `AuthForm` loading state disable on submit
 
 ### Developer Experience
 
 - [ ] Add `prisma migrate dev` to the project README quickstart
-- [ ] Add `.env.example` values documentation
-- [ ] Set up ESLint rule to flag `any` usage
+- [x] Add `.env.example` values documentation
+- [x] Set up ESLint rule to flag `any` usage
 
 ---
 
@@ -137,7 +137,7 @@
 
 - [x] **`lib/services/insights.ts:76-106`** — Deduplicated streak calculation by importing `calculateStreakFromDates` from `@/lib/services/streak.ts`.
 - [x] **`lib/services/dashboard.ts:126-127`** — Fixed timezone bug in `getConsistencyScore` by using UTC methods (`setUTCDate`, `Date.UTC`).
-- [ ] **`lib/utils/formatters.ts:3-4`** — `formatLogDate` uses `setHours(0, 0, 0, 0)` (local time) to compare dates stored as `@db.Date` (UTC). Will misclassify "Today"/"Yesterday" near midnight in non-UTC timezones. Use UTC methods.
+- [x] **`lib/utils/formatters.ts:3-4`** — Already using UTC methods for `formatLogDate`
 
 ### API Rule Violations
 
