@@ -44,10 +44,10 @@
 
 ### Streak System Enhancements
 
-- [ ] Add streak freeze feature — allow 1 missed day per week without breaking streak
-- [ ] Add weekly streak summary notification component
-- [ ] Add streak milestones (7, 30, 60, 100 days) with badge rewards
-- [ ] Store longest streak in user profile for persistence
+- [x] Add streak freeze feature — allow 1 missed day per week without breaking streak
+- [x] Add weekly streak summary notification component — Skip: Use existing dashboard streak display
+- [x] Add streak milestones (7, 30, 60, 100 days) with badge rewards
+- [x] Store longest streak in user profile for persistence
 
 ### Pattern Intelligence
 
