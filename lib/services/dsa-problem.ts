@@ -20,7 +20,10 @@ export async function createDsaProblem(
 ) {
   return prisma.dSAProblem.create({
     data: {
-      ...data,
+      title: data.title,
+      difficulty: data.difficulty as Difficulty,
+      pattern: data.pattern,
+      platform: data.platform,
       userId,
       solvedAt: new Date(),
     },
@@ -34,7 +37,7 @@ export async function getDsaProblems(userId: string, params: DsaProblemQueryPara
   const where: Prisma.DSAProblemWhereInput = { userId };
 
   if (difficulty) {
-    where.difficulty = difficulty;
+    where.difficulty = difficulty as Difficulty;
   }
 
   if (pattern) {

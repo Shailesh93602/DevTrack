@@ -45,7 +45,7 @@ export function ProjectForm({ project, onSuccess }: ProjectFormProps) {
     watch,
     reset,
     formState: { errors },
-  } = useForm<CreateProjectInput>({
+  } = useForm({
     resolver: zodResolver(createProjectSchema),
     defaultValues: {
       name: project?.name ?? "",
@@ -78,7 +78,8 @@ export function ProjectForm({ project, onSuccess }: ProjectFormProps) {
     );
   }
 
-  async function onSubmit(data: CreateProjectInput) {
+  async function onSubmit(data: unknown) {
+    const projectData = data as CreateProjectInput;
     setIsSubmitting(true);
     setSubmitError(null);
 
@@ -89,7 +90,7 @@ export function ProjectForm({ project, onSuccess }: ProjectFormProps) {
       const response = await fetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: JSON.stringify(projectData),
       });
 
       if (!response.ok) {
