@@ -9,6 +9,7 @@ import {
   getWeeklyProblemStats,
 } from "@/lib/services/dashboard";
 import { WeeklyProgressChart } from "@/components/dashboard/WeeklyProgressChart";
+import { DifficultyDistribution } from "@/components/dashboard/DifficultyDistribution";
 import { formatLogDate } from "@/lib/utils/formatters";
 
 export default async function DashboardPage() {
@@ -74,9 +75,19 @@ export default async function DashboardPage() {
         />
       </div>
 
-      <div>
-        <h3 className="text-foreground mb-4 text-sm font-semibold">Progress</h3>
-        <WeeklyProgressChart data={weeklyStats} />
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+        <div className="lg:col-span-2">
+          <h3 className="text-foreground mb-4 text-sm font-semibold">
+            Progress
+          </h3>
+          <WeeklyProgressChart data={weeklyStats} />
+        </div>
+        <div>
+          <h3 className="text-foreground mb-4 text-sm font-semibold">
+            Difficulty
+          </h3>
+          <DifficultyDistribution {...stats.difficultyDistribution} />
+        </div>
       </div>
 
       <div>
