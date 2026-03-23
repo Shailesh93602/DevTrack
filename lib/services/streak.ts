@@ -6,6 +6,40 @@ export interface StreakStats {
   currentStreakWithFreeze: number;
   freezesAvailable: number;
   freezesUsedThisWeek: number;
+  currentMilestone: StreakMilestone | null;
+  nextMilestone: StreakMilestone | null;
+  progressToNext: number;
+}
+
+export interface StreakMilestone {
+  days: number;
+  name: string;
+  badge: string;
+  description: string;
+}
+
+const MILESTONES: StreakMilestone[] = [
+  { days: 7, name: "Week Warrior", badge: "🎯", description: "7-day streak" },
+  { days: 30, name: "Monthly Master", badge: "🔥", description: "30-day streak" },
+  { days: 60, name: "Consistency King", badge: "⚡", description: "60-day streak" },
+  { days: 100, name: "Century Champion", badge: "👑", description: "100-day streak" },
+];
+
+function getMilestonesForStreak(streak: number): { current: StreakMilestone | null; next: StreakMilestone | null; progress: number } {
+  const achieved = MILESTONES.filter((m) => streak >= m.days);
+  const current = achieved.length > 0 ? achieved[achieved.length - 1] : null;
+  const nextIndex = achieved.length;
+  const next = nextIndex < MILESTONES.length ? MILESTONES[nextIndex] : null;
+
+  let progress = 0;
+  if (next) {
+    const prevDays = current?.days ?? 0;
+    progress = Math.min(100, Math.round(((streak - prevDays) / (next.days - prevDays)) * 100));
+  } else if (current) {
+    progress = 100;
+  }
+
+  return { current, next, progress };
 }
 
 function toUtcDateString(date: Date): string {
@@ -100,6 +134,9 @@ export async function calculateStreaks(userId: string): Promise<StreakStats> {
       currentStreakWithFreeze: 0,
       freezesAvailable: 1,
       freezesUsedThisWeek: 0,
+      currentMilestone: null,
+      nextMilestone: MILESTONES[0] ?? null,
+      progressToNext: 0,
     };
   }
 
@@ -153,11 +190,16 @@ export async function calculateStreaks(userId: string): Promise<StreakStats> {
     return !isNextDay(prevDate, d);
   }).length;
 
+  const { current, next, progress } = getMilestonesForStreak(currentStreak);
+
   return {
     currentStreak,
     longestStreak: longest,
     currentStreakWithFreeze,
     freezesAvailable: Math.max(0, 1 - freezesUsedThisWeek),
     freezesUsedThisWeek,
+    currentMilestone: current,
+    nextMilestone: next,
+    progressToNext: progress,
   };
 }
