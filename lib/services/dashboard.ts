@@ -15,8 +15,9 @@ export interface DashboardStats {
 }
 
 export async function getDashboardStats(userId: string): Promise<DashboardStats> {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  // Use UTC date to match @db.Date column storage (timezone-safe)
+  const now = new Date();
+  const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
 
   const [totalProblemsResult, todaysLog, recentLogsResult, streakStats] =
     await Promise.all([

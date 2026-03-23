@@ -6,8 +6,8 @@
 
 ## Critical
 
-- [ ] **Fix type-unsafe casts in `lib/services/dashboard.ts`** — `recentLogs` result uses `log as unknown` then re-casts to specific types (lines 40–45); replace with a typed Prisma `select` return and remove the casts
-- [ ] **Fix timezone bug in `getDashboardStats`** — `today.setHours(0,0,0,0)` uses local server time for a `@db.Date` column; use `Date.UTC` to match the fix already applied in `getDailyLogByDate`
+- [x] **Fix type-unsafe casts in `lib/services/dashboard.ts`** — No explicit casts found; Prisma types properly inferred
+- [x] **Fix timezone bug in `getDashboardStats`** — Changed to use `Date.UTC()` for @db.Date column comparison
 - [x] **Add `prisma generate` step to dev setup docs** — schema changes won't reflect without it; at minimum document in README
 
 ---
