@@ -12,7 +12,7 @@ export const createDailyLogSchema = dailyLogSchema;
 export const updateDailyLogSchema = dailyLogSchema.partial();
 
 export const dailyLogIdSchema = z.object({
-  id: z.string().cuid(),
+  id: z.string().uuid(),
 });
 
 export const dailyLogQuerySchema = z.object({

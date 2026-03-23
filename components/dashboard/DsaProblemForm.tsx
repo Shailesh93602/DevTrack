@@ -240,17 +240,22 @@ export function DsaProblemForm({ problem, onSuccess }: DsaProblemFormProps) {
         </output>
       )}
 
-      <div className="flex justify-end">
-        <Button type="submit" disabled={isSubmitting}>
-          {isSubmitting
-            ? isEditing
-              ? "Saving…"
-              : "Adding…"
-            : isEditing
-              ? "Save Changes"
-              : "Add Problem"}
-        </Button>
-      </div>
+      {(() => {
+        const submitLabel = (() => {
+          if (isSubmitting) {
+            return isEditing ? "Saving…" : "Adding…";
+          }
+          return isEditing ? "Save Changes" : "Add Problem";
+        })();
+
+        return (
+          <div className="flex justify-end">
+            <Button type="submit" disabled={isSubmitting}>
+              {submitLabel}
+            </Button>
+          </div>
+        );
+      })()}
     </form>
   );
 }
