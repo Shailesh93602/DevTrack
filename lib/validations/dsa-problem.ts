@@ -1,11 +1,10 @@
 import { z } from "zod";
-import { Difficulty } from "@prisma/client";
 
-export const difficultyValues = Object.values(Difficulty) as [string, ...string[]];
+const DIFFICULTY_LITERALS = ["EASY", "MEDIUM", "HARD"] as const;
 
 export const dsaProblemSchema = z.object({
   title: z.string().trim().min(1).max(200),
-  difficulty: z.enum(difficultyValues),
+  difficulty: z.enum(DIFFICULTY_LITERALS),
   pattern: z.string().trim().min(1).max(100),
   platform: z.string().trim().min(1).max(50),
 });
@@ -19,7 +18,7 @@ export const dsaProblemIdSchema = z.object({
 });
 
 export const dsaProblemQuerySchema = z.object({
-  difficulty: z.enum(difficultyValues).optional(),
+  difficulty: z.enum(DIFFICULTY_LITERALS).optional(),
   pattern: z.string().optional(),
   platform: z.string().optional(),
   limit: z.coerce.number().int().min(1).max(100).default(50),

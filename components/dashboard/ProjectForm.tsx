@@ -1,9 +1,8 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useMemo } from "react";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -15,107 +14,71 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { X } from "lucide-react";
-import type { CreateProjectInput } from "@/lib/validations/project";
-import { createProjectSchema } from "@/lib/validations/project";
+import { useProjectForm, submitProject } from "@/hooks/useProjectForm";
+import type { ProjectFormProps } from "@/types";
+import { projectFormSchema } from "@/lib/validations";
+import { DEFAULT_VALUES } from "@/constants";
+import type { z } from "zod";
 
-interface ProjectFormProps {
-  project?: {
-    id: string;
-    name: string;
-    description: string | null;
-    status: "IN_PROGRESS" | "COMPLETED" | "ON_HOLD";
-    dueDate: string | null;
-    techStack: string[];
-  };
-  onSuccess?: () => void;
-}
+type FormValues = z.infer<typeof projectFormSchema>;
 
 export function ProjectForm({ project, onSuccess }: ProjectFormProps) {
-  const router = useRouter();
-  const [techInput, setTechInput] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitError, setSubmitError] = useState<string | null>(null);
-
-  const isEditing = !!project;
+  const {
+    techInput,
+    isSubmitting,
+    submitError,
+    isEditing,
+    setTechInput,
+    setIsSubmitting,
+    setSubmitError,
+    addTech,
+    removeTech,
+    clearSubmitError,
+    router,
+  } = useProjectForm(project);
 
   const {
     register,
     handleSubmit,
     setValue,
-    watch,
+    control,
     reset,
     formState: { errors },
-  } = useForm({
-    resolver: zodResolver(createProjectSchema),
-    defaultValues: {
-      name: project?.name ?? "",
-      description: project?.description ?? undefined,
-      status: project?.status ?? "IN_PROGRESS",
-      dueDate: project?.dueDate ? new Date(project.dueDate) : undefined,
-      techStack: project?.techStack ?? [],
-    },
+  } = useForm<FormValues>({
+    resolver: zodResolver(projectFormSchema),
+    defaultValues: project
+      ? {
+          name: project.name,
+          description: project.description ?? undefined,
+          status: project.status,
+          dueDate: project.dueDate ? new Date(project.dueDate) : undefined,
+          techStack: project.techStack,
+        }
+      : DEFAULT_VALUES.PROJECT,
   });
 
-  const techStack = watch("techStack") ?? [];
+  const techStack = useWatch({ control, name: "techStack" }) ?? [];
+  const statusValue = useWatch({ control, name: "status" });
 
-  const buttonText = (() => {
+  const submitButtonText = useMemo(() => {
     if (isSubmitting) {
       return isEditing ? "Updating..." : "Creating...";
     }
     return isEditing ? "Update Project" : "Create Project";
-  })();
+  }, [isSubmitting, isEditing]);
 
-  function addTech() {
-    const trimmed = techInput.trim();
-    if (!trimmed) return;
-    if (techStack.includes(trimmed)) {
-      setTechInput("");
-      return;
-    }
-    if (techStack.length >= 20) return;
-    setValue("techStack", [...techStack, trimmed], { shouldValidate: true });
-    setTechInput("");
-  }
-
-  function removeTech(index: number) {
-    setValue(
-      "techStack",
-      techStack.filter((_, i) => i !== index),
-      { shouldValidate: true }
-    );
-  }
-
-  async function onSubmit(data: unknown) {
-    const projectData = data as CreateProjectInput;
+  async function onSubmit(data: FormValues) {
     setIsSubmitting(true);
-    setSubmitError(null);
+    clearSubmitError();
 
     try {
-      const url = isEditing ? `/api/project/${project.id}` : "/api/project";
-      const method = isEditing ? "PATCH" : "POST";
-
-      const response = await fetch(url, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(projectData),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.error?.message || "Failed to save project");
-      }
+      await submitProject(data, isEditing, project?.id);
 
       router.refresh();
 
       // Clear form after successful creation (not in edit mode)
       if (!isEditing) {
-        reset({
-          name: "",
-          description: undefined,
-          status: "IN_PROGRESS",
-          dueDate: undefined,
-          techStack: [],
-        });
+        reset(DEFAULT_VALUES.PROJECT);
       }
 
       // Call onSuccess callback if provided
@@ -164,7 +127,7 @@ export function ProjectForm({ project, onSuccess }: ProjectFormProps) {
         <div className="space-y-2">
           <Label htmlFor="status">Status</Label>
           <Select
-            value={watch("status")}
+            value={statusValue}
             onValueChange={(value: "IN_PROGRESS" | "COMPLETED" | "ON_HOLD") =>
               setValue("status", value)
             }
@@ -206,12 +169,16 @@ export function ProjectForm({ project, onSuccess }: ProjectFormProps) {
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 e.preventDefault();
-                addTech();
+                addTech(techStack, setValue);
               }
             }}
             placeholder="Add technology (e.g., React, Node.js)"
           />
-          <Button type="button" variant="secondary" onClick={addTech}>
+          <Button
+            type="button"
+            variant="secondary"
+            onClick={() => addTech(techStack, setValue)}
+          >
             Add
           </Button>
         </div>
@@ -224,7 +191,7 @@ export function ProjectForm({ project, onSuccess }: ProjectFormProps) {
               {tech}
               <button
                 type="button"
-                onClick={() => removeTech(index)}
+                onClick={() => removeTech(index, techStack, setValue)}
                 className="text-muted-foreground hover:text-foreground"
                 aria-label={`Remove ${tech}`}
               >
@@ -241,9 +208,11 @@ export function ProjectForm({ project, onSuccess }: ProjectFormProps) {
         </p>
       )}
 
-      <Button type="submit" disabled={isSubmitting}>
-        {buttonText}
-      </Button>
+      <div className="flex justify-end">
+        <Button type="submit" disabled={isSubmitting}>
+          {submitButtonText}
+        </Button>
+      </div>
     </form>
   );
 }

@@ -130,22 +130,3 @@ export async function deleteProject(userId: string, id: string) {
     where: { id, userId },
   });
 }
-
-async function recalculateProgress(
-  projectId: string,
-  tx: Prisma.TransactionClient = prisma
-) {
-  const [total, completed] = await Promise.all([
-    tx.milestone.count({ where: { projectId } }),
-    tx.milestone.count({ where: { projectId, completedAt: { not: null } } }),
-  ]);
-
-  const progress = total === 0 ? 0 : Math.round((completed / total) * 100);
-
-  await tx.project.update({
-    where: { id: projectId },
-    data: { progress },
-  });
-
-  return progress;
-}

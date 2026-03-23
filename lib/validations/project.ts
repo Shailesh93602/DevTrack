@@ -1,11 +1,21 @@
 import { z } from "zod";
 
+// Server-side schema (for API/DB operations)
 export const createProjectSchema = z.object({
   name: z.string().trim().min(1).max(100),
   description: z.string().trim().max(500).optional(),
   status: z.enum(["IN_PROGRESS", "COMPLETED", "ON_HOLD"]).default("IN_PROGRESS"),
   dueDate: z.coerce.date().optional(),
   techStack: z.array(z.string().trim().min(1).max(50)).max(20).default([]),
+});
+
+// Client-side form schema (for React Hook Form) - no defaults, required fields
+export const projectFormSchema = z.object({
+  name: z.string().trim().min(1).max(100),
+  description: z.string().trim().max(500).optional(),
+  status: z.enum(["IN_PROGRESS", "COMPLETED", "ON_HOLD"]),
+  dueDate: z.date().optional(),
+  techStack: z.array(z.string().trim().min(1).max(50)).max(20),
 });
 
 export const updateProjectSchema = createProjectSchema.partial();

@@ -1,66 +1,51 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
+import {
+  useDailyLogForm,
+  submitDailyLog,
+  toDateInputValue,
+  getTodayString,
+} from "@/hooks/useDailyLogForm";
+import type { DailyLogFormProps } from "@/types";
+import { createDailyLogSchema } from "@/lib/validations";
+import type { z } from "zod";
 
-const NOTES_MAX = 1000;
-const TOPICS_MAX = 20;
-
-const formSchema = z.object({
-  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Select a valid date"),
-  problemsSolved: z.coerce
-    .number({ error: "Enter a number" })
-    .int("Must be a whole number")
-    .min(0, "Cannot be negative"),
-  notes: z
-    .string()
-    .max(NOTES_MAX, `Notes must be ${NOTES_MAX} characters or less`)
-    .optional(),
-});
-
-type FormValues = z.infer<typeof formSchema>;
-
-export type SerializedDailyLog = {
-  id: string;
-  date: string;
-  problemsSolved: number;
-  topics: string[];
-  notes: string | null;
-};
-
-interface DailyLogFormProps {
-  log?: SerializedDailyLog | null;
-}
-
-function toDateInputValue(isoString: string): string {
-  return isoString.slice(0, 10);
-}
-
-function getTodayString(): string {
-  return new Date().toISOString().slice(0, 10);
-}
+type FormValues = z.infer<typeof createDailyLogSchema>;
 
 export function DailyLogForm({ log }: DailyLogFormProps) {
-  const router = useRouter();
-  const isEditing = !!log;
+  const {
+    topics,
+    topicInput,
+    topicError,
+    submitError,
+    isEditing,
+    setTopics,
+    setTopicInput,
+    setSubmitError,
+    handleAddTopic,
+    handleRemoveTopic,
+    handleTopicKeyDown,
+    clearTopicError,
+    router,
+    NOTES_MAX,
+  } = useDailyLogForm(log);
 
   const {
     register,
     handleSubmit,
-    watch,
+    control,
     reset,
     formState: { errors, isSubmitting },
   } = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(createDailyLogSchema),
     defaultValues: {
       date: log ? toDateInputValue(log.date) : getTodayString(),
       problemsSolved: log?.problemsSolved ?? 0,
@@ -68,79 +53,11 @@ export function DailyLogForm({ log }: DailyLogFormProps) {
     },
   });
 
-  const [topics, setTopics] = useState<string[]>(log?.topics ?? []);
-  const [topicInput, setTopicInput] = useState("");
-  const [topicError, setTopicError] = useState<string | null>(null);
-  const [submitError, setSubmitError] = useState<string | null>(null);
-
-  const notes = watch("notes") ?? "";
-
-  function handleAddTopic() {
-    const value = topicInput.trim();
-    if (!value) return;
-    if (value.length > 50) {
-      setTopicError("Topic must be 50 characters or less");
-      return;
-    }
-    if (topics.includes(value)) {
-      setTopicError("Topic already added");
-      return;
-    }
-    if (topics.length >= TOPICS_MAX) {
-      setTopicError(`Maximum ${TOPICS_MAX} topics`);
-      return;
-    }
-    setTopicError(null);
-    setTopics((prev) => [...prev, value]);
-    setTopicInput("");
-  }
-
-  function handleTopicKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      handleAddTopic();
-    }
-  }
-
-  function handleRemoveTopic(index: number) {
-    setTopics((prev) => prev.filter((_, i) => i !== index));
-  }
+  const notes = useWatch({ control, name: "notes" }) ?? "";
 
   async function onSubmit(values: FormValues) {
-    setSubmitError(null);
-
     try {
-      const body = {
-        date: values.date,
-        problemsSolved: values.problemsSolved,
-        topics,
-        notes: values.notes?.trim() || undefined,
-      };
-
-      const url = isEditing ? `/api/daily-log/${log.id}` : "/api/daily-log";
-      const method = isEditing ? "PUT" : "POST";
-
-      const response = await fetch(url, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
-
-      const result = (await response.json()) as {
-        success: boolean;
-        error?: { message?: string; code?: string };
-      };
-
-      if (!result.success) {
-        if (result.error?.code === "DUPLICATE_ENTRY") {
-          setSubmitError("A log for this date already exists.");
-        } else {
-          setSubmitError(
-            result.error?.message ?? "Something went wrong. Please try again."
-          );
-        }
-        return;
-      }
+      await submitDailyLog(values, topics, isEditing, log?.id);
 
       // Reset form on success (only for new logs)
       if (!isEditing) {
@@ -156,9 +73,10 @@ export function DailyLogForm({ log }: DailyLogFormProps) {
       router.refresh();
     } catch (error) {
       setSubmitError(
-        "Network error. Please check your connection and try again."
+        error instanceof Error
+          ? error.message
+          : "Something went wrong. Please try again."
       );
-      console.error("Daily log submission error:", error);
     }
   }
 
@@ -224,7 +142,7 @@ export function DailyLogForm({ log }: DailyLogFormProps) {
             value={topicInput}
             onChange={(e) => {
               setTopicInput(e.target.value);
-              setTopicError(null);
+              clearTopicError();
             }}
             onKeyDown={handleTopicKeyDown}
             placeholder="e.g. arrays, dynamic programming…"

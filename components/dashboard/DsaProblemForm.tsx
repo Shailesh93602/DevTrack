@@ -1,115 +1,77 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { useMemo } from "react";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
+import { useDsaProblemForm, submitDsaProblem } from "@/hooks/useDsaProblemForm";
+import type { DsaProblemFormProps } from "@/types/dsa-problem";
+import { DIFFICULTY_OPTIONS } from "@/types/dsa-problem";
+import { dsaProblemSchema } from "@/lib/validations";
+import { DEFAULT_VALUES } from "@/constants";
 
-const TITLE_MAX = 200;
-const PATTERN_MAX = 100;
-const PLATFORM_MAX = 50;
-
-const difficultyOptions = ["EASY", "MEDIUM", "HARD"] as const;
-
-const formSchema = z.object({
-  title: z
-    .string()
-    .min(1, "Title is required")
-    .max(TITLE_MAX, `Title must be ${TITLE_MAX} characters or less`),
-  difficulty: z.enum(difficultyOptions),
-  pattern: z
-    .string()
-    .min(1, "Pattern is required")
-    .max(PATTERN_MAX, `Pattern must be ${PATTERN_MAX} characters or less`),
-  platform: z
-    .string()
-    .min(1, "Platform is required")
-    .max(PLATFORM_MAX, `Platform must be ${PLATFORM_MAX} characters or less`),
-});
-
-type FormValues = z.infer<typeof formSchema>;
-
-interface DsaProblemFormProps {
-  problem?: {
-    id: string;
-    title: string;
-    difficulty: "EASY" | "MEDIUM" | "HARD";
-    pattern: string;
-    platform: string;
-  };
-  onSuccess?: () => void;
-}
+type FormValues = z.infer<typeof dsaProblemSchema>;
 
 export function DsaProblemForm({ problem, onSuccess }: DsaProblemFormProps) {
-  const router = useRouter();
+  const {
+    submitError,
+    submitSuccess,
+    isEditing,
+    setSubmitError,
+    showSuccess,
+    router,
+    TITLE_MAX,
+    PATTERN_MAX,
+    PLATFORM_MAX,
+  } = useDsaProblemForm(problem);
 
-  const isEditing = !!problem;
+  const defaultValues: FormValues = problem ?? DEFAULT_VALUES.DSA_PROBLEM;
 
   const {
     register,
     handleSubmit,
     setValue,
-    watch,
+    control,
     reset,
     formState: { errors, isSubmitting },
   } = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      title: problem?.title ?? "",
-      difficulty: problem?.difficulty ?? "MEDIUM",
-      pattern: problem?.pattern ?? "",
-      platform: problem?.platform ?? "",
-    },
+    resolver: zodResolver(dsaProblemSchema),
+    defaultValues,
   });
 
-  const [submitError, setSubmitError] = useState<string | null>(null);
-  const [submitSuccess, setSubmitSuccess] = useState(false);
+  const titleValue = useWatch({ control, name: "title" }) ?? "";
+  const patternValue = useWatch({ control, name: "pattern" }) ?? "";
+  const platformValue = useWatch({ control, name: "platform" }) ?? "";
+  const difficultyValue = useWatch({ control, name: "difficulty" });
 
-  const titleValue = watch("title") ?? "";
-  const patternValue = watch("pattern") ?? "";
-  const platformValue = watch("platform") ?? "";
-  const difficultyValue = watch("difficulty");
+  const submitLabel = useMemo(() => {
+    if (isSubmitting) {
+      return isEditing ? "Saving…" : "Adding…";
+    }
+    return isEditing ? "Save Changes" : "Add Problem";
+  }, [isSubmitting, isEditing]);
 
   async function onSubmit(values: FormValues) {
-    setSubmitError(null);
-    setSubmitSuccess(false);
+    try {
+      await submitDsaProblem(values, isEditing, problem?.id);
 
-    const url = isEditing
-      ? `/api/dsa-problem/${problem.id}`
-      : "/api/dsa-problem";
-    const method = isEditing ? "PATCH" : "POST";
+      showSuccess();
 
-    const response = await fetch(url, {
-      method,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(values),
-    });
+      if (!isEditing) {
+        reset();
+      }
 
-    const result = (await response.json()) as {
-      success: boolean;
-      error?: { message?: string; code?: string };
-    };
-
-    if (!result.success) {
-      setSubmitError(result.error?.message ?? "Failed to save problem");
-      return;
+      onSuccess?.();
+      router.refresh();
+    } catch (error) {
+      setSubmitError(
+        error instanceof Error ? error.message : "Failed to save problem"
+      );
     }
-
-    setSubmitSuccess(true);
-
-    if (!isEditing) {
-      reset();
-    }
-
-    onSuccess?.();
-    router.refresh();
-
-    setTimeout(() => setSubmitSuccess(false), 3000);
   }
 
   return (
@@ -157,7 +119,7 @@ export function DsaProblemForm({ problem, onSuccess }: DsaProblemFormProps) {
             errors.difficulty ? "problem-difficulty-error" : undefined
           }
         >
-          {difficultyOptions.map((d) => (
+          {DIFFICULTY_OPTIONS.map((d) => (
             <option key={d} value={d}>
               {d.charAt(0) + d.slice(1).toLowerCase()}
             </option>
@@ -240,22 +202,11 @@ export function DsaProblemForm({ problem, onSuccess }: DsaProblemFormProps) {
         </output>
       )}
 
-      {(() => {
-        const submitLabel = (() => {
-          if (isSubmitting) {
-            return isEditing ? "Saving…" : "Adding…";
-          }
-          return isEditing ? "Save Changes" : "Add Problem";
-        })();
-
-        return (
-          <div className="flex justify-end">
-            <Button type="submit" disabled={isSubmitting}>
-              {submitLabel}
-            </Button>
-          </div>
-        );
-      })()}
+      <div className="flex justify-end">
+        <Button type="submit" disabled={isSubmitting}>
+          {submitLabel}
+        </Button>
+      </div>
     </form>
   );
 }

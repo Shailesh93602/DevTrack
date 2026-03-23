@@ -9,26 +9,7 @@ import {
   getWeeklyProblemStats,
 } from "@/lib/services/dashboard";
 import { WeeklyProgressChart } from "@/components/dashboard/WeeklyProgressChart";
-
-function formatLogDate(date: Date): string {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-
-  const logDate = new Date(date);
-  logDate.setHours(0, 0, 0, 0);
-
-  const diffTime = today.getTime() - logDate.getTime();
-  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-
-  if (diffDays === 0) return "Today";
-  if (diffDays === 1) return "Yesterday";
-  if (diffDays < 7) return `${diffDays} days ago`;
-
-  return logDate.toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-  });
-}
+import { formatLogDate } from "@/lib/utils/formatters";
 
 export default async function DashboardPage() {
   const supabase = await createServerSupabaseClient();

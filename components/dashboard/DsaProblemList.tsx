@@ -1,57 +1,22 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Trash2, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { DsaProblemForm } from "./DsaProblemForm";
-
-export type DsaProblem = {
-  id: string;
-  title: string;
-  difficulty: "EASY" | "MEDIUM" | "HARD";
-  pattern: string;
-  platform: string;
-  solvedAt: string;
-};
-
-interface DsaProblemListProps {
-  problems: DsaProblem[];
-}
-
-const difficultyOptions = ["ALL", "EASY", "MEDIUM", "HARD"] as const;
-
-function formatSolvedDate(isoString: string): string {
-  return new Date(isoString).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
-}
-
-function getDifficultyColor(difficulty: string): string {
-  switch (difficulty) {
-    case "EASY":
-      return "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400";
-    case "MEDIUM":
-      return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400";
-    case "HARD":
-      return "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400";
-    default:
-      return "bg-muted text-muted-foreground";
-  }
-}
-
-interface ProblemItemProps {
-  problem: DsaProblem;
-  onDelete: (id: string) => Promise<void>;
-  onEdit: (problem: DsaProblem) => void;
-  isDeleting: boolean;
-  isEditing: boolean;
-}
+import {
+  useDsaProblemList,
+  formatSolvedDate,
+  getDifficultyColor,
+} from "@/hooks/useDsaProblemList";
+import type {
+  DsaProblemListProps,
+  ProblemItemProps,
+} from "@/types/dsa-problem";
+import { FILTER_OPTIONS } from "@/types/dsa-problem";
 
 function ProblemItem({
   problem,
@@ -162,38 +127,15 @@ function ProblemItem({
 }
 
 export function DsaProblemList({ problems }: DsaProblemListProps) {
-  const router = useRouter();
-  const [deletingId, setDeletingId] = useState<string | null>(null);
-  const [editingId, setEditingId] = useState<string | null>(null);
-  const [deleteError, setDeleteError] = useState<string | null>(null);
-  const [filter, setFilter] =
-    useState<(typeof difficultyOptions)[number]>("ALL");
-
-  async function handleDelete(id: string) {
-    setDeletingId(id);
-    setDeleteError(null);
-
-    const response = await fetch(`/api/dsa-problem/${id}`, {
-      method: "DELETE",
-    });
-    const result = (await response.json()) as {
-      success: boolean;
-      error?: { message?: string };
-    };
-
-    setDeletingId(null);
-
-    if (!result.success) {
-      setDeleteError(result.error?.message ?? "Failed to delete problem.");
-      return;
-    }
-
-    router.refresh();
-  }
-
-  function handleEdit(problem: DsaProblem) {
-    setEditingId((current) => (current === problem.id ? null : problem.id));
-  }
+  const {
+    deletingId,
+    editingId,
+    deleteError,
+    filter,
+    setFilter,
+    handleDelete,
+    handleEdit,
+  } = useDsaProblemList();
 
   const filteredProblems =
     filter === "ALL"
@@ -205,7 +147,7 @@ export function DsaProblemList({ problems }: DsaProblemListProps) {
       <div className="flex items-center gap-2">
         <span className="text-muted-foreground text-sm">Filter:</span>
         <div className="flex gap-1">
-          {difficultyOptions.map((d) => (
+          {FILTER_OPTIONS.map((d) => (
             <Button
               key={d}
               variant={filter === d ? "secondary" : "ghost"}

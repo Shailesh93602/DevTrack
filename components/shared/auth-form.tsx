@@ -1,13 +1,12 @@
 "use client";
 
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/shared/PasswordInput";
-import { login, signup } from "@/lib/auth/actions";
+import { useAuthForm } from "@/hooks/useAuthForm";
 
 const loginSchema = z.object({
   email: z
@@ -38,8 +37,7 @@ type LoginFormData = z.infer<typeof loginSchema>;
 type SignupFormData = z.infer<typeof signupSchema>;
 
 export function AuthForm({ mode }: AuthFormProps) {
-  const [serverError, setServerError] = useState<string | null>(null);
-  const [isPending, setIsPending] = useState(false);
+  const { serverError, isPending, onSubmit } = useAuthForm(mode);
 
   const schema = mode === "login" ? loginSchema : signupSchema;
 
@@ -54,24 +52,6 @@ export function AuthForm({ mode }: AuthFormProps) {
       password: "",
     },
   });
-
-  const onSubmit = async (data: LoginFormData | SignupFormData) => {
-    setServerError(null);
-    setIsPending(true);
-
-    const formData = new FormData();
-    formData.append("email", data.email);
-    formData.append("password", data.password);
-
-    const action = mode === "login" ? login : signup;
-    const result = await action({}, formData);
-
-    setIsPending(false);
-
-    if (result?.error) {
-      setServerError(result.error);
-    }
-  };
 
   const submitLabel = (() => {
     if (isPending) return "Loading...";
