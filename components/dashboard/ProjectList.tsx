@@ -197,8 +197,8 @@ export function ProjectList({ projects }: ProjectListProps) {
 
                 {project.techStack.length > 0 && (
                   <div className="flex flex-wrap gap-1">
-                    {project.techStack.map((tech, index) => (
-                      <Badge key={index} variant="outline" className="text-xs">
+                    {project.techStack.map((tech) => (
+                      <Badge key={tech} variant="outline" className="text-xs">
                         {tech}
                       </Badge>
                     ))}

@@ -162,6 +162,13 @@ export function DailyLogForm({ log }: DailyLogFormProps) {
     }
   }
 
+  const submitLabel = (() => {
+    if (isSubmitting) {
+      return isEditing ? "Saving…" : "Logging…";
+    }
+    return isEditing ? "Save changes" : "Log day";
+  })();
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
@@ -237,29 +244,24 @@ export function DailyLogForm({ log }: DailyLogFormProps) {
           </p>
         )}
         {topics.length > 0 && (
-          <div
-            className="flex flex-wrap gap-1.5 pt-1"
-            role="list"
-            aria-label="Added topics"
-          >
+          <ul className="flex flex-wrap gap-1.5 pt-1" aria-label="Added topics">
             {topics.map((topic, index) => (
-              <span
+              <li
                 key={topic}
-                role="listitem"
                 className="border-border bg-muted text-foreground inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-xs"
               >
                 {topic}
                 <button
                   type="button"
                   onClick={() => handleRemoveTopic(index)}
-                  aria-label={`Remove topic "${topic}"`}
+                  aria-label={`Remove topic ${topic}`}
                   className="focus-visible:ring-ring ml-0.5 rounded-full opacity-60 transition-opacity hover:opacity-100 focus:outline-none focus-visible:ring-1"
                 >
                   <X className="h-3 w-3" aria-hidden="true" />
                 </button>
-              </span>
+              </li>
             ))}
-          </div>
+          </ul>
         )}
       </div>
 
@@ -306,13 +308,7 @@ export function DailyLogForm({ log }: DailyLogFormProps) {
 
       <div className="flex justify-end">
         <Button type="submit" disabled={isSubmitting}>
-          {isSubmitting
-            ? isEditing
-              ? "Saving…"
-              : "Logging…"
-            : isEditing
-              ? "Save changes"
-              : "Log day"}
+          {submitLabel}
         </Button>
       </div>
     </form>
