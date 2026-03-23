@@ -10,11 +10,11 @@ export const createMilestoneSchema = z.object({
 export const updateMilestoneSchema = createMilestoneSchema.partial();
 
 export const milestoneIdSchema = z.object({
-  id: z.string().cuid(),
+  id: z.string().uuid(),
 });
 
 export const reorderMilestonesSchema = z.object({
-  orderedIds: z.array(z.string().cuid()).min(1),
+  orderedIds: z.array(z.string().uuid()).min(1),
 });
 
 export type CreateMilestoneInput = z.infer<typeof createMilestoneSchema>;

@@ -13,7 +13,7 @@ const loginSchema = z.object({
   email: z
     .string()
     .min(1, "Email is required")
-    .email("Please enter a valid email address"),
+    .pipe(z.string().email("Please enter a valid email address")),
   password: z.string().min(1, "Password is required"),
 });
 
@@ -21,7 +21,7 @@ const signupSchema = z.object({
   email: z
     .string()
     .min(1, "Email is required")
-    .email("Please enter a valid email address"),
+    .pipe(z.string().email("Please enter a valid email address")),
   password: z
     .string()
     .min(8, "Password must be at least 8 characters")
@@ -73,6 +73,11 @@ export function AuthForm({ mode }: AuthFormProps) {
     }
   };
 
+  const submitLabel = (() => {
+    if (isPending) return "Loading...";
+    return mode === "login" ? "Sign in" : "Create account";
+  })();
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
       <div className="space-y-2">
@@ -92,7 +97,7 @@ export function AuthForm({ mode }: AuthFormProps) {
           {...register("email")}
         />
         {errors.email && (
-          <p className="text-sm text-destructive">{errors.email.message}</p>
+          <p className="text-destructive text-sm">{errors.email.message}</p>
         )}
       </div>
 
@@ -106,7 +111,7 @@ export function AuthForm({ mode }: AuthFormProps) {
           {...register("password")}
         />
         {errors.password && (
-          <p className="text-sm text-destructive">{errors.password.message}</p>
+          <p className="text-destructive text-sm">{errors.password.message}</p>
         )}
         {mode === "signup" && !errors.password && (
           <ul className="text-muted-foreground ml-1 space-y-1 text-xs">
@@ -129,11 +134,7 @@ export function AuthForm({ mode }: AuthFormProps) {
         className="h-11 w-full font-medium"
         disabled={isPending}
       >
-        {isPending
-          ? "Loading..."
-          : mode === "login"
-            ? "Sign in"
-            : "Create account"}
+        {submitLabel}
       </Button>
     </form>
   );

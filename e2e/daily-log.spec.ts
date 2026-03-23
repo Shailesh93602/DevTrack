@@ -88,7 +88,7 @@ test.describe("Daily Log Feature", () => {
     await expect(page.locator("text=Trees")).toBeVisible();
 
     // Remove the topic using the X button
-    await page.locator('button[aria-label="Remove topic \"Trees\""]').click();
+    await page.locator('button[aria-label="Remove topic Trees"]').click();
 
     // Verify topic is removed
     await expect(page.locator("text=Trees")).not.toBeVisible();

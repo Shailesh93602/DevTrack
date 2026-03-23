@@ -58,6 +58,13 @@ export function ProjectForm({ project, onSuccess }: ProjectFormProps) {
 
   const techStack = watch("techStack") ?? [];
 
+  const buttonText = (() => {
+    if (isSubmitting) {
+      return isEditing ? "Updating..." : "Creating...";
+    }
+    return isEditing ? "Update Project" : "Create Project";
+  })();
+
   function addTech() {
     const trimmed = techInput.trim();
     if (!trimmed) return;
@@ -211,7 +218,7 @@ export function ProjectForm({ project, onSuccess }: ProjectFormProps) {
         <div className="flex flex-wrap gap-1">
           {techStack.map((tech, index) => (
             <span
-              key={index}
+              key={`${tech}-${index}`}
               className="bg-muted inline-flex items-center gap-1 rounded px-2 py-1 text-xs"
             >
               {tech}
@@ -235,13 +242,7 @@ export function ProjectForm({ project, onSuccess }: ProjectFormProps) {
       )}
 
       <Button type="submit" disabled={isSubmitting}>
-        {isSubmitting
-          ? isEditing
-            ? "Updating..."
-            : "Creating..."
-          : isEditing
-            ? "Update Project"
-            : "Create Project"}
+        {buttonText}
       </Button>
     </form>
   );
