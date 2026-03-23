@@ -11,8 +11,9 @@ export const dailyLogSchema = z.object({
 // Client-side form schema (for React Hook Form)
 export const dailyLogFormSchema = z.object({
   date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Select a valid date"),
-  problemsSolved: z.number().int().min(0, "Cannot be negative"),
-  notes: z.string().trim().max(1000).optional(),
+  problemsSolved: z.coerce.number().int().min(0, "Cannot be negative"),
+  topics: z.array(z.string().trim().min(1).max(50)).max(20).optional().default([]),
+  notes: z.string().trim().max(1000).optional().nullable(),
 });
 
 export const createDailyLogSchema = dailyLogFormSchema;
@@ -20,7 +21,7 @@ export const createDailyLogSchema = dailyLogFormSchema;
 export const updateDailyLogSchema = dailyLogFormSchema.partial();
 
 export const dailyLogIdSchema = z.object({
-  id: z.string().uuid(),
+  id: z.string().min(1, "ID is required"),
 });
 
 export const dailyLogQuerySchema = z.object({

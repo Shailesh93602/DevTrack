@@ -68,7 +68,7 @@ export function handleApiError(error: unknown): NextResponse<ApiResponse<never>>
 
   if (error instanceof Prisma.PrismaClientValidationError) {
     return errorResponse(
-      "Invalid data provided",
+      `Invalid data: ${error.message}`,
       400,
       "PRISMA_VALIDATION_ERROR"
     );

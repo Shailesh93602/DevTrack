@@ -21,9 +21,11 @@ export async function createDailyLog(
   userId: string,
   data: CreateDailyLogInput
 ) {
+  const [year, month, day] = data.date.split('-').map(Number);
   return prisma.dailyLog.create({
     data: {
       ...data,
+      date: new Date(Date.UTC(year, month - 1, day)),
       userId,
     },
     select: defaultSelect,
@@ -65,11 +67,21 @@ export async function getDailyLogById(userId: string, id: string) {
 export async function updateDailyLog(
   userId: string,
   id: string,
-  data: UpdateDailyLogInput
+  data: UpdateDailyLogInput & { topics?: string[] }
 ) {
+  const { date, ...rest } = data;
+  const dateUpdate = date
+    ? { date: new Date(Date.UTC(...date.split('-').map(Number).map((v, i) => i === 1 ? v - 1 : v) as [number, number, number])) }
+    : {};
+
+  const updateData: Prisma.DailyLogUpdateInput = {
+    ...rest,
+    ...dateUpdate,
+  };
+
   return prisma.dailyLog.update({
     where: { id, userId },
-    data,
+    data: updateData,
     select: defaultSelect,
   });
 }

@@ -25,6 +25,51 @@ function isNextDay(a: string, b: string): boolean {
 }
 
 /**
+ * Calculate current streak from sorted unique dates
+ * Must be consecutive from today or yesterday
+ */
+function calculateCurrentStreak(uniqueDates: string[]): number {
+  const today = toUtcDateString(new Date());
+  const yesterday = toUtcDateString(new Date(Date.now() - 86_400_000));
+  const lastDate = uniqueDates.at(-1)!;
+
+  // Only count streak if last log is today or yesterday
+  if (lastDate !== today && lastDate !== yesterday) {
+    return 0;
+  }
+
+  let currentStreak = 0;
+  let expectedDate = lastDate;
+  let dateIndex = uniqueDates.length - 1;
+
+  while (dateIndex >= 0) {
+    const currentDate = uniqueDates[dateIndex];
+
+    if (currentDate === expectedDate) {
+      // Found the expected date, count it and move to previous day
+      currentStreak++;
+      const expectedDateObj = new Date(expectedDate + "T00:00:00Z");
+      expectedDateObj.setUTCDate(expectedDateObj.getUTCDate() - 1);
+      expectedDate = toUtcDateString(expectedDateObj);
+      dateIndex--;
+    } else {
+      // Gap detected - check if it's before expected date
+      const currentDateObj = new Date(currentDate + "T00:00:00Z");
+      const expectedDateObj = new Date(expectedDate + "T00:00:00Z");
+
+      if (currentDateObj.getTime() < expectedDateObj.getTime()) {
+        // Gap exists, streak ends
+        break;
+      }
+      // Skip dates after expected (shouldn't happen with sorted)
+      dateIndex--;
+    }
+  }
+
+  return currentStreak;
+}
+
+/**
  * Calculate current and longest streaks from daily log dates
  * Streak requires CONSECUTIVE days - any gap breaks the streak
  * @param dates - Array of YYYY-MM-DD strings in ascending order
@@ -35,7 +80,6 @@ export function calculateStreakFromDates(dates: string[]): StreakResult {
     return { currentStreak: 0, longestStreak: 0 };
   }
 
-  // Remove duplicates and sort
   const uniqueDates = Array.from(new Set(dates)).sort((a, b) => a.localeCompare(b));
 
   // Calculate longest streak with forward pass
@@ -51,46 +95,7 @@ export function calculateStreakFromDates(dates: string[]): StreakResult {
     }
   }
 
-  // Calculate current streak - MUST be consecutive from today
-  const today = toUtcDateString(new Date());
-  const yesterday = toUtcDateString(new Date(Date.now() - 86_400_000));
-
-  let currentStreak = 0;
-  const lastDate = uniqueDates.at(-1)!;
-
-  // Only count streak if last log is today or yesterday
-  if (lastDate === today || lastDate === yesterday) {
-    // Start from expected date and work backwards through dates
-    // Each date must be exactly 1 day before the expected date
-    let expectedDate = lastDate;
-    let dateIndex = uniqueDates.length - 1;
-
-    while (dateIndex >= 0) {
-      const currentDate = uniqueDates[dateIndex];
-
-      if (currentDate === expectedDate) {
-        // Found the expected date, count it and move to previous day
-        currentStreak++;
-        // Calculate previous expected date
-        const expectedDateObj = new Date(expectedDate + "T00:00:00Z");
-        expectedDateObj.setUTCDate(expectedDateObj.getUTCDate() - 1);
-        expectedDate = toUtcDateString(expectedDateObj);
-        dateIndex--;
-      } else {
-        // Gap detected - expected date not found
-        // Check if this is just a date we haven't reached yet
-        const currentDateObj = new Date(currentDate + "T00:00:00Z");
-        const expectedDateObj = new Date(expectedDate + "T00:00:00Z");
-
-        if (currentDateObj.getTime() < expectedDateObj.getTime()) {
-          // Current date is before expected - gap exists, break streak
-          break;
-        }
-        // Current date is after expected (shouldn't happen with sorted), skip it
-        dateIndex--;
-      }
-    }
-  }
+  const currentStreak = calculateCurrentStreak(uniqueDates);
 
   return { currentStreak, longestStreak };
 }
@@ -115,15 +120,5 @@ export async function calculateStreaks(userId: string): Promise<StreakResult> {
   const dates = logs.map((log) => toUtcDateString(log.date));
   const { currentStreak, longestStreak } = calculateStreakFromDates(dates);
 
-  // Persist longest streak if it's a new record
-  // This allows future calls to skip full history scan
-  const effectiveLongest = Math.max(longestStreak, currentStreak);
-  if (effectiveLongest > 0) {
-    await prisma.user.updateMany({
-      where: { id: userId, longestStreak: { lt: effectiveLongest } },
-      data: { longestStreak: effectiveLongest },
-    });
-  }
-
-  return { currentStreak, longestStreak: effectiveLongest };
+  return { currentStreak, longestStreak };
 }

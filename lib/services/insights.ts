@@ -21,7 +21,7 @@ async function buildInsightContext(userId: string): Promise<InsightContext> {
     problems,
     recentLogs,
     lastLog,
-    streakData,
+    logs,
   ] = await Promise.all([
     prisma.dSAProblem.findMany({
       where: { userId },
@@ -38,9 +38,11 @@ async function buildInsightContext(userId: string): Promise<InsightContext> {
       orderBy: { date: "desc" },
       select: { date: true },
     }),
-    prisma.user.findUnique({
-      where: { id: userId },
-      select: { longestStreak: true },
+    prisma.dailyLog.findMany({
+      where: { userId },
+      select: { date: true },
+      orderBy: { date: "asc" },
+      take: 120,
     }),
   ]);
 
@@ -73,16 +75,27 @@ async function buildInsightContext(userId: string): Promise<InsightContext> {
   }
 
   // Calculate current streak
-  const logs = await prisma.dailyLog.findMany({
-    where: { userId },
-    select: { date: true },
-    orderBy: { date: "asc" },
-    take: 120,
-  });
-
   const dates = logs.map((log) =>
     log.date.toISOString().slice(0, 10)
   );
+
+  // Calculate longest streak from logs
+  let longestStreak = 0;
+  if (dates.length > 0) {
+    let currentStreakCount = 1;
+    longestStreak = 1;
+    for (let i = 1; i < dates.length; i++) {
+      const dateA = new Date(dates[i - 1] + "T00:00:00Z");
+      const dateB = new Date(dates[i] + "T00:00:00Z");
+      const diffMs = dateB.getTime() - dateA.getTime();
+      if (diffMs === 86_400_000) {
+        currentStreakCount++;
+        longestStreak = Math.max(longestStreak, currentStreakCount);
+      } else {
+        currentStreakCount = 1;
+      }
+    }
+  }
 
   const todayStr = new Date().toISOString().slice(0, 10);
   const yesterdayStr = new Date(Date.now() - 86_400_000).toISOString().slice(0, 10);
@@ -111,7 +124,7 @@ async function buildInsightContext(userId: string): Promise<InsightContext> {
     recentLogsCount: recentLogs.length,
     daysSinceLastLog,
     currentStreak,
-    longestStreak: streakData?.longestStreak ?? 0,
+    longestStreak,
   };
 }
 
