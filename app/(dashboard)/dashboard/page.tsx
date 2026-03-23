@@ -70,7 +70,9 @@ export default async function DashboardPage() {
           title="Active Projects"
           value={stats.activeProjects}
           description={
-            stats.activeProjects === 1 ? "in progress" : "in progress"
+            stats.activeProjects === 1
+              ? "project in progress"
+              : "projects in progress"
           }
         />
       </div>

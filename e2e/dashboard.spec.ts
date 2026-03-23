@@ -76,8 +76,8 @@ test.describe("Dashboard Feature", () => {
     const content = await page.content();
 
     // Should show numeric values for project stats
-    const totalProjectsMatch = content.match(/Total Projects[\s\S]*?(\d+)/);
-    const activeProjectsMatch = content.match(/Active Projects[\s\S]*?(\d+)/);
+    const totalProjectsMatch = /Total Projects[\s\S]*?(\d+)/.exec(content);
+    const activeProjectsMatch = /Active Projects[\s\S]*?(\d+)/.exec(content);
 
     // Either we have numbers or 0 (empty state)
     expect(totalProjectsMatch || content.includes("0")).toBeTruthy();
@@ -89,6 +89,6 @@ test.describe("Dashboard Feature", () => {
     await page.reload();
 
     // Should still show overview after reload
-    await expect(page.locator("text=Overview")).toBeVisible({ timeout: 10000 });
+    await expect(page.getByRole("heading", { name: "Overview" })).toBeVisible({ timeout: 10000 });
   });
 });
