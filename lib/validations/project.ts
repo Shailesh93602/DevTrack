@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { ProjectStatus } from "@prisma/client";
 
 export const createProjectSchema = z.object({
   name: z.string().trim().min(1).max(100),
