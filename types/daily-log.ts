@@ -19,6 +19,7 @@ export interface SerializedDailyLog {
  */
 export interface DailyLogFormProps {
   log?: SerializedDailyLog | null;
+  onSuccess?: () => void;
 }
 
 /**
