@@ -14,19 +14,19 @@
 
 ## High
 
-### Projects Feature (zero implementation exists)
+### Projects Feature
 
-- [ ] Add `lib/validations/project.ts` — Zod schema for create/update (name, description, status, repoUrl, liveUrl)
-- [ ] Add `lib/services/project.ts` — `createProject`, `updateProject`, `deleteProject`, `getProjects`, `getProjectById`
-- [ ] Add `components/dashboard/ProjectForm.tsx` — React Hook Form + Zod; create/edit mode from `project` prop
-- [ ] Add `components/dashboard/ProjectList.tsx` — list with status badge, 2-step delete, empty state
-- [ ] Add `app/(dashboard)/dashboard/projects/page.tsx` — server component; auth check; fetch + serialize; render form + list
-- [ ] Add Projects link to `components/dashboard/sidebar.tsx`
+- [x] Add `lib/validations/project.ts` — Zod schema for create/update (name, description, status, repoUrl, liveUrl)
+- [x] Add `lib/services/project.ts` — `createProject`, `updateProject`, `deleteProject`, `getProjects`, `getProjectById`
+- [x] Add `components/dashboard/ProjectForm.tsx` — React Hook Form + Zod; create/edit mode from `project` prop
+- [x] Add `components/dashboard/ProjectList.tsx` — list with status badge, 2-step delete, empty state
+- [x] Add `app/(dashboard)/dashboard/projects/page.tsx` — server component; auth check; fetch + serialize; render form + list
+- [x] Add Projects link to `components/dashboard/sidebar.tsx`
 
 ### Settings Page
 
-- [ ] Add `app/(dashboard)/dashboard/settings/page.tsx` — display email, sign-out button (call existing `signOut` action from `lib/auth/actions.ts`)
-- [ ] Add Settings link to sidebar
+- [x] Add `app/(dashboard)/dashboard/settings/page.tsx` — display email, sign-out button (call existing `signOut` action from `lib/auth/actions.ts`)
+- [x] Add Settings link to sidebar
 
 ### DSA Problems — Filtering & Pagination
 
