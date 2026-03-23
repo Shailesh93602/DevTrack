@@ -1,6 +1,7 @@
 # DevTrack — Todo
 
 > Sections ordered by priority. Tasks within each section ordered by dependency.
+> Last updated: 2026-03-23
 
 ---
 
@@ -14,64 +15,53 @@
 
 ## High
 
-### Projects Feature
+### Streak System ✓ Complete
 
-- [x] Add `lib/validations/project.ts` — Zod schema for create/update (name, description, status, repoUrl, liveUrl)
-- [x] Add `lib/services/project.ts` — `createProject`, `updateProject`, `deleteProject`, `getProjects`, `getProjectById`
-- [x] Add `components/dashboard/ProjectForm.tsx` — React Hook Form + Zod; create/edit mode from `project` prop
-- [x] Add `components/dashboard/ProjectList.tsx` — list with status badge, 2-step delete, empty state
-- [x] Add `app/(dashboard)/dashboard/projects/page.tsx` — server component; auth check; fetch + serialize; render form + list
-- [x] Add Projects link to `components/dashboard/sidebar.tsx`
+- [x] Implement streak calculation service (`lib/services/streak.ts`)
+- [x] Calculate current streak (consecutive days with DailyLog)
+- [x] Calculate longest streak
+- [x] Handle missed days (streak breaks on gap > 1 day)
+- [x] UTC-safe date handling
+- [x] Persist longest streak to User table
+- [x] Add streak display to dashboard
 
-### Settings Page
+### Pattern Analysis ✓ Complete
 
-- [x] Add `app/(dashboard)/dashboard/settings/page.tsx` — display email, sign-out button (call existing `signOut` action from `lib/auth/actions.ts`)
-- [x] Add Settings link to sidebar
+- [x] Create pattern analysis service (`lib/services/dsa-problem.ts`)
+- [x] Group problems by pattern with counts
+- [x] Calculate percentage distribution
+- [x] Identify strongest pattern (most practiced)
+- [x] Identify weakest pattern (least practiced)
+- [x] Add API route `/api/dsa-problem/patterns`
+- [x] Display patterns on dashboard
 
-### DSA Problems — Filtering & Pagination
+### Insights System ✓ Complete
 
-- [x] Add difficulty filter UI to `DsaProblemList.tsx` — Already implemented with ALL/EASY/MEDIUM/HARD filter
-- [x] Add platform filter UI to `DsaProblemList.tsx` — Edit: Platform is displayed but filtering not critical; skip for now
-- [x] Replace hardcoded `limit: 50` in `problems/page.tsx` with load-more or paginated fetch via `getDsaProblems` offset param
-- [x] Add search/filter by title or pattern to `DsaProblemList.tsx`
+- [x] Design rule-based insight engine (`lib/services/insights.ts`)
+- [x] Implement strength insights ("You are strong in X")
+- [x] Implement weakness insights ("Practice X more")
+- [x] Implement activity insights ("Your activity dropped")
+- [x] Implement milestone insights (streak achievements)
+- [x] Add `InsightsList` component to dashboard
+- [x] Configurable thresholds for all rules
 
-### Dashboard Stats — Missing Metrics
+### Project Tracker ✓ Complete
 
-- [x] Add `totalProjects` and `activeProjects` count to `getDashboardStats` in `lib/services/dashboard.ts`
-- [x] Add corresponding `StatsCard` for projects on `dashboard/page.tsx`
-- [x] Add current streak (consecutive days with a daily log) to `getDashboardStats`
-- [x] Render streak stat in a `StatsCard`
+- [x] Project CRUD with activity logs
+- [x] Milestone management (create, complete, delete, reorder)
+- [x] Auto-calculate progress from milestone completion %
+- [x] Project detail page with milestones
+- [x] Activity log history per project
+- [x] Tech stack tags
+- [x] Status workflow (In Progress, Completed, On Hold)
 
-### Streak System Enhancements
+### UX Improvements ✓ Complete
 
-- [x] Add streak freeze feature — allow 1 missed day per week without breaking streak
-- [x] Add weekly streak summary notification component — Skip: Use existing dashboard streak display
-- [x] Add streak milestones (7, 30, 60, 100 days) with badge rewards
-- [x] Store longest streak in user profile for persistence
-
-### Pattern Intelligence
-
-- [x] Analyze user's most practiced patterns from DSA problems
-- [x] Recommend weak patterns based on low solve count or difficulty struggles
-- [x] Show pattern mastery progress bar per category
-- [x] Suggest next pattern to learn based on interview frequency + current skill gaps
-
-### Insights & Analytics
-
-- [ ] Add weekly summary email/generation (problems solved, streak status, weak areas)
-- [ ] Add productivity trends — compare current week vs previous
-- [x] Add difficulty distribution pie chart to dashboard
-- [x] Add "consistency score" metric (logs per week / target)
-- [ ] Add peak productivity time analysis (if timestamp data available)
-
-### Project Tracker Enhancements
-
-- [x] Add project milestones with deadlines and completion tracking — Already implemented with dueDate, completedAt, order
-- [x] Add project status change history/activity log — Already implemented with ProjectActivityLog
-- [x] Add tech stack tags with icon display — Already implemented (techStack String[] field exists)
-- [x] Add project progress bar based on milestone completion — Already implemented with recalculateProgress()
-- [x] Link DSA problems to projects (e.g., "practice for this interview") — Skip: Feature not critical
-- [x] Add project notes/documentation section — Skip: description field exists
+- [x] Simplify dashboard stats (4 key metrics vs 7)
+- [x] Improve spacing and visual hierarchy
+- [x] Add icons to empty states
+- [x] Extract conditional render to PatternCard component
+- [x] Consistent section headers
 
 ---
 
@@ -79,48 +69,97 @@
 
 ### Daily Logs — Improvements
 
-- [x] Add edit support to `DailyLogList.tsx` — "Edit" button per row that opens `DailyLogForm` pre-filled with that log's data
-- [x] Add `problemsSolved` to the log list row display in `DailyLogList.tsx` (currently only topics shown)
+- [x] Add edit support to `DailyLogList.tsx`
+- [x] Add `problemsSolved` to the log list row display
 - [ ] Add a date range filter to the logs list (e.g., last 7 days / 30 days / all)
-- [ ] Cap logs list to 10 entries with a "Load more" control; currently fetches all
+- [ ] Cap logs list to 10 entries with a "Load more" control
 
 ### DSA Problems — Edit Support
 
-- [x] Add edit button + pre-filled form to `DsaProblemList.tsx` — Already implemented with edit mode toggle
-- [x] Add `updateDsaProblem` to `lib/services/dsa-problem.ts` and expose it via an API route or server action — Already exists
-- [ ] Add `notes` field to `DSAProblem` in `schema.prisma` for review notes; run migration
+- [x] Add edit button + pre-filled form to `DsaProblemList.tsx`
+- [x] Add `updateDsaProblem` to `lib/services/dsa-problem.ts`
+- [ ] Add `notes` field to `DSAProblem` for review notes
 
 ### Analytics — Chart Improvements
 
-- [ ] Replace `Week 1 … Week N` labels in `WeeklyProgressChart` with actual date ranges (e.g., `Mar 10–16`) using the `weekStart` date already computed in `getWeeklyProblemStats`
-- [ ] Add a difficulty breakdown bar chart — Easy / Medium / Hard counts per week — using data from `getDsaProblems` grouped by difficulty
-- [ ] Add a daily log activity heatmap (GitHub-style) for the last 90 days — requires a new `getDailyLogHeatmap` service function
+- [ ] Replace `Week 1 … Week N` labels with actual date ranges
+- [ ] Add difficulty breakdown bar chart per week
+- [ ] Add daily log activity heatmap (GitHub-style) for last 90 days
 
 ### Navigation & UX
 
-- [ ] Add active state highlight to sidebar links based on current pathname (`usePathname`)
-- [ ] Add mobile-responsive sidebar (collapsible drawer) — currently sidebar is always visible
-- [ ] Add loading skeletons to dashboard, logs, and problems pages using Next.js `loading.tsx`
+- [x] Add active state highlight to sidebar links
+- [ ] Add mobile-responsive sidebar (collapsible drawer)
+- [ ] Add loading skeletons to dashboard, logs, and problems pages
 
 ---
 
 ## Low
 
+### Insights Enhancements
+
+- [ ] Add weekly summary email/generation
+- [ ] Add productivity trends (compare current week vs previous)
+- [ ] Add peak productivity time analysis
+
 ### Code Quality
 
-- [ ] Extract `formatLogDate` from `dashboard/page.tsx` into `lib/utils.ts` — it's duplicated in `DailyLogList.tsx`
-- [ ] Add `error.tsx` boundary pages for dashboard routes — unhandled service errors currently crash the page with no UI
+- [ ] Extract `formatLogDate` from `dashboard/page.tsx` into `lib/utils.ts`
+- [ ] Add `error.tsx` boundary pages for dashboard routes
 - [ ] Add `not-found.tsx` for the dashboard group
-- [ ] Audit all Prisma queries for missing `userId` scoping — ensure no cross-user data leaks on any list or find query
+- [ ] Audit all Prisma queries for missing `userId` scoping
 
 ### Auth Improvements
 
-- [ ] Add password reset flow — "Forgot password?" link on login page → Supabase `resetPasswordForEmail`
-- [ ] Add email confirmation handling — redirect after signup to a "check your email" page instead of straight to dashboard
-- [ ] Add `AuthForm` loading state disable on submit to prevent double-submission (currently only `isLoading` text changes)
+- [ ] Add password reset flow
+- [ ] Add email confirmation handling page
+- [ ] Add `AuthForm` loading state disable on submit
 
 ### Developer Experience
 
 - [ ] Add `prisma migrate dev` to the project README quickstart
-- [ ] Add `.env.example` values documentation (which Supabase project settings each var maps to)
-- [ ] Set up ESLint rule to flag `any` usage — enforces the TypeScript strict-mode rule from CLAUDE.md
+- [ ] Add `.env.example` values documentation
+- [ ] Set up ESLint rule to flag `any` usage
+
+---
+
+## Code Review — Issues Found (2026-03-23)
+
+> Full audit of all local + today's commit changes. Fix these before shipping.
+
+### Design Rule Violations (must fix)
+
+- [ ] **`ProjectList.tsx:36-39`** — Hardcoded colors in `statusConfig`: `bg-blue-500`, `bg-green-500`, `bg-amber-500`. Replace with semantic CSS-variable-mapped classes or data attributes (e.g. use `text-primary`, `text-destructive`, `text-muted-foreground` or a variant prop pattern). No raw Tailwind color classes allowed per design rules.
+- [ ] **`projects/[id]/page.tsx:13-15`** — Identical `statusConfig` with same hardcoded colors duplicated from `ProjectList.tsx`. Needs to be removed AND deduplicated (see architecture issue below).
+- [ ] **`MilestoneList.tsx:121`** — Inline `style={{ width: \`${progress}%\` }}` violates the no-inline-styles rule. The `<Progress>` component (already installed and used in `ProjectList.tsx`) should be used here instead.
+
+### Coding Rule Violations
+
+- [ ] **`lib/services/insights.ts:76-106`** — Streak calculation is re-implemented from scratch instead of calling `calculateStreakFromDates` from `@/lib/services/streak.ts`. This is a DRY violation and will diverge if streak logic changes. Import and reuse the existing function.
+- [ ] **`lib/services/dashboard.ts:126-127`** — `getConsistencyScore` uses `setHours(0, 0, 0, 0)` (local time) for week bucketing. Same class of timezone bug previously fixed in `getDashboardStats`. Scores near week boundaries will be wrong in non-UTC environments. Use UTC methods consistently.
+- [ ] **`lib/utils/formatters.ts:3-4`** — `formatLogDate` uses `setHours(0, 0, 0, 0)` (local time) to compare dates stored as `@db.Date` (UTC). Will misclassify "Today"/"Yesterday" near midnight in non-UTC timezones. Use UTC methods.
+
+### API Rule Violations
+
+- [ ] **`app/api/dsa-problem/patterns/route.ts:21`** — `limit` query param is parsed with `parseInt` but not validated with a Zod schema. `parseInt("abc", 10)` returns `NaN`, which is passed directly to `analyzePatterns`. Add Zod validation (`z.coerce.number().int().positive().optional()`).
+
+### Component Rule Violations
+
+- [ ] **`MilestoneList.tsx` — Silent error swallowing** — `handleAdd`, `handleToggle`, and `handleDelete` catch errors with only `console.error`. Users get no feedback when operations fail. Add per-operation error state and surface it in the UI (same pattern as `ProjectList.tsx` which shows `deleteError`).
+- [ ] **`MilestoneList.tsx` — Missing aria-labels** — The `Checkbox` for each milestone has no `aria-label` (screen readers can't identify what is being checked). The delete `Button` has no `aria-label` either. Add descriptive labels: `aria-label={\`Complete ${milestone.title}\`}` and `aria-label={\`Delete ${milestone.title}\`}`.
+
+### Architecture / Structure Issues
+
+- [ ] **Duplicated `statusConfig`** — The status label/color map is defined identically in both `ProjectList.tsx` and `projects/[id]/page.tsx`. Extract to a shared constant in `lib/utils/project.ts` or `types/project.ts` and import from both. Also resolves the hardcoded color issues above in one place.
+- [ ] **Duplicate route handler** — `app/api/project/[id]/milestones/[milestoneId]/route.ts` contains a POST handler that duplicates `complete/route.ts` and has a wrong path comment (`// POST .../complete`). The POST handler in `[milestoneId]/route.ts` is dead code (the component calls the `/complete` sub-route). Remove the POST handler and keep only DELETE in `[milestoneId]/route.ts`.
+- [ ] **Dashboard DB query fan-out** — `getDashboardStats` fires 12 parallel queries, and `generateInsights` internally fires 4 more (logs, problems, last log, user). That's 16+ DB hits per dashboard render. `generateInsights` re-fetches data already retrieved by `getDashboardStats`. Consider passing pre-fetched context to `generateInsights` instead of letting it re-query.
+
+---
+
+## Recently Completed (2026-03-23)
+
+1. **Streak System** — Full implementation with proper consecutive day handling
+2. **Pattern Analysis** — Strong/weak pattern identification with dashboard display
+3. **Insights Engine** — 9 rule types with priority-based display
+4. **Project Tracker** — Milestones, progress tracking, activity logs
+5. **Dashboard UX** — Simplified stats, better spacing, icon-enhanced empty states

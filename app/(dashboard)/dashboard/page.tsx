@@ -9,8 +9,10 @@ import {
   getWeeklyProblemStats,
 } from "@/lib/services/dashboard";
 import { WeeklyProgressChart } from "@/components/dashboard/WeeklyProgressChart";
-import { DifficultyDistribution } from "@/components/dashboard/DifficultyDistribution";
+import { InsightsList } from "@/components/dashboard/InsightsList";
+import { PatternCard } from "@/components/dashboard/PatternCard";
 import { formatLogDate } from "@/lib/utils/formatters";
+import { BookOpen } from "lucide-react";
 
 export default async function DashboardPage() {
   const supabase = await createServerSupabaseClient();
@@ -33,69 +35,67 @@ export default async function DashboardPage() {
 
       <Separator />
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-7">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
         <StatsCard
-          title="Total Problems"
+          title="Problems"
           value={stats.totalProblems}
-          description="All DSA problems solved"
+          description="Total solved"
         />
         <StatsCard
-          title="Today's Progress"
-          value={stats.todaysProblems}
-          description="Problems solved today"
-        />
-        <StatsCard
-          title="Recent Logs"
-          value={stats.recentLogs.length}
-          description="Latest daily entries"
-        />
-        <StatsCard
-          title="Current Streak"
+          title="Streak"
           value={stats.currentStreak}
-          description={
-            stats.currentStreak === 1 ? "day in a row" : "days in a row"
-          }
+          description={stats.currentStreak === 1 ? "day" : "days"}
         />
         <StatsCard
-          title="Longest Streak"
-          value={stats.longestStreak}
-          description={stats.longestStreak === 1 ? "day" : "days"}
-        />
-        <StatsCard
-          title="Total Projects"
-          value={stats.totalProjects}
-          description="All projects tracked"
-        />
-        <StatsCard
-          title="Active Projects"
+          title="Projects"
           value={stats.activeProjects}
-          description={
-            stats.activeProjects === 1
-              ? "project in progress"
-              : "projects in progress"
-          }
+          description="Active"
+        />
+        <StatsCard
+          title="Today"
+          value={stats.todaysProblems}
+          description="Solved"
         />
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        <div className="lg:col-span-2">
-          <h3 className="text-foreground mb-4 text-sm font-semibold">
-            Progress
+        <div className="space-y-4 lg:col-span-2">
+          <h3 className="text-foreground text-sm font-semibold">
+            Weekly Progress
           </h3>
           <WeeklyProgressChart data={weeklyStats} />
         </div>
-        <div>
-          <h3 className="text-foreground mb-4 text-sm font-semibold">
-            Difficulty
-          </h3>
-          <DifficultyDistribution {...stats.difficultyDistribution} />
+        <div className="space-y-4">
+          <h3 className="text-foreground text-sm font-semibold">Insights</h3>
+          <InsightsList insights={stats.insights} />
         </div>
       </div>
 
-      <div>
-        <h3 className="text-foreground mb-4 text-sm font-semibold">
-          Recent Logs
-        </h3>
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <div className="space-y-4">
+          <h3 className="text-foreground text-sm font-semibold">
+            Strongest Pattern
+          </h3>
+          <Card className="border-border rounded-lg border shadow-none">
+            <CardContent className="pt-6">
+              <PatternCard analysis={stats.patternAnalysis} type="strongest" />
+            </CardContent>
+          </Card>
+        </div>
+        <div className="space-y-4">
+          <h3 className="text-foreground text-sm font-semibold">
+            Needs Practice
+          </h3>
+          <Card className="border-border rounded-lg border shadow-none">
+            <CardContent className="pt-6">
+              <PatternCard analysis={stats.patternAnalysis} type="weakest" />
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+
+      <div className="space-y-4">
+        <h3 className="text-foreground text-sm font-semibold">Recent Logs</h3>
         <Card className="border-border rounded-lg border shadow-none">
           <CardHeader className="pb-3">
             <CardTitle className="text-muted-foreground text-sm font-medium">
@@ -104,9 +104,12 @@ export default async function DashboardPage() {
           </CardHeader>
           <CardContent className="py-0">
             {stats.recentLogs.length === 0 ? (
-              <p className="text-muted-foreground py-8 text-center text-sm">
-                No logs yet. Start tracking your daily progress!
-              </p>
+              <div className="py-8 text-center">
+                <BookOpen className="text-muted-foreground mx-auto h-8 w-8" />
+                <p className="text-muted-foreground mt-3 text-sm">
+                  No logs yet. Start tracking your daily progress!
+                </p>
+              </div>
             ) : (
               <div className="divide-border divide-y">
                 {stats.recentLogs.map((log) => (

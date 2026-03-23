@@ -1,5 +1,9 @@
 import { prisma } from "@/lib/db/prisma";
 import { calculateStreaks } from "@/lib/services/streak";
+import { analyzePatterns } from "@/lib/services/dsa-problem";
+import { generateInsights } from "@/lib/services/insights";
+import type { PatternAnalysis } from "@/types/dsa-problem";
+import type { Insight } from "@/types/insights";
 
 export interface DashboardStats {
   totalProblems: number;
@@ -20,6 +24,8 @@ export interface DashboardStats {
     hard: number;
   };
   consistencyScore: number;
+  patternAnalysis: PatternAnalysis;
+  insights: Insight[];
 }
 
 export async function getDashboardStats(userId: string): Promise<DashboardStats> {
@@ -27,7 +33,7 @@ export async function getDashboardStats(userId: string): Promise<DashboardStats>
   const now = new Date();
   const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
 
-  const [totalProblemsResult, todaysLog, recentLogsResult, streakStats, totalProjectsResult, activeProjectsResult, easyCount, mediumCount, hardCount, consistencyScore] =
+  const [totalProblemsResult, todaysLog, recentLogsResult, streakStats, totalProjectsResult, activeProjectsResult, easyCount, mediumCount, hardCount, consistencyScore, patternAnalysis, insights] =
     await Promise.all([
       prisma.dSAProblem.count({
         where: { userId },
@@ -61,6 +67,8 @@ export async function getDashboardStats(userId: string): Promise<DashboardStats>
       prisma.dSAProblem.count({ where: { userId, difficulty: "MEDIUM" } }),
       prisma.dSAProblem.count({ where: { userId, difficulty: "HARD" } }),
       getConsistencyScore(userId),
+      analyzePatterns(userId, { limit: 1000 }),
+      generateInsights(userId),
     ]);
 
   const recentLogs = recentLogsResult.map((log) => ({
@@ -84,6 +92,8 @@ export async function getDashboardStats(userId: string): Promise<DashboardStats>
       hard: hardCount,
     },
     consistencyScore,
+    patternAnalysis,
+    insights,
   };
 }
 

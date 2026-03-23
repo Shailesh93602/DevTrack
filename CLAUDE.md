@@ -331,4 +331,36 @@ See `.env.example` for reference.
 
 **Next:** Settings page, milestone management UI (within project detail view)
 
+**2026-03-23** — Major features implemented: Streak System, Pattern Analysis, Insights Engine, Project Tracker, UX improvements:
+
+- **Streak System** — `@/lib/services/streak.ts`
+  - Strict consecutive day calculation (any gap breaks streak)
+  - UTC-safe date handling with `toISOString().slice(0, 10)`
+  - Forward pass for longest streak, backward pass for current streak
+  - Persisted to `User.longestStreak` for efficiency
+- **Pattern Analysis** — `@/lib/services/dsa-problem.ts` + `@/types/dsa-problem.ts`
+  - Groups problems by pattern with count/percentage
+  - Identifies strongest (most practiced) and weakest (least practiced) patterns
+  - API route: `/api/dsa-problem/patterns`
+  - Dashboard display with "Strongest Pattern" and "Needs Practice" cards
+- **Insights Engine** — `@/lib/services/insights.ts` + `@/types/insights.ts`
+  - 9 rule types: strength, weakness, activity, milestone, suggestion
+  - Configurable thresholds via `DEFAULT_INSIGHT_CONFIG`
+  - Priority-based display (high → medium → low)
+  - `InsightsList` component on dashboard
+- **Project Tracker** — Milestones and detail view
+  - `MilestoneList` component with add/complete/delete
+  - Project detail page: `/dashboard/projects/[id]`
+  - Activity log history per project
+  - API routes: `/api/project/[id]/milestones/*`
+- **Dashboard UX Improvements**
+  - Simplified stats grid: 4 key metrics (was 7)
+  - Better spacing with `space-y-4` section containers
+  - Icon-enhanced empty states (BookOpen, ClipboardList)
+  - Extracted `PatternCard` component from inline IIFE
+  - Consistent section headers
+- **Updated `devtrack_todo.md`** — Marked completed features, reorganized by priority
+
+**Next:** Settings page completion, mobile responsiveness, loading skeletons
+
 ---

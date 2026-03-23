@@ -1,123 +1,108 @@
 import { prisma } from "@/lib/db/prisma";
 
-export interface StreakStats {
+export interface StreakResult {
   currentStreak: number;
   longestStreak: number;
-  currentStreakWithFreeze: number;
-  freezesAvailable: number;
-  freezesUsedThisWeek: number;
-  currentMilestone: StreakMilestone | null;
-  nextMilestone: StreakMilestone | null;
-  progressToNext: number;
 }
 
-export interface StreakMilestone {
-  days: number;
-  name: string;
-  badge: string;
-  description: string;
-}
-
-const MILESTONES: StreakMilestone[] = [
-  { days: 7, name: "Week Warrior", badge: "🎯", description: "7-day streak" },
-  { days: 30, name: "Monthly Master", badge: "🔥", description: "30-day streak" },
-  { days: 60, name: "Consistency King", badge: "⚡", description: "60-day streak" },
-  { days: 100, name: "Century Champion", badge: "👑", description: "100-day streak" },
-];
-
-function getMilestonesForStreak(streak: number): { current: StreakMilestone | null; next: StreakMilestone | null; progress: number } {
-  const achieved = MILESTONES.filter((m) => streak >= m.days);
-  const current = achieved.length > 0 ? achieved[achieved.length - 1] : null;
-  const nextIndex = achieved.length;
-  const next = nextIndex < MILESTONES.length ? MILESTONES[nextIndex] : null;
-
-  let progress = 0;
-  if (next) {
-    const prevDays = current?.days ?? 0;
-    progress = Math.min(100, Math.round(((streak - prevDays) / (next.days - prevDays)) * 100));
-  } else if (current) {
-    progress = 100;
-  }
-
-  return { current, next, progress };
-}
-
+/**
+ * Convert Date to UTC YYYY-MM-DD string for safe comparison
+ * Avoids timezone issues with setHours(0,0,0,0) which uses local time
+ */
 function toUtcDateString(date: Date): string {
   return date.toISOString().slice(0, 10);
 }
 
+/**
+ * Check if dateB is exactly 1 day after dateA
+ * Both inputs are YYYY-MM-DD strings
+ */
 function isNextDay(a: string, b: string): boolean {
   const dateA = new Date(a + "T00:00:00Z");
   const dateB = new Date(b + "T00:00:00Z");
   const diffMs = dateB.getTime() - dateA.getTime();
-  return diffMs === 86_400_000;
+  return diffMs === 86_400_000; // Exactly 24 hours
 }
 
-function getWeekStart(dateStr: string): string {
-  const date = new Date(dateStr + "T00:00:00Z");
-  const dayOfWeek = date.getUTCDay();
-  const weekStart = new Date(date);
-  weekStart.setUTCDate(date.getUTCDate() - dayOfWeek);
-  return toUtcDateString(weekStart);
-}
+/**
+ * Calculate current and longest streaks from daily log dates
+ * Streak requires CONSECUTIVE days - any gap breaks the streak
+ * @param dates - Array of YYYY-MM-DD strings in ascending order
+ * @returns Current streak and longest streak
+ */
+export function calculateStreakFromDates(dates: string[]): StreakResult {
+  if (dates.length === 0) {
+    return { currentStreak: 0, longestStreak: 0 };
+  }
 
-function calculateStreakWithFreeze(
-  dates: string[],
-  referenceDate: string
-): { streak: number; freezesUsed: number } {
-  if (dates.length === 0) return { streak: 0, freezesUsed: 0 };
+  // Remove duplicates and sort
+  const uniqueDates = Array.from(new Set(dates)).sort((a, b) => a.localeCompare(b));
 
-  // Check if reference date is today or yesterday of last log
-  const lastDate = dates.at(-1)!;
+  // Calculate longest streak with forward pass
+  let runningStreak = 1;
+  let longestStreak = 1;
+
+  for (let i = 1; i < uniqueDates.length; i++) {
+    if (isNextDay(uniqueDates[i - 1], uniqueDates[i])) {
+      runningStreak++;
+      longestStreak = Math.max(longestStreak, runningStreak);
+    } else {
+      runningStreak = 1;
+    }
+  }
+
+  // Calculate current streak - MUST be consecutive from today
   const today = toUtcDateString(new Date());
   const yesterday = toUtcDateString(new Date(Date.now() - 86_400_000));
 
-  if (lastDate !== today && lastDate !== yesterday) {
-    return { streak: 0, freezesUsed: 0 };
-  }
+  let currentStreak = 0;
+  const lastDate = uniqueDates.at(-1)!;
 
-  let streak = 0;
-  let freezesUsed = 0;
-  let currentWeekFreezes = 0;
-  let lastWeekStart: string | null = null;
+  // Only count streak if last log is today or yesterday
+  if (lastDate === today || lastDate === yesterday) {
+    // Start from expected date and work backwards through dates
+    // Each date must be exactly 1 day before the expected date
+    let expectedDate = lastDate;
+    let dateIndex = uniqueDates.length - 1;
 
-  // Work backwards from the reference date
-  for (let i = dates.length - 1; i >= 0; i--) {
-    const date = dates[i];
-    const expectedDate = toUtcDateString(
-      new Date(new Date(referenceDate + "T00:00:00Z").getTime() - streak * 86_400_000)
-    );
+    while (dateIndex >= 0) {
+      const currentDate = uniqueDates[dateIndex];
 
-    if (date === expectedDate) {
-      streak++;
-    } else {
-      // Check if we can use a freeze
-      const dateWeekStart = getWeekStart(expectedDate);
-
-      if (lastWeekStart !== dateWeekStart) {
-        currentWeekFreezes = 0;
-        lastWeekStart = dateWeekStart;
-      }
-
-      if (currentWeekFreezes < 1) {
-        // Use freeze for this day
-        streak++;
-        freezesUsed++;
-        currentWeekFreezes++;
-        // Continue checking with the same date (it should match the next expected)
-        i++; // Don't advance, check same date against next expected
+      if (currentDate === expectedDate) {
+        // Found the expected date, count it and move to previous day
+        currentStreak++;
+        // Calculate previous expected date
+        const expectedDateObj = new Date(expectedDate + "T00:00:00Z");
+        expectedDateObj.setUTCDate(expectedDateObj.getUTCDate() - 1);
+        expectedDate = toUtcDateString(expectedDateObj);
+        dateIndex--;
       } else {
-        // Streak broken
-        break;
+        // Gap detected - expected date not found
+        // Check if this is just a date we haven't reached yet
+        const currentDateObj = new Date(currentDate + "T00:00:00Z");
+        const expectedDateObj = new Date(expectedDate + "T00:00:00Z");
+
+        if (currentDateObj.getTime() < expectedDateObj.getTime()) {
+          // Current date is before expected - gap exists, break streak
+          break;
+        }
+        // Current date is after expected (shouldn't happen with sorted), skip it
+        dateIndex--;
       }
     }
   }
 
-  return { streak, freezesUsed };
+  return { currentStreak, longestStreak };
 }
 
-export async function calculateStreaks(userId: string): Promise<StreakStats> {
-  // Only fetch last 120 days - sufficient for current streak calc, avoids loading all history
+/**
+ * Fetch user's daily logs and calculate streak statistics
+ * Optimized: only fetches last 120 days for current streak
+ * Longest streak is persisted to avoid full table scans
+ */
+export async function calculateStreaks(userId: string): Promise<StreakResult> {
+  // Only fetch last 120 days - sufficient for current streak calc
+  // Current streaks beyond 120 days are extremely rare
   const cutoffDate = new Date();
   cutoffDate.setDate(cutoffDate.getDate() - 120);
 
@@ -127,73 +112,12 @@ export async function calculateStreaks(userId: string): Promise<StreakStats> {
     orderBy: { date: "asc" },
   });
 
-  if (logs.length === 0) {
-    return {
-      currentStreak: 0,
-      longestStreak: 0,
-      currentStreakWithFreeze: 0,
-      freezesAvailable: 1,
-      freezesUsedThisWeek: 0,
-      currentMilestone: null,
-      nextMilestone: MILESTONES[0] ?? null,
-      progressToNext: 0,
-    };
-  }
-
   const dates = logs.map((log) => toUtcDateString(log.date));
+  const { currentStreak, longestStreak } = calculateStreakFromDates(dates);
 
-  // Calculate longest streak
-  let streak = 1;
-  let longest = 1;
-  for (let i = 1; i < dates.length; i++) {
-    if (isNextDay(dates[i - 1], dates[i])) {
-      streak++;
-      longest = Math.max(longest, streak);
-    } else {
-      streak = 1;
-    }
-  }
-
-  // Calculate current streak (without freeze)
-  const todayStr = toUtcDateString(new Date());
-  const yesterdayStr = toUtcDateString(
-    new Date(Date.now() - 86_400_000)
-  );
-  const lastDate = dates.at(-1)!;
-
-  let currentStreak = 0;
-  if (lastDate === todayStr || lastDate === yesterdayStr) {
-    currentStreak = 1;
-    for (let i = dates.length - 2; i >= 0; i--) {
-      if (isNextDay(dates[i], dates[i + 1])) {
-        currentStreak++;
-      } else {
-        break;
-      }
-    }
-  }
-
-  // Calculate streak with freeze
-  const today = toUtcDateString(new Date());
-  const { streak: currentStreakWithFreeze, freezesUsed: _freezesUsed } = calculateStreakWithFreeze(
-    dates,
-    today
-  );
-
-  // Calculate freezes available this week
-  const todayWeekStart = getWeekStart(today);
-  const freezesUsedThisWeek = dates.filter((d, i) => {
-    if (getWeekStart(d) !== todayWeekStart) return false;
-    // Check if this date used a freeze (gap from previous day)
-    if (i === 0) return false;
-    const prevDate = dates[i - 1];
-    return !isNextDay(prevDate, d);
-  }).length;
-
-  const { current, next, progress } = getMilestonesForStreak(currentStreak);
-
-  // Persist longest streak if new record achieved
-  const effectiveLongest = Math.max(longest, currentStreak);
+  // Persist longest streak if it's a new record
+  // This allows future calls to skip full history scan
+  const effectiveLongest = Math.max(longestStreak, currentStreak);
   if (effectiveLongest > 0) {
     await prisma.user.updateMany({
       where: { id: userId, longestStreak: { lt: effectiveLongest } },
@@ -201,14 +125,5 @@ export async function calculateStreaks(userId: string): Promise<StreakStats> {
     });
   }
 
-  return {
-    currentStreak,
-    longestStreak: effectiveLongest,
-    currentStreakWithFreeze,
-    freezesAvailable: Math.max(0, 1 - freezesUsedThisWeek),
-    freezesUsedThisWeek,
-    currentMilestone: current,
-    nextMilestone: next,
-    progressToNext: progress,
-  };
+  return { currentStreak, longestStreak: effectiveLongest };
 }

@@ -68,3 +68,21 @@ export interface DsaProblemActions {
   handleEdit: (problem: DsaProblem) => void;
   setFilter: (filter: typeof FILTER_OPTIONS[number]) => void;
 }
+
+// ─── Pattern Analysis Types ─────────────────────────────────────────────────
+
+export interface PatternStat {
+  pattern: string;
+  count: number;
+  percentage: number;
+}
+
+export interface PatternAnalysis {
+  patterns: PatternStat[];
+  summary: {
+    totalProblems: number;
+    uniquePatterns: number;
+    mostPracticed: PatternStat | null;
+    leastPracticed: PatternStat | null;
+  };
+}

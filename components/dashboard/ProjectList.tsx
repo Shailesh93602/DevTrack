@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -12,6 +13,7 @@ import {
   Clock,
   AlertCircle,
   Pencil,
+  ArrowRight,
 } from "lucide-react";
 import { ProjectForm } from "./ProjectForm";
 
@@ -126,7 +128,10 @@ export function ProjectList({ projects }: ProjectListProps) {
             ) : (
               <>
                 <div className="flex items-start justify-between">
-                  <div className="flex items-center gap-2">
+                  <Link
+                    href={`/dashboard/projects/${project.id}`}
+                    className="flex items-center gap-2 hover:opacity-80"
+                  >
                     <div className={`h-2 w-2 rounded-full ${status.color}`} />
                     <h4 className="text-foreground font-medium">
                       {project.name}
@@ -135,9 +140,19 @@ export function ProjectList({ projects }: ProjectListProps) {
                       <StatusIcon className="mr-1 h-3 w-3" />
                       {status.label}
                     </Badge>
-                  </div>
+                  </Link>
 
                   <div className="flex items-center gap-1">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      asChild
+                      className="text-muted-foreground hover:text-foreground"
+                    >
+                      <Link href={`/dashboard/projects/${project.id}`}>
+                        <ArrowRight className="h-4 w-4" />
+                      </Link>
+                    </Button>
                     <Button
                       variant="ghost"
                       size="sm"
