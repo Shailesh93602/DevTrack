@@ -5,7 +5,7 @@ test.use({ storageState: "playwright/.auth/user.json" });
 test.describe("Streak System", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/dashboard");
-    await expect(page.locator("text=Overview")).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Overview" })).toBeVisible();
   });
 
   test("should display current streak count", async ({ page }) => {

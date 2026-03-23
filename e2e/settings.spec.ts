@@ -5,7 +5,7 @@ test.use({ storageState: "playwright/.auth/user.json" });
 test.describe("Settings Page", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/dashboard/settings");
-    await expect(page.locator("text=Settings")).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Settings" })).toBeVisible();
   });
 
   test("should display user information", async ({ page }) => {
@@ -33,6 +33,6 @@ test.describe("Settings Page", () => {
     await page.click('a[href="/dashboard"]');
 
     // Should be on dashboard
-    await expect(page.locator("text=Overview")).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Overview" })).toBeVisible();
   });
 });

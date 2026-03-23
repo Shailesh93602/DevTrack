@@ -5,7 +5,7 @@ test.use({ storageState: "playwright/.auth/user.json" });
 test.describe("Dashboard Feature", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/dashboard");
-    await expect(page.locator("text=Overview")).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Overview" })).toBeVisible();
   });
 
   test("should display dashboard stats cards", async ({ page }) => {
@@ -47,9 +47,9 @@ test.describe("Dashboard Feature", () => {
   });
 
   test("should navigate to daily log page from dashboard", async ({ page }) => {
-    // Click on any navigation link to logs
-    await page.click('a[href="/dashboard/logs"]');
-    await expect(page.locator("text=Daily Logs")).toBeVisible();
+    // Click on Logs link in sidebar
+    await page.getByRole("link", { name: "Logs" }).click();
+    await expect(page.getByRole("heading", { name: "Daily Logs" })).toBeVisible();
   });
 
   test("should show empty state when no recent logs", async ({ page }) => {
