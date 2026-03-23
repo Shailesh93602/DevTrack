@@ -8,7 +8,7 @@
 
 - [ ] **Fix type-unsafe casts in `lib/services/dashboard.ts`** — `recentLogs` result uses `log as unknown` then re-casts to specific types (lines 40–45); replace with a typed Prisma `select` return and remove the casts
 - [ ] **Fix timezone bug in `getDashboardStats`** — `today.setHours(0,0,0,0)` uses local server time for a `@db.Date` column; use `Date.UTC` to match the fix already applied in `getDailyLogByDate`
-- [ ] **Add `prisma generate` step to dev setup docs** — schema changes won't reflect without it; at minimum document in README
+- [x] **Add `prisma generate` step to dev setup docs** — schema changes won't reflect without it; at minimum document in README
 
 ---
 
@@ -39,8 +39,39 @@
 
 - [ ] Add `totalProjects` and `activeProjects` count to `getDashboardStats` in `lib/services/dashboard.ts`
 - [ ] Add corresponding `StatsCard` for projects on `dashboard/page.tsx`
-- [ ] Add current streak (consecutive days with a daily log) to `getDashboardStats`
-- [ ] Render streak stat in a `StatsCard`
+- [x] Add current streak (consecutive days with a daily log) to `getDashboardStats`
+- [x] Render streak stat in a `StatsCard`
+
+### Streak System Enhancements
+
+- [ ] Add streak freeze feature — allow 1 missed day per week without breaking streak
+- [ ] Add weekly streak summary notification component
+- [ ] Add streak milestones (7, 30, 60, 100 days) with badge rewards
+- [ ] Store longest streak in user profile for persistence
+
+### Pattern Intelligence
+
+- [ ] Analyze user's most practiced patterns from DSA problems
+- [ ] Recommend weak patterns based on low solve count or difficulty struggles
+- [ ] Show pattern mastery progress bar per category
+- [ ] Suggest next pattern to learn based on interview frequency + current skill gaps
+
+### Insights & Analytics
+
+- [ ] Add weekly summary email/generation (problems solved, streak status, weak areas)
+- [ ] Add productivity trends — compare current week vs previous
+- [ ] Add difficulty distribution pie chart to dashboard
+- [ ] Add "consistency score" metric (logs per week / target)
+- [ ] Add peak productivity time analysis (if timestamp data available)
+
+### Project Tracker Enhancements
+
+- [ ] Add project milestones with deadlines and completion tracking
+- [ ] Add project status change history/activity log
+- [ ] Add tech stack tags with icon display
+- [ ] Add project progress bar based on milestone completion
+- [ ] Link DSA problems to projects (e.g., "practice for this interview")
+- [ ] Add project notes/documentation section
 
 ---
 
@@ -48,8 +79,8 @@
 
 ### Daily Logs — Improvements
 
-- [ ] Add edit support to `DailyLogList.tsx` — "Edit" button per row that opens `DailyLogForm` pre-filled with that log's data
-- [ ] Add `problemsSolved` to the log list row display in `DailyLogList.tsx` (currently only topics shown)
+- [x] Add edit support to `DailyLogList.tsx` — "Edit" button per row that opens `DailyLogForm` pre-filled with that log's data
+- [x] Add `problemsSolved` to the log list row display in `DailyLogList.tsx` (currently only topics shown)
 - [ ] Add a date range filter to the logs list (e.g., last 7 days / 30 days / all)
 - [ ] Cap logs list to 10 entries with a "Load more" control; currently fetches all
 
