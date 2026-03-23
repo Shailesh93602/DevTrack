@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { Trash2, Pencil } from "lucide-react";
+import { Trash2, Pencil, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { DsaProblemForm } from "./DsaProblemForm";
 import {
@@ -136,27 +137,45 @@ export function DsaProblemList({ problems }: DsaProblemListProps) {
     handleDelete,
     handleEdit,
   } = useDsaProblemList();
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredProblems =
-    filter === "ALL"
-      ? problems
-      : problems.filter((p) => p.difficulty === filter);
+  const filteredProblems = problems.filter((p) => {
+    const matchesDifficulty = filter === "ALL" || p.difficulty === filter;
+    const matchesSearch =
+      searchQuery === "" ||
+      p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      p.pattern.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesDifficulty && matchesSearch;
+  });
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center gap-2">
-        <span className="text-muted-foreground text-sm">Filter:</span>
-        <div className="flex gap-1">
-          {FILTER_OPTIONS.map((d) => (
-            <Button
-              key={d}
-              variant={filter === d ? "secondary" : "ghost"}
-              size="sm"
-              onClick={() => setFilter(d)}
-            >
-              {d.charAt(0) + d.slice(1).toLowerCase()}
-            </Button>
-          ))}
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center gap-2">
+          <span className="text-muted-foreground text-sm">Filter:</span>
+          <div className="flex gap-1">
+            {FILTER_OPTIONS.map((d) => (
+              <Button
+                key={d}
+                variant={filter === d ? "secondary" : "ghost"}
+                size="sm"
+                onClick={() => setFilter(d)}
+              >
+                {d.charAt(0) + d.slice(1).toLowerCase()}
+              </Button>
+            ))}
+          </div>
+        </div>
+
+        <div className="relative">
+          <Search className="text-muted-foreground absolute top-2.5 left-2.5 h-4 w-4" />
+          <Input
+            type="text"
+            placeholder="Search title or pattern..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="h-9 w-full pl-9 sm:w-[200px]"
+          />
         </div>
       </div>
 
