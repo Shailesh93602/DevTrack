@@ -37,8 +37,8 @@
 
 ### Dashboard Stats — Missing Metrics
 
-- [ ] Add `totalProjects` and `activeProjects` count to `getDashboardStats` in `lib/services/dashboard.ts`
-- [ ] Add corresponding `StatsCard` for projects on `dashboard/page.tsx`
+- [x] Add `totalProjects` and `activeProjects` count to `getDashboardStats` in `lib/services/dashboard.ts`
+- [x] Add corresponding `StatsCard` for projects on `dashboard/page.tsx`
 - [x] Add current streak (consecutive days with a daily log) to `getDashboardStats`
 - [x] Render streak stat in a `StatsCard`
 
