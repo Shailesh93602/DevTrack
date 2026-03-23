@@ -44,9 +44,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       return errorResponse("No fields to update", 400, "NO_CHANGES");
     }
 
-    await updateDailyLog(user.id, validatedId.id, validatedData);
-
-    const updatedLog = await getDailyLogById(user.id, validatedId.id);
+    const updatedLog = await updateDailyLog(user.id, validatedId.id, validatedData);
 
     return successResponse(updatedLog);
   } catch (error) {

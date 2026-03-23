@@ -67,9 +67,10 @@ export async function updateDailyLog(
   id: string,
   data: UpdateDailyLogInput
 ) {
-  return prisma.dailyLog.updateMany({
+  return prisma.dailyLog.update({
     where: { id, userId },
     data,
+    select: defaultSelect,
   });
 }
 

@@ -17,8 +17,12 @@ function isNextDay(a: string, b: string): boolean {
 }
 
 export async function calculateStreaks(userId: string): Promise<StreakStats> {
+  // Only fetch last 120 days - sufficient for current streak calc, avoids loading all history
+  const cutoffDate = new Date();
+  cutoffDate.setDate(cutoffDate.getDate() - 120);
+
   const logs = await prisma.dailyLog.findMany({
-    where: { userId },
+    where: { userId, date: { gte: cutoffDate } },
     select: { date: true },
     orderBy: { date: "asc" },
   });
@@ -46,7 +50,7 @@ export async function calculateStreaks(userId: string): Promise<StreakStats> {
   const yesterdayStr = toUtcDateString(
     new Date(Date.now() - 86_400_000)
   );
-  const lastDate = dates[dates.length - 1];
+  const lastDate = dates.at(-1)!;
 
   let currentStreak = 0;
   if (lastDate === todayStr || lastDate === yesterdayStr) {
