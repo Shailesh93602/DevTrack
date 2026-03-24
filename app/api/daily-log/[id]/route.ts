@@ -38,10 +38,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     }
 
     const body = await request.json();
-    console.log("PUT /api/daily-log/[id] - Raw body:", JSON.stringify(body, null, 2));
-
     const validatedData = updateDailyLogSchema.parse(body);
-    console.log("PUT /api/daily-log/[id] - Validated data:", JSON.stringify(validatedData, null, 2));
 
     const updatedLog = await updateDailyLog(user.id, validatedId.id, {
       ...validatedData,

@@ -26,19 +26,9 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    console.log("POST /api/daily-log - Raw body:", JSON.stringify(body, null, 2));
-
     const validatedData = createDailyLogSchema.parse(body);
-    console.log("POST /api/daily-log - Validated data:", JSON.stringify(validatedData, null, 2));
 
-    const log = await createDailyLog(
-      user.id,
-      {
-        ...validatedData,
-        topics: body.topics || [],
-      },
-      user.email
-    );
+    const log = await createDailyLog(user.id, validatedData, user.email);
 
     return successResponse(log);
   } catch (error) {
