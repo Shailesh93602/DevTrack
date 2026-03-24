@@ -1,6 +1,11 @@
 import { prisma } from "@/lib/db/prisma";
 import { calculateStreakFromDates } from "@/lib/services/streak";
 import { toUtcDateString } from "@/lib/utils/date";
+import {
+  DAYS_IN_WEEK,
+  INSIGHTS_QUERY_LIMIT,
+  MS_PER_DAY,
+} from "@/lib/constants";
 import type {
   Insight,
   InsightContext,
@@ -19,75 +24,7 @@ function generateInsightId(type: string, suffix: string): string {
  * Build insight context from user data
  */
 async function buildInsightContext(userId: string): Promise<InsightContext> {
-  const [
-    problems,
-    recentLogs,
-    lastLog,
-    logs,
-  ] = await Promise.all([
-    prisma.dSAProblem.findMany({
-      where: { userId },
-      select: { pattern: true },
-    }),
-    prisma.dailyLog.findMany({
-      where: { userId },
-      orderBy: { date: "desc" },
-      take: 7,
-      select: { id: true },
-    }),
-    prisma.dailyLog.findFirst({
-      where: { userId },
-      orderBy: { date: "desc" },
-      select: { date: true },
-    }),
-    prisma.dailyLog.findMany({
-      where: { userId },
-      select: { date: true },
-      orderBy: { date: "asc" },
-      take: 120,
-    }),
-  ]);
-
-  // Calculate pattern stats
-  const patternCounts = new Map<string, number>();
-  for (const problem of problems) {
-    const normalized = problem.pattern.trim();
-    patternCounts.set(normalized, (patternCounts.get(normalized) ?? 0) + 1);
-  }
-
-  const totalProblems = problems.length;
-  const patternStats = Array.from(patternCounts.entries())
-    .map(([pattern, count]) => ({
-      pattern,
-      count,
-      percentage: totalProblems > 0 ? Math.round((count / totalProblems) * 100) : 0,
-    }))
-    .sort((a, b) => b.count - a.count);
-
-  // Calculate days since last log
-  let daysSinceLastLog: number | null = null;
-  if (lastLog) {
-    const lastDate = new Date(lastLog.date);
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    lastDate.setHours(0, 0, 0, 0);
-    daysSinceLastLog = Math.floor(
-      (today.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24)
-    );
-  }
-
-  // Calculate current and longest streak using shared service
-  const dates = logs.map((log) => toUtcDateString(log.date));
-  const { currentStreak, longestStreak } = calculateStreakFromDates(dates);
-
-  return {
-    patternStats,
-    totalProblems,
-    recentLogsCount: recentLogs.length,
-    daysSinceLastLog,
-    currentStreak,
-    longestStreak,
-  };
+  return buildInsightContextWithPartialData(userId, {});
 }
 
 /**
@@ -378,7 +315,7 @@ async function buildInsightContextWithPartialData(
   const recentLogs = preFetched.recentLogs ?? await prisma.dailyLog.findMany({
     where: { userId },
     orderBy: { date: "desc" },
-    take: 7,
+    take: DAYS_IN_WEEK,
     select: { id: true },
   });
 
@@ -392,7 +329,7 @@ async function buildInsightContextWithPartialData(
     where: { userId },
     select: { date: true },
     orderBy: { date: "asc" },
-    take: 120,
+    take: INSIGHTS_QUERY_LIMIT,
   });
 
   // Calculate pattern stats
@@ -419,7 +356,7 @@ async function buildInsightContextWithPartialData(
     today.setHours(0, 0, 0, 0);
     lastDate.setHours(0, 0, 0, 0);
     daysSinceLastLog = Math.floor(
-      (today.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24)
+      (today.getTime() - lastDate.getTime()) / MS_PER_DAY
     );
   }
 

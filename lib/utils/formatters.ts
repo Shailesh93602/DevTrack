@@ -1,3 +1,4 @@
+import { DAYS_IN_WEEK } from "@/lib/constants";
 import { toUtcDateString, parseUtcDate, DATE_CONSTANTS } from "./date";
 
 const { MS_PER_DAY } = DATE_CONSTANTS;
@@ -14,7 +15,7 @@ export function formatLogDate(date: Date): string {
 
   if (diffDays === 0) return "Today";
   if (diffDays === 1) return "Yesterday";
-  if (diffDays < 7) return `${diffDays} days ago`;
+  if (diffDays < DAYS_IN_WEEK) return `${diffDays} days ago`;
 
   return logDate.toLocaleDateString("en-US", {
     month: "short",

@@ -1,5 +1,5 @@
-export { DATE_CONSTANTS } from "@/constants";
-import { DATE_CONSTANTS } from "@/constants";
+export { DATE_CONSTANTS } from "@/lib/constants";
+import { DATE_CONSTANTS } from "@/lib/constants";
 
 const { MS_PER_DAY } = DATE_CONSTANTS;
 

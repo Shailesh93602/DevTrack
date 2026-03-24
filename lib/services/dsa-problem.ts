@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/db/prisma";
 import { Prisma, Difficulty } from "@prisma/client";
+import { INSIGHTS_QUERY_LIMIT } from "@/lib/constants";
 import type { CreateDsaProblemInput, DsaProblemQueryParams, UpdateDsaProblemInput } from "@/lib/validations/dsa-problem";
 import type { PatternAnalysis } from "@/types/dsa-problem";
 
@@ -114,7 +115,7 @@ export async function analyzePatterns(
   userId: string,
   options: { limit?: number } = {}
 ): Promise<PatternAnalysis> {
-  const { limit = 1000 } = options;
+  const { limit = INSIGHTS_QUERY_LIMIT } = options;
 
   const problems = await prisma.dSAProblem.findMany({
     where: { userId },

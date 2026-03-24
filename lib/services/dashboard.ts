@@ -3,6 +3,15 @@ import { calculateStreaks } from "@/lib/services/streak";
 import { analyzePatterns } from "@/lib/services/dsa-problem";
 import { generateInsights } from "@/lib/services/insights";
 import { normalizeToUtcMidnight, toUtcDateString } from "@/lib/utils/date";
+import {
+  CONSISTENCY_TARGET_LOGS_PER_WEEK,
+  CONSISTENCY_WEEKS_CHECK,
+  DAYS_IN_WEEK,
+  INSIGHTS_QUERY_LIMIT,
+  MS_PER_DAY,
+  RECENT_LOGS_DISPLAY_LIMIT,
+  WEEKLY_STATS_WEEKS,
+} from "@/lib/constants";
 import type { PatternAnalysis } from "@/types/dsa-problem";
 import type { Insight } from "@/types/insights";
 
@@ -80,7 +89,7 @@ export async function getDashboardStats(userId: string): Promise<DashboardStats>
     prisma.dailyLog.findMany({
       where: { userId },
       orderBy: { date: "desc" },
-      take: 5,
+      take: RECENT_LOGS_DISPLAY_LIMIT,
       select: {
         id: true,
         date: true,
@@ -105,7 +114,7 @@ export async function getDashboardStats(userId: string): Promise<DashboardStats>
       where: { userId },
       select: { date: true },
       orderBy: { date: "asc" },
-      take: 120,
+      take: INSIGHTS_QUERY_LIMIT,
     }),
     prisma.dailyLog.findMany({
       where: { userId },
@@ -147,14 +156,14 @@ export async function getDashboardStats(userId: string): Promise<DashboardStats>
     todayDate.setHours(0, 0, 0, 0);
     lastDate.setHours(0, 0, 0, 0);
     daysSinceLastLog = Math.floor(
-      (todayDate.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24)
+      (todayDate.getTime() - lastDate.getTime()) / MS_PER_DAY
     );
   }
 
   // Build pre-fetched context for insights
   const preFetchedInsightContext = {
     problems: problemsForInsights,
-    recentLogs: recentLogsResult.slice(0, 7),
+    recentLogs: recentLogsResult.slice(0, DAYS_IN_WEEK),
     lastLog: lastLog ? { date: lastLog.date } : null,
     logs: logsForInsights,
     patternStats,
@@ -172,7 +181,7 @@ export async function getDashboardStats(userId: string): Promise<DashboardStats>
   const startOfThisWeek = new Date(today);
   startOfThisWeek.setUTCDate(today.getUTCDate() - today.getUTCDay());
   const startOfLastWeek = new Date(startOfThisWeek);
-  startOfLastWeek.setUTCDate(startOfThisWeek.getUTCDate() - 7);
+  startOfLastWeek.setUTCDate(startOfThisWeek.getUTCDate() - DAYS_IN_WEEK);
 
   const stats: DashboardStats = {
     totalProblems: totalProblemsResult,
@@ -251,12 +260,12 @@ export interface WeeklyDataPoint {
 }
 
 async function getConsistencyScore(userId: string): Promise<number> {
-  const weeksToCheck = 4;
-  const targetLogsPerWeek = 5;
+  const weeksToCheck = CONSISTENCY_WEEKS_CHECK;
+  const targetLogsPerWeek = CONSISTENCY_TARGET_LOGS_PER_WEEK;
 
   const now = new Date();
   const startDate = new Date(now);
-  startDate.setDate(startDate.getDate() - weeksToCheck * 7);
+  startDate.setDate(startDate.getDate() - CONSISTENCY_WEEKS_CHECK * DAYS_IN_WEEK);
 
   const logs = await prisma.dailyLog.findMany({
     where: {
@@ -281,7 +290,7 @@ async function getConsistencyScore(userId: string): Promise<number> {
   let weeksMet = 0;
   for (let i = 0; i < weeksToCheck; i++) {
     const checkDate = normalizeToUtcMidnight(now);
-    checkDate.setUTCDate(checkDate.getUTCDate() - i * 7);
+    checkDate.setUTCDate(checkDate.getUTCDate() - i * DAYS_IN_WEEK);
     checkDate.setUTCDate(checkDate.getUTCDate() - checkDate.getUTCDay());
     const logCount = weekMap.get(checkDate.getTime()) ?? 0;
     if (logCount >= targetLogsPerWeek) {
@@ -295,7 +304,7 @@ async function getConsistencyScore(userId: string): Promise<number> {
 export async function getWeeklyProblemStats(userId: string, weeks: number = 8): Promise<WeeklyDataPoint[]> {
   const now = new Date();
   const startDate = new Date(now);
-  startDate.setDate(startDate.getDate() - weeks * 7);
+  startDate.setDate(startDate.getDate() - weeks * DAYS_IN_WEEK);
   startDate.setHours(0, 0, 0, 0);
 
   const problems = await prisma.dSAProblem.findMany({
@@ -337,7 +346,7 @@ export async function getWeeklyProblemStats(userId: string, weeks: number = 8): 
 
   for (let i = 0; i < weeks; i++) {
     const weekEnd = new Date(now);
-    weekEnd.setDate(weekEnd.getDate() - i * 7);
+    weekEnd.setDate(weekEnd.getDate() - i * DAYS_IN_WEEK);
     weekEnd.setHours(23, 59, 59, 999);
 
     const weekStart = new Date(weekEnd);
