@@ -10,7 +10,6 @@ import {
   INSIGHTS_QUERY_LIMIT,
   MS_PER_DAY,
   RECENT_LOGS_DISPLAY_LIMIT,
-  WEEKLY_STATS_WEEKS,
 } from "@/lib/constants";
 import type { PatternAnalysis } from "@/types/dsa-problem";
 import type { Insight } from "@/types/insights";

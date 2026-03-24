@@ -1,0 +1,130 @@
+import { Skeleton } from "@/components/ui/skeleton";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+
+export function StatCardSkeleton() {
+  return (
+    <Card>
+      <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+        <Skeleton className="h-4 w-[100px]" />
+        <Skeleton className="h-4 w-4 rounded-full" />
+      </CardHeader>
+      <CardContent>
+        <Skeleton className="h-8 w-[60px] mb-1" />
+        <Skeleton className="h-3 w-[120px]" />
+      </CardContent>
+    </Card>
+  );
+}
+
+export function PatternCardSkeleton() {
+  return (
+    <Card>
+      <CardHeader>
+        <Skeleton className="h-5 w-[140px]" />
+      </CardHeader>
+      <CardContent className="space-y-4">
+        {[1, 2, 3].map((i) => (
+          <div key={i} className="space-y-2">
+            <div className="flex items-center justify-between">
+              <Skeleton className="h-4 w-[80px]" />
+              <Skeleton className="h-4 w-[40px]" />
+            </div>
+            <Skeleton className="h-2 w-full" />
+          </div>
+        ))}
+      </CardContent>
+    </Card>
+  );
+}
+
+export function InsightCardSkeleton() {
+  return (
+    <Card>
+      <CardHeader>
+        <Skeleton className="h-5 w-[120px]" />
+      </CardHeader>
+      <CardContent className="space-y-4">
+        {[1, 2, 3].map((i) => (
+          <div key={i} className="flex gap-3 p-3 border rounded-lg">
+            <Skeleton className="h-5 w-5 rounded-full" />
+            <div className="flex-1 space-y-2">
+              <Skeleton className="h-4 w-[150px]" />
+              <Skeleton className="h-3 w-full" />
+            </div>
+          </div>
+        ))}
+      </CardContent>
+    </Card>
+  );
+}
+
+export function ActivityHeatmapSkeleton() {
+  return (
+    <Card>
+      <CardHeader>
+        <Skeleton className="h-5 w-[180px]" />
+      </CardHeader>
+      <CardContent className="space-y-2">
+        <div className="flex flex-wrap gap-1">
+          {Array.from({ length: 90 }).map((_, i) => (
+            <Skeleton key={`heatmap-${i}`} className="h-3 w-3 rounded-sm" />
+          ))}
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+export function DashboardSkeleton() {
+  return (
+    <div className="space-y-8 animate-in fade-in duration-500">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        {[1, 2, 3, 4].map((i) => (
+          <StatCardSkeleton key={`stat-${i}`} />
+        ))}
+      </div>
+
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+        <div className="md:col-span-4 space-y-4">
+           <Skeleton className="h-[350px] w-full rounded-xl" />
+        </div>
+        <div className="md:col-span-3">
+          <PatternCardSkeleton />
+        </div>
+      </div>
+
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+        <div className="md:col-span-3">
+          <InsightCardSkeleton />
+        </div>
+        <div className="md:col-span-4">
+          <ActivityHeatmapSkeleton />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function ListSkeleton({ count = 5 }: { count?: number }) {
+  return (
+    <div className="space-y-4 animate-in fade-in duration-500">
+      {Array.from({ length: count }).map((_, i) => (
+        <Card key={`list-item-${i}`}>
+          <CardContent className="p-4 flex items-center justify-between">
+            <div className="flex gap-4 flex-1">
+              <Skeleton className="h-10 w-10 rounded-md" />
+              <div className="flex-1 space-y-2 pt-1">
+                <Skeleton className="h-4 w-[60%] max-w-[200px]" />
+                <Skeleton className="h-3 w-[80%] max-w-[350px]" />
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <Skeleton className="h-8 w-8 rounded-md" />
+              <Skeleton className="h-8 w-8 rounded-md" />
+            </div>
+          </CardContent>
+        </Card>
+      ))}
+    </div>
+  );
+}

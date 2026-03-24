@@ -1,38 +1,12 @@
-import { Skeleton } from "@/components/ui/skeleton";
+import { DashboardSkeleton } from "@/components/dashboard/SkeletonCards";
 
 export default function Loading() {
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div className="space-y-2">
-          <Skeleton className="h-8 w-48" />
-          <Skeleton className="h-4 w-64" />
-        </div>
-        <Skeleton className="h-10 w-32" />
+    <div className="flex-1 space-y-4 pt-6">
+      <div className="flex items-center justify-between space-y-2">
+        <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
       </div>
-
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {[0, 1, 2, 3].map((i) => (
-          <Skeleton key={`stat-${i}`} className="h-28 w-full rounded-xl" />
-        ))}
-      </div>
-
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <Skeleton className="h-[350px] w-full rounded-xl" />
-        <Skeleton className="h-[350px] w-full rounded-xl" />
-      </div>
-
-      <div className="space-y-4">
-        <Skeleton className="h-6 w-32" />
-        <Skeleton className="h-32 w-full rounded-xl" />
-      </div>
-
-      <div className="space-y-4">
-        <Skeleton className="h-6 w-32" />
-        {[0, 1, 2].map((i) => (
-          <Skeleton key={`log-${i}`} className="h-24 w-full rounded-xl" />
-        ))}
-      </div>
+      <DashboardSkeleton />
     </div>
   );
 }
