@@ -1,19 +1,10 @@
 "use server";
 
 import { createServerSupabaseClient } from "@/lib/auth/supabase-server";
-import { prisma } from "@/lib/db/prisma";
+import { ensureUserInDb } from "@/lib/services/user";
 import { redirect } from "next/navigation";
-import { z } from "zod";
 
-const authSchema = z.object({
-  email: z.string().min(1, "Email is required").pipe(z.string().email("Please enter a valid email address")),
-  password: z
-    .string()
-    .min(8, "Password must be at least 8 characters")
-    .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
-    .regex(/[a-z]/, "Password must contain at least one lowercase letter")
-    .regex(/\d/, "Password must contain at least one digit"),
-});
+import { authSchema, passwordSchema } from "@/lib/validations/auth";
 
 export type AuthFormState = {
   error?: string;
@@ -65,20 +56,10 @@ export async function signup(
   }
 
   // Create user in local database if it doesn't exist
-  if (signUpData.user) {
+  if (signUpData.user?.email) {
     try {
-      await prisma.user.upsert({
-        where: { id: signUpData.user.id },
-        update: { email: signUpData.user.email! },
-        create: {
-          id: signUpData.user.id,
-          email: signUpData.user.email!,
-        },
-      });
-    } catch (e) {
-      console.error("Failed to create user in Prisma:", e);
-      // We don't return error here because Supabase account is created, 
-      // but it might cause issues later. 
+      await ensureUserInDb(signUpData.user.id, signUpData.user.email);
+    } catch {     // Non-blocking error for user creation - the account exists in Supabase
     }
   }
 
@@ -101,8 +82,9 @@ export async function forgotPassword(
   _prev: AuthFormState,
   formData: FormData
 ): Promise<AuthFormState> {
-  const email = formData.get("email") as string;
-  if (!email || !email.includes("@")) {
+  const emailEntry = formData.get("email");
+  const email = typeof emailEntry === "string" ? emailEntry : undefined;
+  if (!email?.includes("@")) {
     return { error: "Please enter a valid email address." };
   }
 
@@ -123,13 +105,8 @@ export async function resetPassword(
   formData: FormData
 ): Promise<AuthFormState> {
   const password = formData.get("password") as string;
-  
-  const parsed = z.string()
-    .min(8, "Password must be at least 8 characters")
-    .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
-    .regex(/[a-z]/, "Password must contain at least one lowercase letter")
-    .regex(/\d/, "Password must contain at least one digit")
-    .safeParse(password);
+
+  const parsed = passwordSchema.safeParse(password);
 
   if (!parsed.success) {
     return { error: parsed.error.issues[0].message };

@@ -67,7 +67,7 @@ export function ActivityHeatmapSkeleton() {
       <CardContent className="space-y-2">
         <div className="flex flex-wrap gap-1">
           {Array.from({ length: 90 }).map((_, i) => (
-            <Skeleton key={`heatmap-${i}`} className="h-3 w-3 rounded-sm" />
+            <Skeleton key={`heatmap-cell-${i}`} className="h-3 w-3 rounded-sm" />
           ))}
         </div>
       </CardContent>
@@ -109,7 +109,7 @@ export function ListSkeleton({ count = 5 }: { count?: number }) {
   return (
     <div className="space-y-4 animate-in fade-in duration-500">
       {Array.from({ length: count }).map((_, i) => (
-        <Card key={`list-item-${i}`}>
+        <Card key={`list-card-${i}`}>
           <CardContent className="p-4 flex items-center justify-between">
             <div className="flex gap-4 flex-1">
               <Skeleton className="h-10 w-10 rounded-md" />

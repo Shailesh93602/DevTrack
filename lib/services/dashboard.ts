@@ -132,34 +132,10 @@ export async function getDashboardStats(userId: string): Promise<DashboardStats>
   // This avoids redundant DB queries in generateInsights
   const lastLog = recentLogsResult.length > 0 ? recentLogsResult[0] : null;
 
-  // Calculate pattern stats from pre-fetched problems
-  const patternCounts = new Map<string, number>();
-  for (const problem of problemsForInsights) {
-    const normalized = problem.pattern.trim();
-    patternCounts.set(normalized, (patternCounts.get(normalized) ?? 0) + 1);
-  }
-
-  const patternStats = Array.from(patternCounts.entries())
-    .map(([pattern, count]) => ({
-      pattern,
-      count,
-      percentage: problemsForInsights.length > 0 ? Math.round((count / problemsForInsights.length) * 100) : 0,
-    }))
-    .sort((a, b) => b.count - a.count);
-
-  // Calculate days since last log
-  let daysSinceLastLog: number | null = null;
-  if (lastLog) {
-    const lastDate = new Date(lastLog.date);
-    const todayDate = new Date();
-    todayDate.setHours(0, 0, 0, 0);
-    lastDate.setHours(0, 0, 0, 0);
-    daysSinceLastLog = Math.floor(
-      (todayDate.getTime() - lastDate.getTime()) / MS_PER_DAY
-    );
-  }
-
   // Build pre-fetched context for insights
+  const patternStats = calculatePatternStats(problemsForInsights);
+  const daysSinceLastLog = calculateDaysSinceLastLog(lastLog);
+  
   const preFetchedInsightContext = {
     problems: problemsForInsights,
     recentLogs: recentLogsResult.slice(0, DAYS_IN_WEEK),
@@ -175,12 +151,6 @@ export async function getDashboardStats(userId: string): Promise<DashboardStats>
 
   // Generate insights with pre-fetched context (saves 4 DB queries)
   const insights = await generateInsights(userId, undefined, preFetchedInsightContext);
-
-  // Calculate trends
-  const startOfThisWeek = new Date(today);
-  startOfThisWeek.setUTCDate(today.getUTCDate() - today.getUTCDay());
-  const startOfLastWeek = new Date(startOfThisWeek);
-  startOfLastWeek.setUTCDate(startOfThisWeek.getUTCDate() - DAYS_IN_WEEK);
 
   const stats: DashboardStats = {
     totalProblems: totalProblemsResult,
@@ -202,24 +172,67 @@ export async function getDashboardStats(userId: string): Promise<DashboardStats>
       date: toUtcDateString(log.date),
       count: 1
     })),
-    trends: {
-      problemsThisWeek: problemsForInsights.filter(p => new Date(p.solvedAt) >= startOfThisWeek).length,
-      problemsLastWeek: problemsForInsights.filter(p => {
-        const d = new Date(p.solvedAt);
-        return d >= startOfLastWeek && d < startOfThisWeek;
-      }).length,
-      logsThisWeek: logsForInsights.filter(l => new Date(l.date) >= startOfThisWeek).length,
-      logsLastWeek: logsForInsights.filter(l => {
-        const d = new Date(l.date);
-        return d >= startOfLastWeek && d < startOfThisWeek;
-      }).length,
-    },
-    peakTime: null,
+    trends: calculateTrends(problemsForInsights, logsForInsights, today),
+    peakTime: calculatePeakTime(logsForPeak),
   };
 
-  // Peak Time Calculation
+  return stats;
+}
+
+// --- Helper Functions ---
+
+function calculatePatternStats(problems: { pattern: string }[]) {
+  const patternCounts = new Map<string, number>();
+  for (const p of problems) {
+    const normalized = p.pattern.trim();
+    patternCounts.set(normalized, (patternCounts.get(normalized) ?? 0) + 1);
+  }
+
+  return Array.from(patternCounts.entries())
+    .map(([pattern, count]) => ({
+      pattern,
+      count,
+      percentage: problems.length > 0 ? Math.round((count / problems.length) * 100) : 0,
+    }))
+    .sort((a, b) => b.count - a.count);
+}
+
+function calculateDaysSinceLastLog(lastLog: { date: Date } | null): number | null {
+  if (!lastLog) return null;
+  const lastDate = new Date(lastLog.date);
+  const todayDate = new Date();
+  todayDate.setHours(0, 0, 0, 0);
+  lastDate.setHours(0, 0, 0, 0);
+  return Math.floor((todayDate.getTime() - lastDate.getTime()) / MS_PER_DAY);
+}
+
+function calculateTrends(
+  problems: { solvedAt: Date }[],
+  logs: { date: Date }[],
+  today: Date
+) {
+  const startOfThisWeek = new Date(today);
+  startOfThisWeek.setUTCDate(today.getUTCDate() - today.getUTCDay());
+  const startOfLastWeek = new Date(startOfThisWeek);
+  startOfLastWeek.setUTCDate(startOfThisWeek.getUTCDate() - DAYS_IN_WEEK);
+
+  return {
+    problemsThisWeek: problems.filter(p => new Date(p.solvedAt) >= startOfThisWeek).length,
+    problemsLastWeek: problems.filter(p => {
+      const d = new Date(p.solvedAt);
+      return d >= startOfLastWeek && d < startOfThisWeek;
+    }).length,
+    logsThisWeek: logs.filter(l => new Date(l.date) >= startOfThisWeek).length,
+    logsLastWeek: logs.filter(l => {
+      const d = new Date(l.date);
+      return d >= startOfLastWeek && d < startOfThisWeek;
+    }).length,
+  };
+}
+
+function calculatePeakTime(logs: { createdAt: Date }[]) {
   const hourCounts = new Array(24).fill(0);
-  for (const log of logsForPeak) {
+  for (const log of logs) {
     const hour = new Date(log.createdAt).getHours();
     hourCounts[hour]++;
   }
@@ -233,19 +246,16 @@ export async function getDashboardStats(userId: string): Promise<DashboardStats>
     }
   }
 
-  const formatHour = (h: number) => {
-    const period = h >= 12 ? "PM" : "AM";
-    const displayHour = h % 12 || 12;
-    return `${displayHour} ${period}`;
-  };
+  if (peakHour === -1) return null;
 
-  stats.peakTime = peakHour === -1 ? null : {
+  const period = peakHour >= 12 ? "PM" : "AM";
+  const displayHour = peakHour % 12 || 12;
+  
+  return {
     hour: peakHour,
     count: maxCount,
-    label: formatHour(peakHour),
+    label: `${displayHour} ${period}`,
   };
-
-  return stats;
 }
 
 export interface WeeklyDataPoint {
@@ -309,31 +319,52 @@ export async function getWeeklyProblemStats(userId: string, weeks: number = 8): 
   const problems = await prisma.dSAProblem.findMany({
     where: {
       userId,
-      solvedAt: {
-        gte: startDate,
-      },
+      solvedAt: { gte: startDate },
     },
-    select: {
-      solvedAt: true,
-      difficulty: true,
-    },
+    select: { solvedAt: true, difficulty: true },
   });
 
-  // Helper to format date range label (e.g., "Jan 1-7", "Jan 8-14")
-  function formatWeekLabel(start: Date, end: Date): string {
-    const startMonth = start.toLocaleDateString("en-US", { month: "short" });
-    const endMonth = end.toLocaleDateString("en-US", { month: "short" });
-    const startDay = start.getDate();
-    const endDay = end.getDate();
+  const buckets = initializeWeekBuckets(now, weeks);
 
-    if (startMonth === endMonth) {
-      return `${startMonth} ${startDay}-${endDay}`;
+  // Count problems per week
+  for (const problem of problems) {
+    const solvedDate = new Date(problem.solvedAt);
+    const bucket = buckets.find(b => solvedDate >= b.start && solvedDate <= b.end);
+    
+    if (bucket) {
+      bucket.count++;
+      if (problem.difficulty === "EASY") bucket.easy++;
+      if (problem.difficulty === "MEDIUM") bucket.medium++;
+      if (problem.difficulty === "HARD") bucket.hard++;
     }
-    return `${startMonth} ${startDay}-${endMonth} ${endDay}`;
   }
 
-  // Initialize week buckets with date range labels
-  const weekBuckets: Array<{ 
+  return buckets.map(b => ({
+    week: b.label,
+    count: b.count,
+    easy: b.easy,
+    medium: b.medium,
+    hard: b.hard,
+    weekStart: b.start,
+    weekEnd: b.end,
+  }));
+}
+
+// --- Additional Helper Functions ---
+
+function formatWeekLabel(start: Date, end: Date): string {
+  const startMonth = start.toLocaleDateString("en-US", { month: "short" });
+  const endMonth = end.toLocaleDateString("en-US", { month: "short" });
+  const startDay = start.getDate();
+  const endDay = end.getDate();
+
+  return startMonth === endMonth 
+    ? `${startMonth} ${startDay}-${endDay}`
+    : `${startMonth} ${startDay}-${endMonth} ${endDay}`;
+}
+
+function initializeWeekBuckets(now: Date, weeks: number) {
+  const buckets: Array<{ 
     label: string; 
     start: Date; 
     end: Date; 
@@ -342,17 +373,16 @@ export async function getWeeklyProblemStats(userId: string, weeks: number = 8): 
     medium: number;
     hard: number;
   }> = [];
-
   for (let i = 0; i < weeks; i++) {
     const weekEnd = new Date(now);
     weekEnd.setDate(weekEnd.getDate() - i * DAYS_IN_WEEK);
     weekEnd.setHours(23, 59, 59, 999);
 
     const weekStart = new Date(weekEnd);
-    weekStart.setDate(weekStart.getDate() - 6);
+    weekStart.setDate(weekStart.getDate() - (DAYS_IN_WEEK - 1));
     weekStart.setHours(0, 0, 0, 0);
 
-    weekBuckets.unshift({
+    buckets.unshift({
       label: formatWeekLabel(weekStart, weekEnd),
       start: weekStart,
       end: weekEnd,
@@ -362,31 +392,5 @@ export async function getWeeklyProblemStats(userId: string, weeks: number = 8): 
       hard: 0,
     });
   }
-
-  // Count problems per week
-  for (const problem of problems) {
-    const solvedDate = new Date(problem.solvedAt);
-
-    // Find which week bucket this problem belongs to
-    for (const bucket of weekBuckets) {
-      if (solvedDate >= bucket.start && solvedDate <= bucket.end) {
-        bucket.count++;
-        if (problem.difficulty === "EASY") bucket.easy++;
-        if (problem.difficulty === "MEDIUM") bucket.medium++;
-        if (problem.difficulty === "HARD") bucket.hard++;
-        break;
-      }
-    }
-  }
-
-  // Map to WeeklyDataPoint format
-  return weekBuckets.map((bucket) => ({
-    week: bucket.label,
-    count: bucket.count,
-    easy: bucket.easy,
-    medium: bucket.medium,
-    hard: bucket.hard,
-    weekStart: bucket.start,
-    weekEnd: bucket.end,
-  }));
+  return buckets;
 }

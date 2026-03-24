@@ -54,8 +54,8 @@ export function DsaProblemForm({ problem, onSuccess }: DsaProblemFormProps) {
   async function onSubmit(data: DsaProblemInput) {
     setSubmitError(null);
     try {
-      const result = isEditing 
-        ? await updateDsaProblem(problem!.id, data)
+      const result = isEditing && problem
+        ? await updateDsaProblem(problem.id, data)
         : await createDsaProblem(data);
 
       if (!result.success) {

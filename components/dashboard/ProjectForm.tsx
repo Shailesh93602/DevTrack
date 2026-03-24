@@ -17,7 +17,7 @@ import type { ProjectFormProps } from "@/types";
 import { DEFAULT_VALUES } from "@/lib/constants";
 import { TechSelector } from "./project/TechSelector";
 import { createProject, updateProject } from "@/lib/api/project";
-import { type CreateProjectInput, projectFormSchema } from "@/lib/validations/project";
+import { type ProjectFormInput, projectFormSchema } from "@/lib/validations/project";
 
 export function ProjectForm({ project, onSuccess }: ProjectFormProps) {
   const {
@@ -40,8 +40,8 @@ export function ProjectForm({ project, onSuccess }: ProjectFormProps) {
     control,
     reset,
     formState: { errors, isSubmitting },
-  } = useForm<CreateProjectInput>({
-    resolver: zodResolver(projectFormSchema) as any,
+  } = useForm<ProjectFormInput>({
+    resolver: zodResolver(projectFormSchema),
     defaultValues: project
       ? {
           name: project.name,
@@ -63,11 +63,11 @@ export function ProjectForm({ project, onSuccess }: ProjectFormProps) {
     return isEditing ? "Update Project" : "Create Project";
   })();
 
-  async function onSubmit(data: CreateProjectInput) {
+  async function onSubmit(data: ProjectFormInput) {
     setSubmitError(null);
     try {
-      const result = isEditing 
-        ? await updateProject(project!.id, data)
+      const result = isEditing && project
+        ? await updateProject(project.id, data)
         : await createProject(data);
 
       if (!result.success) {
@@ -126,7 +126,7 @@ export function ProjectForm({ project, onSuccess }: ProjectFormProps) {
           <Label htmlFor="project-status">Status</Label>
           <Select
             value={statusValue}
-            onValueChange={(value: any) =>
+            onValueChange={(value: ProjectFormInput["status"]) =>
               setValue("status", value, { shouldValidate: true })
             }
           >

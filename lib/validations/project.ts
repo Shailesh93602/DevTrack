@@ -38,6 +38,7 @@ export const projectQuerySchema = z.object({
 });
 
 export type CreateProjectInput = z.infer<typeof createProjectSchema>;
+export type ProjectFormInput = z.infer<typeof projectFormSchema>;
 export type UpdateProjectInput = z.infer<typeof updateProjectSchema>;
 export type ProjectIdParams = z.infer<typeof projectIdSchema>;
 export type ProjectQueryParams = z.infer<typeof projectQuerySchema>;

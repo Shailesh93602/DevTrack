@@ -2,40 +2,17 @@
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/shared/PasswordInput";
 import { useAuthForm } from "@/hooks/useAuthForm";
 
-const loginSchema = z.object({
-  email: z
-    .string()
-    .min(1, "Email is required")
-    .pipe(z.string().email("Please enter a valid email address")),
-  password: z.string().min(1, "Password is required"),
-});
-
-const signupSchema = z.object({
-  email: z
-    .string()
-    .min(1, "Email is required")
-    .pipe(z.string().email("Please enter a valid email address")),
-  password: z
-    .string()
-    .min(8, "Password must be at least 8 characters")
-    .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
-    .regex(/[a-z]/, "Password must contain at least one lowercase letter")
-    .regex(/\d/, "Password must contain at least one digit"),
-});
+import { loginSchema, signupSchema, type LoginFormData, type SignupFormData } from "@/lib/validations/auth";
 
 interface AuthFormProps {
   mode: "login" | "signup";
 }
-
-type LoginFormData = z.infer<typeof loginSchema>;
-type SignupFormData = z.infer<typeof signupSchema>;
 
 export function AuthForm({ mode }: AuthFormProps) {
   const { serverError, isPending, onSubmit } = useAuthForm(mode);
@@ -47,7 +24,7 @@ export function AuthForm({ mode }: AuthFormProps) {
     handleSubmit,
     formState: { errors },
   } = useForm<LoginFormData | SignupFormData>({
-    resolver: zodResolver(schema) as any,
+    resolver: zodResolver(schema),
     defaultValues: {
       email: "",
       password: "",

@@ -40,7 +40,7 @@ export function DailyLogForm({ log, onSuccess }: DailyLogFormProps) {
     setValue,
     formState: { errors, isSubmitting },
   } = useForm<DailyLogFormInput>({
-    resolver: zodResolver(createDailyLogSchema) as any, // Temporary cast to bypass Zod/RHF type mismatch on defaulted fields
+    resolver: zodResolver(createDailyLogSchema),
     defaultValues: {
       date: log ? toDateInputValue(log.date) : getTodayUtcString(),
       problemsSolved: log?.problemsSolved ?? 0,
