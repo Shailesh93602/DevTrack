@@ -85,9 +85,16 @@ export async function updateDsaProblem(
     ...(data.notes !== undefined && { notes: data.notes }),
   };
 
-  return prisma.dSAProblem.updateMany({
+  const existing = await prisma.dSAProblem.findFirst({
     where: { id, userId },
+  });
+
+  if (!existing) return null;
+
+  return prisma.dSAProblem.update({
+    where: { id },
     data: updateData,
+    select: defaultSelect,
   });
 }
 

@@ -50,6 +50,10 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
         topics: body.topics, // Only update topics if provided in body
       });
 
+      if (!updatedLog) {
+        return errorResponse("Failed to update daily log", 500, "UPDATE_FAILED");
+      }
+
       return successResponse(updatedLog);
     } catch (error) {
       if (error instanceof z.ZodError) {

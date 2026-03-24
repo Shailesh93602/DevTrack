@@ -74,11 +74,11 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
 
     const result = await updateDsaProblem(user.id, validatedId.id, validatedData);
 
-    if (result.count === 0) {
+    if (!result) {
       return errorResponse("Failed to update DSA problem", 500, "UPDATE_FAILED");
     }
 
-    return successResponse({ message: "DSA problem updated successfully" });
+    return successResponse(result);
   } catch (error) {
     if (error instanceof Error && error.message === "UNAUTHORIZED") {
       return handleAuthError(error);

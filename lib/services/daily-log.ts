@@ -79,8 +79,14 @@ export async function updateDailyLog(
     ...dateUpdate,
   };
 
-  return prisma.dailyLog.update({
+  const existing = await prisma.dailyLog.findFirst({
     where: { id, userId },
+  });
+
+  if (!existing) return null;
+
+  return prisma.dailyLog.update({
+    where: { id },
     data: updateData,
     select: defaultSelect,
   });
