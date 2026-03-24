@@ -23,11 +23,16 @@ test.describe("Pattern Intelligence on DSA Problems", () => {
   });
 
   test("should display most practiced patterns", async ({ page }) => {
+    // Wait for skeletons to vanish
+    await expect(page.locator('.animate-pulse')).toHaveCount(0, { timeout: 15000 });
+
     // Create a problem to generate pattern data
-    await page.fill('input[placeholder="e.g. Two Sum"]', "Pattern Test Problem");
-    await page.selectOption("select", "EASY");
-    await page.fill('input[placeholder="e.g. Hash Map, Two Pointers"]', "Two Pointers");
-    await page.fill('input[placeholder="e.g. LeetCode, HackerRank"]', "LeetCode");
+    await page.click('button:has-text("Add Problem")');
+    await page.getByLabel(/problem title/i).fill("Pattern Test Problem");
+    await page.getByLabel(/difficulty/i).click();
+    await page.getByRole("option", { name: "Easy" }).click();
+    await page.getByLabel(/pattern/i).fill("Two Pointers");
+    await page.getByLabel(/platform/i).fill("LeetCode");
     await page.click('button[type="submit"]');
 
     await expect(page.locator("text=Problem added successfully")).toBeVisible({ timeout: 10000 });

@@ -10,11 +10,10 @@ test.describe("Project Feature", () => {
 
   test("should create a new project", async ({ page }) => {
     // Fill in the project form
-    await page.fill('input#name', "Test Project");
+    await page.getByLabel(/project name/i).fill("Test Project");
 
     // Fill description
-    await page.fill(
-      'input#description',
+    await page.getByLabel(/description/i).fill(
       "This is a test project for E2E testing"
     );
 
@@ -22,7 +21,7 @@ test.describe("Project Feature", () => {
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
     const dateString = tomorrow.toISOString().split("T")[0];
-    await page.fill('input#dueDate', dateString);
+    await page.getByLabel(/due date/i).fill(dateString);
 
     // Add tech stack
     await page.getByLabel("Tech stack input").fill("React");
@@ -34,11 +33,8 @@ test.describe("Project Feature", () => {
     // Submit the form
     await page.click('button[type="submit"]');
 
-    // Wait for success (page refresh)
-    await page.waitForLoadState("networkidle");
-
-    // Verify the project appears in the list
-    await expect(page.locator("text=Test Project")).toBeVisible();
+    // Wait for success (new project card appears)
+    await expect(page.locator("text=Test Project").first()).toBeVisible({ timeout: 15000 });
   });
 
   test("should validate required fields", async ({ page }) => {
@@ -51,21 +47,20 @@ test.describe("Project Feature", () => {
 
   test("should edit an existing project", async ({ page }) => {
     // Create a project first
-    await page.fill('input#name', "Edit Test Project");
-    await page.fill(
-      'input#description',
+    await page.getByLabel(/project name/i).fill("Edit Test Project");
+    await page.getByLabel(/description/i).fill(
       "Original description"
     );
     await page.click('button[type="submit"]');
 
     // Wait for submission
-    await page.waitForLoadState("networkidle");
+    await expect(page.locator("text=Edit Test Project").first()).toBeVisible({ timeout: 15000 });
 
     // Click edit button
     await page.getByLabel(/Edit/).first().click();
 
     // Change the name
-    await page.fill('input#name', "Updated Project Name");
+    await page.getByLabel(/project name/i).fill("Updated Project Name");
 
     // Change status to Completed using Radix Select
     await page.getByRole("combobox").click();
@@ -80,15 +75,14 @@ test.describe("Project Feature", () => {
 
   test("should delete a project", async ({ page }) => {
     // Create a project first
-    await page.fill('input#name', "Delete Test Project");
-    await page.fill(
-      'input#description',
+    await page.getByLabel(/project name/i).fill("Delete Test Project");
+    await page.getByLabel(/description/i).fill(
       "To be deleted"
     );
     await page.click('button[type="submit"]');
 
     // Wait for submission
-    await page.waitForLoadState("networkidle");
+    await expect(page.locator("text=Delete Test Project").first()).toBeVisible({ timeout: 15000 });
 
     // Click delete button
     await page.getByLabel(/Delete/).first().click();
@@ -102,11 +96,11 @@ test.describe("Project Feature", () => {
 
   test("should change project status", async ({ page }) => {
     // Create a project
-    await page.fill('input#name', "Status Test Project");
+    await page.getByLabel(/project name/i).fill("Status Test Project");
     await page.click('button[type="submit"]');
 
     // Wait for submission
-    await page.waitForLoadState("networkidle");
+    await expect(page.locator("text=Status Test Project").first()).toBeVisible({ timeout: 15000 });
 
     // Click edit to access status change
     await page.getByLabel(/Edit/).first().click();
@@ -145,11 +139,11 @@ test.describe("Project Feature", () => {
 
   test("should display project progress", async ({ page }) => {
     // Create a project
-    await page.fill('input#name', "Progress Test");
+    await page.getByLabel(/project name/i).fill("Progress Test");
     await page.click('button[type="submit"]');
 
     // Wait for submission
-    await page.waitForLoadState("networkidle");
+    await expect(page.locator("text=Progress Test").first()).toBeVisible({ timeout: 15000 });
 
     // Look for progress indicator or status
     const content = await page.content();
@@ -159,11 +153,11 @@ test.describe("Project Feature", () => {
   test("should handle character limits", async ({ page }) => {
     // Name max 100 chars
     const longName = "a".repeat(101);
-    await page.fill('input#name', longName);
+    await page.getByLabel(/project name/i).fill(longName);
 
     // Description max 500 chars
     const longDesc = "b".repeat(501);
-    await page.fill('input#description', longDesc);
+    await page.getByLabel(/description/i).fill(longDesc);
 
     await page.click('button[type="submit"]');
 

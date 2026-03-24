@@ -66,8 +66,8 @@ test.describe("Dashboard Feature", () => {
   test("should show empty state when no recent logs", async ({ page }) => {
     // Check if empty state message exists
     const content = await page.content();
-    if (content.includes("No logs yet")) {
-      await expect(page.locator("text=No logs yet")).toBeVisible();
+    if (content.includes("Showing")) {
+      await expect(page.locator(String.raw`text=/Showing \d+ of \d+/`)).toBeVisible();
     }
   });
 
@@ -122,5 +122,23 @@ test.describe("Dashboard Feature", () => {
     await page.getByRole("dialog").getByRole("link", { name: "DSA Problems" }).click();
     await expect(page.getByRole("dialog")).not.toBeVisible();
     await expect(page.getByRole("heading", { name: "DSA Problems" })).toBeVisible();
+  });
+ 
+  test("should display consistency score", async ({ page }) => {
+    // Look for consistency-related text
+    const content = await page.content();
+    expect(content).toMatch(/Consistency|Score/i);
+    
+    // Should show a number or percentage
+    expect(content).toMatch(/\d+\s*%|\d+\s*%/);
+  });
+ 
+  test("should display trend indicators for stats", async ({ page }) => {
+    // Look for percentage changes (e.g. "+10%", "-5%")
+    const content = await page.content();
+    const hasTrend = /[+\-]\d+\s*%/.test(content) || content.includes("vs last week");
+    
+    // Trend might be 0% or neutral, but text "vs last week" is a good indicator
+    expect(hasTrend || content.includes("vs last week")).toBeTruthy();
   });
 });

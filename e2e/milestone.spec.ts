@@ -13,10 +13,12 @@ test.describe("Project Milestones", () => {
     await expect(page.locator("text=Your Projects")).toBeVisible();
 
     // Create a project with milestones
-    await page.fill('input#name', "Milestone Test Project");
+    await page.getByLabel(/project name/i).fill("Milestone Test Project");
     await page.click('button[type="submit"]');
-    await page.waitForLoadState("networkidle");
-
+    
+    // Wait for the new project card to appear
+    await expect(page.locator("text=Milestone Test Project").first()).toBeVisible({ timeout: 15000 });
+ 
     // Click on the project to view details
     await page.locator("text=Milestone Test Project").first().click();
 
@@ -26,9 +28,9 @@ test.describe("Project Milestones", () => {
 
   test("should add a milestone to a project", async ({ page }) => {
     // Create a project
-    await page.fill('input#name', "Add Milestone Project");
+    await page.getByLabel(/project name/i).fill("Add Milestone Project");
     await page.click('button[type="submit"]');
-    await page.waitForLoadState("networkidle");
+    await expect(page.locator("text=Add Milestone Project").first()).toBeVisible({ timeout: 15000 });
 
     // Open project details
     await page.locator("text=Add Milestone Project").first().click();
@@ -48,9 +50,9 @@ test.describe("Project Milestones", () => {
 
   test("should complete a milestone", async ({ page }) => {
     // Create a project with milestone
-    await page.fill('input#name', "Complete Milestone Project");
+    await page.getByLabel(/project name/i).fill("Complete Milestone Project");
     await page.click('button[type="submit"]');
-    await page.waitForLoadState("networkidle");
+    await expect(page.locator("text=Complete Milestone Project").first()).toBeVisible({ timeout: 15000 });
 
     // Open project details
     await page.locator("text=Complete Milestone Project").first().click();

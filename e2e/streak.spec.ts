@@ -67,9 +67,10 @@ test.describe("Streak System", () => {
     await expect(page.locator("text=Daily Logs")).toBeVisible();
 
     // Create a new daily log
-    await page.fill('input[placeholder="e.g. 3"]', "5");
-    await page.fill('input[placeholder="Add a topic..."]', "Arrays");
-    await page.click('button:has-text("Add")');
+    await page.getByLabel(/problems solved/i).fill("5");
+    // Assuming there's a label for "Topic" or "Add topic"
+    await page.getByLabel(/topic/i).fill("Arrays");
+    await page.getByLabel(/topic/i).press("Enter");
 
     // Submit the form
     await page.click('button[type="submit"]');

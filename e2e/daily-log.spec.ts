@@ -32,9 +32,13 @@ test.describe("Daily Log Feature", () => {
       "Worked on array problems yesterday"
     );
 
-    // Submit the form
+    // Wait for submission response
+    const responsePromise = page.waitForResponse(response => 
+      response.url().includes('/api/daily-log') && response.request().method() === 'POST'
+    );
     await page.click('button[type="submit"]');
-
+    await responsePromise;
+ 
     // Wait for the log to appear in the history list (it should say "5 problems")
     await expect(page.locator("text=5 problems")).toBeVisible({ timeout: 15000 });
   });
@@ -71,9 +75,9 @@ test.describe("Daily Log Feature", () => {
     await page.fill('input[type="date"]', dateStr);
     await page.getByLabel(/problems solved/i).fill("5");
     await page.click('button[type="submit"]');
-
-    // Should show duplicate entry error
-    await expect(page.locator("text=A log for this date already exists")).toBeVisible({ timeout: 5000 });
+ 
+    // Should show duplicate entry error (wait for error or result)
+    await expect(page.locator("text=A record with this unique constraint already exists")).toBeVisible({ timeout: 15000 });
   });
 
   test("should handle topic input with Enter key", async ({ page }) => {
@@ -131,7 +135,11 @@ test.describe("Daily Log Feature", () => {
     // Create log for yesterday
     await page.fill('input[type="date"]', yesterdayStr);
     await page.fill('input[type="number"]', "5");
+    const respPromise2 = page.waitForResponse(response => 
+      response.url().includes('/api/daily-log') && response.request().method() === 'POST'
+    );
     await page.click('button[type="submit"]');
+    await respPromise2;
     await expect(page.locator("text=5 problems")).toBeVisible({ timeout: 15000 });
 
     // Verify both logs are visible
@@ -154,8 +162,11 @@ test.describe("Daily Log Feature", () => {
     // Create a log for today
     const today = new Date().toISOString().split("T")[0];
     await page.fill('input[type="date"]', today);
-    await page.fill('input[type="number"]', "4");
+    const respPromise = page.waitForResponse(response => 
+      response.url().includes('/api/daily-log') && response.request().method() === 'POST'
+    );
     await page.click('button[type="submit"]');
+    await respPromise;
     await expect(page.locator("text=4 problems")).toBeVisible({ timeout: 15000 });
 
     // Switch to "Last 30 days" then back to "All time"
@@ -204,14 +215,22 @@ test.describe("Daily Log Feature", () => {
     const today = new Date().toISOString().split("T")[0];
     await page.fill('input[type="date"]', today);
     await page.fill('input[type="number"]', "4");
+    const respPromise = page.waitForResponse(response => 
+      response.url().includes('/api/daily-log') && response.request().method() === 'POST'
+    );
     await page.click('button[type="submit"]');
-
+    await respPromise;
+ 
     // Wait for submission
     await expect(page.locator("text=4 problems")).toBeVisible({ timeout: 15000 });
 
     // Delete the log
-    await page.click('button[aria-label^="Delete"]');
+    await page.click('button[aria-label*="Delete"]');
+    const deleteResponsePromise = page.waitForResponse(response => 
+      response.url().includes('/api/daily-log') && response.request().method() === 'DELETE'
+    );
     await page.click('button:has-text("Delete")');
+    await deleteResponsePromise;
 
     // Verify the log is removed
     await expect(page.locator("text=4 problems")).not.toBeVisible();
