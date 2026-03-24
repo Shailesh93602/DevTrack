@@ -14,6 +14,7 @@ import {
   createDailyLogSchema,
   dailyLogQuerySchema,
 } from "@/lib/validations/daily-log";
+import { parseQueryParams } from "@/lib/utils/api";
 
 export async function POST(request: NextRequest) {
   try {
@@ -54,12 +55,7 @@ export async function GET(request: NextRequest) {
     }
 
     const { searchParams } = new URL(request.url);
-    const rawParams = {
-      startDate: searchParams.get("startDate") || undefined,
-      endDate: searchParams.get("endDate") || undefined,
-      limit: searchParams.get("limit") || undefined,
-      offset: searchParams.get("offset") || undefined,
-    };
+    const rawParams = parseQueryParams(searchParams);
 
     const validatedParams = dailyLogQuerySchema.parse(rawParams);
 

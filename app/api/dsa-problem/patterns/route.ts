@@ -7,6 +7,7 @@ import {
   handleApiError,
 } from "@/lib/api/errors";
 import { analyzePatterns } from "@/lib/services/dsa-problem";
+import { parseQueryParams } from "@/lib/utils/api";
 
 export async function GET(request: NextRequest) {
   try {
@@ -18,10 +19,10 @@ export async function GET(request: NextRequest) {
     }
 
     const { searchParams } = new URL(request.url);
-    const limitParam = searchParams.get("limit");
+    const rawParams = parseQueryParams(searchParams);
 
     const limitSchema = z.coerce.number().int().positive().optional();
-    const parseResult = limitSchema.safeParse(limitParam || undefined);
+    const parseResult = limitSchema.safeParse(rawParams.limit);
 
     if (!parseResult.success) {
       throw new Error("INVALID_LIMIT");

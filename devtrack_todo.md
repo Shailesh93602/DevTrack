@@ -177,7 +177,7 @@
 
 ### Phase 2: Service Layer & API
 
-- [ ] **Standardize Pagination** — Create a shared utility for parsing `limit` and `offset` from `searchParams` and generating the count/metadata response.
+- [x] **Standardize Pagination** — Create a shared utility for parsing `limit` and `offset` from `searchParams` and generating the count/metadata response.
 - [ ] **Deduplicate Logic** — Remove redundant validation checks in `POST` handlers that are already covered by `handleApiError`.
 - [ ] **Centralize Error Logging** — Use a unified utility for server-side error logging instead of scattered `console.error`.
 

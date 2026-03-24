@@ -13,6 +13,7 @@ import {
   createDsaProblemSchema,
   dsaProblemQuerySchema,
 } from "@/lib/validations/dsa-problem";
+import { parseQueryParams } from "@/lib/utils/api";
 
 export async function POST(request: NextRequest) {
   try {
@@ -47,13 +48,7 @@ export async function GET(request: NextRequest) {
     }
 
     const { searchParams } = new URL(request.url);
-    const rawParams = {
-      difficulty: searchParams.get("difficulty") || undefined,
-      pattern: searchParams.get("pattern") || undefined,
-      platform: searchParams.get("platform") || undefined,
-      limit: searchParams.get("limit") || undefined,
-      offset: searchParams.get("offset") || undefined,
-    };
+    const rawParams = parseQueryParams(searchParams);
 
     const validatedParams = dsaProblemQuerySchema.parse(rawParams);
 

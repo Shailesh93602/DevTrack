@@ -10,6 +10,7 @@ import {
   createProjectSchema,
   projectQuerySchema,
 } from "@/lib/validations/project";
+import { parseQueryParams } from "@/lib/utils/api";
 
 export async function POST(request: NextRequest) {
   try {
@@ -44,11 +45,7 @@ export async function GET(request: NextRequest) {
     }
 
     const { searchParams } = new URL(request.url);
-    const rawParams = {
-      status: searchParams.get("status") || undefined,
-      limit: searchParams.get("limit") || undefined,
-      offset: searchParams.get("offset") || undefined,
-    };
+    const rawParams = parseQueryParams(searchParams);
 
     const validatedParams = projectQuerySchema.parse(rawParams);
 
