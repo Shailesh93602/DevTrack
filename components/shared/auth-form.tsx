@@ -44,6 +44,7 @@ export function AuthForm({ mode }: AuthFormProps) {
         handleSubmit(onSubmit)(e);
       }}
       className="space-y-4"
+      noValidate
     >
       <div className="space-y-2">
         <label
