@@ -3,6 +3,7 @@ import { login, signup } from "@/lib/auth/actions";
 
 export function useAuthForm(mode: "login" | "signup") {
   const [serverError, setServerError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [isPending, setIsPending] = useState(false);
 
   const onSubmit = async (data: { email: string; password: string }) => {
@@ -15,22 +16,29 @@ export function useAuthForm(mode: "login" | "signup") {
 
     const action = mode === "login" ? login : signup;
     const result = await action({}, formData);
-
     setIsPending(false);
 
     if (result?.error) {
       setServerError(result.error);
     }
 
+    if (result?.message) {
+      setSuccessMessage(result.message);
+    }
+
     return result;
   };
 
-  const clearServerError = () => setServerError(null);
+  const clearMessages = () => {
+    setServerError(null);
+    setSuccessMessage(null);
+  };
 
   return {
     serverError,
+    successMessage,
     isPending,
     onSubmit,
-    clearServerError,
+    clearMessages,
   };
 }

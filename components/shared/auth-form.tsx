@@ -15,7 +15,7 @@ interface AuthFormProps {
 }
 
 export function AuthForm({ mode }: AuthFormProps) {
-  const { serverError, isPending, onSubmit } = useAuthForm(mode);
+  const { serverError, successMessage, isPending, onSubmit } = useAuthForm(mode);
 
   const schema = mode === "login" ? loginSchema : signupSchema;
 
@@ -37,7 +37,14 @@ export function AuthForm({ mode }: AuthFormProps) {
   })();
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <form
+      method="POST"
+      onSubmit={(e) => {
+        e.preventDefault();
+        handleSubmit(onSubmit)(e);
+      }}
+      className="space-y-4"
+    >
       <div className="space-y-2">
         <label
           htmlFor="email"
@@ -47,7 +54,7 @@ export function AuthForm({ mode }: AuthFormProps) {
         </label>
         <Input
           id="email"
-          type="text"
+          type="email"
           inputMode="email"
           placeholder="you@example.com"
           autoComplete="email"
@@ -97,6 +104,12 @@ export function AuthForm({ mode }: AuthFormProps) {
       {serverError && (
         <div className="bg-destructive/10 text-destructive border border-destructive/20 rounded-md p-3 text-sm">
           {serverError}
+        </div>
+      )}
+
+      {successMessage && (
+        <div className="bg-green-500/10 text-green-600 border border-green-500/20 rounded-md p-3 text-sm">
+          {successMessage}
         </div>
       )}
 

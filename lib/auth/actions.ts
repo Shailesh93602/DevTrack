@@ -8,6 +8,7 @@ import { authSchema, passwordSchema } from "@/lib/validations/auth";
 
 export type AuthFormState = {
   error?: string;
+  message?: string;
 };
 
 export async function login(
@@ -47,7 +48,7 @@ export async function signup(
   }
 
   const supabase = await createServerSupabaseClient();
-
+ 
   // Sign up the user
   const { data: signUpData, error: signUpError } = await supabase.auth.signUp(parsed.data);
 
@@ -97,7 +98,7 @@ export async function forgotPassword(
     return { error: error.message };
   }
 
-  return { error: "Check your email for the password reset link." }; // "error" here is used to display message in AuthForm's error box
+  return { message: "Check your email for the password reset link." };
 }
 
 export async function resetPassword(
