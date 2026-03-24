@@ -1,4 +1,5 @@
 import { redirect, notFound } from "next/navigation";
+export const dynamic = "force-dynamic";
 import Link from "next/link";
 import { ArrowLeft, FolderKanban } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -106,7 +107,7 @@ export default async function ProjectDetailPage({
                 <div>
                   <p className="text-muted-foreground text-xs">Due Date</p>
                   <p className="text-foreground text-sm">
-                    {project.dueDate.toLocaleDateString()}
+                    {project.dueDate.toLocaleDateString("en-US", { timeZone: "UTC" })}
                   </p>
                 </div>
               )}

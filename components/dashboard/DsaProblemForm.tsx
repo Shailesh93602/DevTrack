@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useDsaProblemForm } from "@/hooks/useDsaProblemForm";
 import type { DsaProblemFormProps } from "@/types/dsa-problem";
 import { dsaProblemSchema, type DsaProblemInput } from "@/lib/validations/dsa-problem";
-import { DEFAULT_VALUES } from "@/lib/constants";
+import { DEFAULT_VALUES, NOTES_MAX_LENGTH } from "@/lib/constants";
 import { ProblemDetails } from "./dsa-problem/ProblemDetails";
 import { createDsaProblem, updateDsaProblem } from "@/lib/api/dsa-problem";
 
@@ -88,7 +88,7 @@ export function DsaProblemForm({ problem, onSuccess }: DsaProblemFormProps) {
         <div className="flex items-center justify-between">
           <Label htmlFor="problem-notes">Notes (optional)</Label>
           <span className="text-muted-foreground text-xs tabular-nums">
-            {notesValue.length}/1000
+            {notesValue.length}/{NOTES_MAX_LENGTH}
           </span>
         </div>
         <Textarea

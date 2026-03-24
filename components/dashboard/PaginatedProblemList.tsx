@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { DsaProblemList } from "@/components/dashboard/DsaProblemList";
 import type { DsaProblem } from "@/types/dsa-problem";
@@ -20,6 +20,12 @@ export function PaginatedProblemList({
     initialProblems.length === PROBLEMS_PER_PAGE
   );
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    setProblems(initialProblems);
+    setOffset(initialProblems.length);
+    setHasMore(initialProblems.length === PROBLEMS_PER_PAGE);
+  }, [initialProblems]);
 
   const loadMore = useCallback(async () => {
     if (isLoading) return;

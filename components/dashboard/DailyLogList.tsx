@@ -147,8 +147,8 @@ export function DailyLogList({ logs }: DailyLogListProps) {
 
     const days = Number.parseInt(dateRangeFilter, 10);
     const cutoffDate = new Date();
-    cutoffDate.setDate(cutoffDate.getDate() - days);
-    cutoffDate.setHours(0, 0, 0, 0);
+    cutoffDate.setUTCDate(cutoffDate.getUTCDate() - days);
+    cutoffDate.setUTCHours(0, 0, 0, 0);
 
     return logs.filter((log) => {
       const logDate = new Date(log.date);

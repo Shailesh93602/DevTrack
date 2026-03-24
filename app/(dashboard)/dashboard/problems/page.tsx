@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+export const dynamic = "force-dynamic";
 import { Separator } from "@/components/ui/separator";
 import {
   Card,
