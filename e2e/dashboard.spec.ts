@@ -12,11 +12,11 @@ test.describe("Dashboard Feature", () => {
     // Wait for the overview heading
     await expect(page.getByRole("heading", { name: "Overview" })).toBeVisible({ timeout: 15000 });
 
-    // Verify all stats cards titles are present
-    await expect(page.getByText("Problems", { exact: false })).toBeVisible();
-    await expect(page.getByText("Streak", { exact: false })).toBeVisible();
-    await expect(page.getByText("Projects", { exact: false })).toBeVisible();
-    await expect(page.getByText("Today", { exact: false })).toBeVisible();
+    // Verify all stats cards titles are present using specific h3 targets to avoid strict mode violations
+    await expect(page.locator("h3:has-text('Problems')").first()).toBeVisible();
+    await expect(page.locator("h3:has-text('Streak')").first()).toBeVisible();
+    await expect(page.locator("h3:has-text('Projects')").first()).toBeVisible();
+    await expect(page.locator("h3:has-text('Today')").first()).toBeVisible();
 
     // Verify some values
     const content = await page.content();
@@ -136,9 +136,27 @@ test.describe("Dashboard Feature", () => {
   test("should display trend indicators for stats", async ({ page }) => {
     // Look for percentage changes (e.g. "+10%", "-5%")
     const content = await page.content();
-    const hasTrend = /[+\-]\d+\s*%/.test(content) || content.includes("vs last week");
+    const hasTrend = /[-+]\d+\s*%/.test(content) || content.includes("vs last week");
     
     // Trend might be 0% or neutral, but text "vs last week" is a good indicator
     expect(hasTrend || content.includes("vs last week")).toBeTruthy();
+  });
+ 
+  test("should display activity heatmap", async ({ page }) => {
+    // Check for activity section
+    await expect(page.getByRole("heading", { name: "Activity" })).toBeVisible();
+    
+    // The heatmap usually has month labels (e.g. "Jan", "Feb")
+    const content = await page.content();
+    expect(content).toMatch(/Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec/);
+  });
+ 
+  test("should display peak productivity times", async ({ page }) => {
+    // Check for Peak Time card
+    await expect(page.getByText(/Peak Time/i)).toBeVisible();
+    
+    // Should show a time-related value like "Morning", "Afternoon", "Evening", or "Night"
+    const content = await page.content();
+    expect(content).toMatch(/Peak productivity|Morning|Afternoon|Evening|Night/i);
   });
 });

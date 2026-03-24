@@ -165,4 +165,35 @@ test.describe("Project Feature", () => {
     await expect(page.locator("text=Name must be at most 100 characters")).toBeVisible();
     await expect(page.locator("text=Description must be at most 500 characters")).toBeVisible();
   });
+ 
+  test("should update project progress when milestones are completed", async ({ page }) => {
+    const projectName = "Progress Flow Project";
+    
+    // 1. Create project
+    await page.getByLabel(/project name/i).fill(projectName);
+    await page.click('button[type="submit"]');
+    await expect(page.locator(`text=${projectName}`).first()).toBeVisible({ timeout: 15000 });
+ 
+    // 2. Navigate to project details
+    await page.click(`text=${projectName}`);
+    await expect(page.getByRole("heading", { name: projectName })).toBeVisible();
+ 
+    // 3. Add a milestone
+    await page.click('button:has-text("Add Milestone")');
+    await page.getByLabel(/Milestone Title/i).fill("Initial Milestone");
+    await page.click('button:has-text("Add Milestone")');
+    await expect(page.locator("text=Initial Milestone")).toBeVisible();
+    
+    // 4. Verify progress is 0%
+    await expect(page.locator("text=0%")).toBeVisible();
+ 
+    // 5. Complete the milestone
+    await page.getByLabel("Complete Initial Milestone").click();
+    await expect(page.locator("text=100%")).toBeVisible();
+ 
+    // 6. Go back to projects list and verify 100% there too
+    await page.goto("/dashboard/projects");
+    const projectCard = page.locator("div.rounded-lg").filter({ hasText: projectName });
+    await expect(projectCard.locator("text=100%")).toBeVisible();
+  });
 });

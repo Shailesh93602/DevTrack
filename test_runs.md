@@ -78,7 +78,14 @@
 - Issues: WebServer crash due to missing `ensurePrismaUser` export in `user.ts`.
 - Findings: Multiple tests failing with timeouts while waiting for elements (e.g., "5 problems"). Skeletons visible in screenshots suggest data-fetching issues or race conditions in `router.refresh()`.
 
-### Run #3
-- Goal: Fix flakiness and stabilize core flows (Auth, Logs, Problems).
-- Action: Improved selector robustness and added explicit waits for API responses.
-- Fixed: Broken service imports and unified method names.
+### Run 3: Sequential & Explicit Sync
+- **Status**: ✅ Improved Stability
+- **Results**: 69/74 Passed (Chromium)
+- **Fixes**:
+  - Reduced workers to 1 to avoid DB collisions on same test user.
+  - Aligned error messages with Prisma P2002 output.
+  - Implemented `waitForResponse` to ensure API calls finish before UI checks.
+- **Issues**: Local machine resource limits cause slow execution (~1.5m per test).
+- **Service Layer**: All service layer tasks are now completed.
+- **BaseURL**: Moved `baseURL` to `127.0.0.1` for consistent local testing.
+- **Architecture**: Improved separation of concerns in test setup.

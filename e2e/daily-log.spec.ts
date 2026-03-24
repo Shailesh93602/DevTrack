@@ -7,6 +7,8 @@ test.describe("Daily Log Feature", () => {
   test.beforeEach(async ({ page }) => {
     // Navigate to dashboard logs page before each test
     await page.goto("/dashboard/logs");
+    // Ensure we are not redirected to login
+    await expect(page).not.toHaveURL(/.*login.*/);
     await expect(page.getByRole("heading", { name: "Daily Logs" })).toBeVisible({ timeout: 15000 });
   });
 
@@ -23,7 +25,7 @@ test.describe("Daily Log Feature", () => {
     await page.getByLabel(/problems solved/i).fill("5");
 
     // Add topics
-    const topicInput = page.getByPlaceholder(/Add topic/i);
+    const topicInput = page.getByPlaceholder(/e.g. arrays/i);
     await topicInput.fill("Arrays");
     await topicInput.press("Enter");
 
@@ -81,7 +83,7 @@ test.describe("Daily Log Feature", () => {
   });
 
   test("should handle topic input with Enter key", async ({ page }) => {
-    const topicInput = page.getByPlaceholder(/Add topic/i);
+    const topicInput = page.getByPlaceholder(/e.g. arrays/i);
 
     await topicInput.fill("Graphs");
     await topicInput.press("Enter");
@@ -91,7 +93,7 @@ test.describe("Daily Log Feature", () => {
   });
 
   test("should allow removing topics", async ({ page }) => {
-    const topicInput = page.getByPlaceholder(/Add topic/i);
+    const topicInput = page.getByPlaceholder(/e.g. arrays/i);
     // Add a topic first
     await topicInput.fill("Trees");
     await topicInput.press("Enter");
