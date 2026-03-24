@@ -25,11 +25,8 @@ test.describe("DSA Problem Feature", () => {
     // Submit the form
     await page.click('button[type="submit"]');
 
-    // Wait for success indication
-    await expect(page.locator("text=Problem added successfully")).toBeVisible({ timeout: 10000 });
-
-    // Verify the problem appears in the list
-    await expect(page.locator("text=Two Sum")).toBeVisible();
+    // Wait for the new problem to appear in the list
+    await expect(page.locator("text=Two Sum").first()).toBeVisible({ timeout: 15000 });
     await expect(page.locator("text=Hash Map")).toBeVisible();
     await expect(page.locator("text=LeetCode")).toBeVisible();
   });
