@@ -1,7 +1,7 @@
 # DevTrack — Todo
 
 > Sections ordered by priority. Tasks within each section ordered by dependency.
-> Last updated: 2026-03-23
+> Last updated: 2026-03-24
 
 ---
 
@@ -183,9 +183,9 @@
 
 ### Phase 3: Component Architecture
 
-- [ ] **Refactor `DailyLogForm`** — Clean up the split logic between `useDailyLogForm` hook and `useForm`. Ensure all form values are type-safe.
-- [ ] **File Line Audit** — Split overly large components (>200 lines) into smaller sub-components (e.g., `TopicSelector`, `LogHeader`).
-- [ ] **Naming Convention Sync** — Ensure all variables and props follow a consistent pattern (e.g., `isEditing` vs `editing`, `handleX` for events).
+- [x] **Refactor `DailyLogForm`** — Clean up the split logic between `useDailyLogForm` hook and `useForm`. Ensure all form values are type-safe.
+- [x] **File Line Audit** — Split overly large components (>200 lines) into smaller sub-components (e.g., `TopicSelector`, `LogHeader`).
+- [x] **Naming Convention Sync** — Ensure all variables and props follow a consistent pattern (e.g., `isEditing` vs `editing`, `handleX` for events).
 - [x] **Centralize Layout Constants** — Move magic numbers (e.g., `120` days in streaks, `86400000` ms) and business limits (`NOTES_MAX`, `TOPICS_MAX`) to `@/lib/constants`.
 - [x] **Logic Unification in Services** — Refactor `insights.ts` and `streak.ts` to deduplicate logic (e.g., `buildInsightContext` vs `buildInsightContextWithPartialData`). Use optional parameters and shared helper functions.
-- [ ] **API Wrapper Centralization** — Move all `fetch` calls from hooks (like `submitDailyLog` in `useDailyLogForm.ts`) to a dedicated `@/lib/api` directory with consistent error handling and type-safe payloads.
+- [x] **API Wrapper Centralization** — Move all `fetch` calls from hooks (like `submitDailyLog` in `useDailyLogForm.ts`) to a dedicated `@/lib/api` directory with consistent error handling and type-safe payloads.
