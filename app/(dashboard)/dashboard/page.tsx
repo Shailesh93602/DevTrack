@@ -13,6 +13,8 @@ import { InsightsList } from "@/components/dashboard/InsightsList";
 import { PatternCard } from "@/components/dashboard/PatternCard";
 import { DifficultyDistribution } from "@/components/dashboard/DifficultyDistribution";
 import { ActivityHeatmap } from "@/components/dashboard/ActivityHeatmap";
+import { TrendsCard } from "@/components/dashboard/TrendsCard";
+import { PeakTimeCard } from "@/components/dashboard/PeakTimeCard";
 import { formatLogDate } from "@/lib/utils/formatters";
 import { BookOpen } from "lucide-react";
 
@@ -77,6 +79,11 @@ export default async function DashboardPage() {
           <h3 className="text-foreground text-sm font-semibold">Insights</h3>
           <InsightsList insights={stats.insights} />
         </div>
+      </div>
+
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <TrendsCard trends={stats.trends} />
+        <PeakTimeCard peakTime={stats.peakTime} />
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">

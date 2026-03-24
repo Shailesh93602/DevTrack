@@ -27,6 +27,17 @@ export interface DashboardStats {
   patternAnalysis: PatternAnalysis;
   insights: Insight[];
   activityData: { date: string; count: number }[];
+  trends: {
+    problemsThisWeek: number;
+    problemsLastWeek: number;
+    logsThisWeek: number;
+    logsLastWeek: number;
+  };
+  peakTime: {
+    hour: number;
+    count: number;
+    label: string;
+  } | null;
 }
 
 export async function getDashboardStats(userId: string): Promise<DashboardStats> {
@@ -49,6 +60,7 @@ export async function getDashboardStats(userId: string): Promise<DashboardStats>
     patternAnalysis,
     problemsForInsights, // Fetch problems for insights generation
     logsForInsights,     // Fetch logs for insights generation
+    logsForPeak,          // Fetch logs for peak time analysis
   ] = await Promise.all([
     prisma.dSAProblem.count({
       where: { userId },
@@ -86,13 +98,17 @@ export async function getDashboardStats(userId: string): Promise<DashboardStats>
     // Pre-fetch data for insights to avoid redundant queries
     prisma.dSAProblem.findMany({
       where: { userId },
-      select: { pattern: true },
+      select: { pattern: true, solvedAt: true },
     }),
     prisma.dailyLog.findMany({
       where: { userId },
       select: { date: true },
       orderBy: { date: "asc" },
       take: 120,
+    }),
+    prisma.dailyLog.findMany({
+      where: { userId },
+      select: { createdAt: true },
     }),
   ]);
 
@@ -151,7 +167,13 @@ export async function getDashboardStats(userId: string): Promise<DashboardStats>
   // Generate insights with pre-fetched context (saves 4 DB queries)
   const insights = await generateInsights(userId, undefined, preFetchedInsightContext);
 
-  return {
+  // Calculate trends
+  const startOfThisWeek = new Date(today);
+  startOfThisWeek.setUTCDate(today.getUTCDate() - today.getUTCDay());
+  const startOfLastWeek = new Date(startOfThisWeek);
+  startOfLastWeek.setUTCDate(startOfThisWeek.getUTCDate() - 7);
+
+  const stats: DashboardStats = {
     totalProblems: totalProblemsResult,
     todaysProblems: todaysLog?.problemsSolved ?? 0,
     recentLogs,
@@ -169,9 +191,52 @@ export async function getDashboardStats(userId: string): Promise<DashboardStats>
     insights,
     activityData: logsForInsights.map(log => ({
       date: log.date.toISOString().slice(0, 10),
-      count: 1 // for now, count 1 if log exists, or I could use problemsSolved if I fetched it
-    }))
+      count: 1
+    })),
+    trends: {
+      problemsThisWeek: problemsForInsights.filter(p => new Date(p.solvedAt) >= startOfThisWeek).length,
+      problemsLastWeek: problemsForInsights.filter(p => {
+        const d = new Date(p.solvedAt);
+        return d >= startOfLastWeek && d < startOfThisWeek;
+      }).length,
+      logsThisWeek: logsForInsights.filter(l => new Date(l.date) >= startOfThisWeek).length,
+      logsLastWeek: logsForInsights.filter(l => {
+        const d = new Date(l.date);
+        return d >= startOfLastWeek && d < startOfThisWeek;
+      }).length,
+    },
+    peakTime: null,
   };
+
+  // Peak Time Calculation
+  const hourCounts = new Array(24).fill(0);
+  for (const log of logsForPeak) {
+    const hour = new Date(log.createdAt).getHours();
+    hourCounts[hour]++;
+  }
+
+  let peakHour = -1;
+  let maxCount = 0;
+  for (let h = 0; h < 24; h++) {
+    if (hourCounts[h] > maxCount) {
+      maxCount = hourCounts[h];
+      peakHour = h;
+    }
+  }
+
+  const formatHour = (h: number) => {
+    const period = h >= 12 ? "PM" : "AM";
+    const displayHour = h % 12 || 12;
+    return `${displayHour} ${period}`;
+  };
+
+  stats.peakTime = peakHour === -1 ? null : {
+    hour: peakHour,
+    count: maxCount,
+    label: formatHour(peakHour),
+  };
+
+  return stats;
 }
 
 export interface WeeklyDataPoint {
