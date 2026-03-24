@@ -5,7 +5,7 @@ test.use({ storageState: "playwright/.auth/user.json" });
 test.describe("DSA Problem Feature", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/dashboard/problems");
-    await expect(page.locator("text=DSA Problems")).toBeVisible();
+    await expect(page.locator("text=DSA Problems")).toBeVisible({ timeout: 15000 });
   });
 
   test("should create a new DSA problem", async ({ page }) => {

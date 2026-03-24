@@ -5,7 +5,7 @@ test.use({ storageState: "playwright/.auth/user.json" });
 test.describe("Project Feature", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/dashboard/projects");
-    await expect(page.getByRole("heading", { name: "Projects" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Projects", level: 2 })).toBeVisible();
   });
 
   test("should create a new project", async ({ page }) => {
