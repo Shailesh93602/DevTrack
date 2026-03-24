@@ -178,8 +178,8 @@
 ### Phase 2: Service Layer & API
 
 - [x] **Standardize Pagination** — Create a shared utility for parsing `limit` and `offset` from `searchParams` and generating the count/metadata response.
-- [ ] **Deduplicate Logic** — Remove redundant validation checks in `POST` handlers that are already covered by `handleApiError`.
-- [ ] **Centralize Error Logging** — Use a unified utility for server-side error logging instead of scattered `console.error`.
+- [x] **Deduplicate Logic** — Remove redundant validation checks in `POST` handlers that are already covered by `handleApiError`.
+- [x] **Centralize Error Logging** — Use a unified utility for server-side error logging instead of scattered `console.error`.
 
 ### Phase 3: Component Architecture
 

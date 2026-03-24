@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { z, ZodError } from "zod";
 import { Prisma } from "@prisma/client";
 
+import { logger } from "@/lib/utils/logger";
+
 export type ApiError = {
   message: string;
   code?: string;
@@ -59,6 +61,7 @@ export function handleApiError(error: unknown): NextResponse<ApiResponse<never>>
       );
     }
 
+    logger.error(`Database Error (${error.code})`, error);
     return errorResponse(
       `Database error: ${error.message}`,
       500,
@@ -67,6 +70,7 @@ export function handleApiError(error: unknown): NextResponse<ApiResponse<never>>
   }
 
   if (error instanceof Prisma.PrismaClientValidationError) {
+    logger.error("Prisma Validation Error", error);
     return errorResponse(
       `Invalid data: ${error.message}`,
       400,
@@ -75,9 +79,11 @@ export function handleApiError(error: unknown): NextResponse<ApiResponse<never>>
   }
 
   if (error instanceof Error) {
+    logger.error("Internal API Error", error);
     return errorResponse(error.message, 500, "INTERNAL_ERROR");
   }
 
+  logger.error("Unexpected API Error", error);
   return errorResponse("An unexpected error occurred", 500, "UNKNOWN_ERROR");
 }
 
