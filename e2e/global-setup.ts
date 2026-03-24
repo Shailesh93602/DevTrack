@@ -2,8 +2,9 @@ import { createClient } from "@supabase/supabase-js";
 import { config } from "dotenv";
 import path from "node:path";
 
-// Load .env.local so env vars are available outside Next.js runtime
-config({ path: path.resolve(process.cwd(), ".env.local") });
+// Load .env then .env.local to ensure all are covered
+config({ path: path.resolve(process.cwd(), ".env") });
+config({ path: path.resolve(process.cwd(), ".env.local"), override: true });
 
 export const TEST_USER = {
   email: "devtrack.e2e.test@gmail.com",
@@ -52,8 +53,10 @@ export default async function globalSetup() {
   });
 
   if (createError) {
-    console.warn("[global-setup] Could not pre-create test user:", createError.message);
+    if (createError.message !== "User already exists") {
+      console.warn("[global-setup] Could not pre-create test user in Supabase:", createError.message);
+    }
   } else {
-    console.log("[global-setup] Pre-created confirmed test user:", TEST_USER.email);
+    console.log("[global-setup] Pre-created confirmed test user in Supabase:", TEST_USER.email);
   }
 }

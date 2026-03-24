@@ -10,57 +10,66 @@ test.describe("Daily Log Feature", () => {
     await expect(page.getByRole("heading", { name: "Daily Logs" })).toBeVisible({ timeout: 15000 });
   });
 
-  test("should create a new daily log", async ({ page }) => {
-    // Fill in the daily log form
-    const today = new Date().toISOString().split("T")[0];
+  test("should create a new daily log and appear in history", async ({ page }) => {
+    // Navigate using yesterday's date to ensure it appears in the history list
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yesterdayStr = yesterday.toISOString().split("T")[0];
 
     // Clear and set date
-    await page.fill('input[type="date"]', today);
+    await page.fill('input[type="date"]', yesterdayStr);
 
     // Set problems solved
-    await page.fill('input[type="number"]', "5");
+    await page.getByLabel(/problems solved/i).fill("5");
 
     // Add topics
-    await page.fill('input[placeholder="e.g. arrays, dynamic programming…"]', "Arrays");
-    await page.click('button:has-text("Add")');
-
-    await page.fill('input[placeholder="e.g. arrays, dynamic programming…"]', "Dynamic Programming");
-    await page.click('button:has-text("Add")');
+    const topicInput = page.getByPlaceholder(/Add topic/i);
+    await topicInput.fill("Arrays");
+    await topicInput.press("Enter");
 
     // Add notes
-    await page.fill(
-      'textarea[placeholder="What did you work on today?"]',
-      "Worked on array problems and DP patterns"
+    await page.getByPlaceholder(/What did you work on today/i).fill(
+      "Worked on array problems yesterday"
     );
 
     // Submit the form
     await page.click('button[type="submit"]');
 
-    // Wait for the form to be processed and log to appear in the list
+    // Wait for the log to appear in the history list (it should say "5 problems")
     await expect(page.locator("text=5 problems")).toBeVisible({ timeout: 15000 });
   });
 
-  test("should validate required fields", async ({ page }) => {
-    // Try to submit with empty fields (problems solved is 0 by default)
+  test("should validate required fields and appear in history", async ({ page }) => {
+    // Use an older date to ensure it appears in list
+    const date = new Date();
+    date.setDate(date.getDate() - 2);
+    const dateStr = date.toISOString().split("T")[0];
+    
+    await page.fill('input[type="date"]', dateStr);
+    
+    // Try to submit with default 0 problems
     await page.click('button[type="submit"]');
 
-    // Form should submit successfully even with 0 problems and appear in list
     // Wait for the item to render in the history (which will say "0 problems")
     await expect(page.locator("text=0 problems")).toBeVisible({ timeout: 15000 });
   });
 
-  test.skip("should prevent duplicate entries for same date", async ({ page }) => {
-    // First, create a log
-    const today = new Date().toISOString().split("T")[0];
-    await page.fill('input[type="date"]', today);
-    await page.fill('input[type="number"]', "3");
+  test("should prevent duplicate entries for same date", async ({ page }) => {
+    // Create a log for 3 days ago
+    const date = new Date();
+    date.setDate(date.getDate() - 3);
+    const dateStr = date.toISOString().split("T")[0];
+    
+    await page.fill('input[type="date"]', dateStr);
+    await page.getByLabel(/problems solved/i).fill("3");
     await page.click('button[type="submit"]');
 
     // Wait for submission
     await expect(page.locator("text=3 problems")).toBeVisible({ timeout: 15000 });
 
     // Try to create another log for the same date
-    await page.fill('input[type="number"]', "5");
+    await page.fill('input[type="date"]', dateStr);
+    await page.getByLabel(/problems solved/i).fill("5");
     await page.click('button[type="submit"]');
 
     // Should show duplicate entry error
@@ -68,7 +77,7 @@ test.describe("Daily Log Feature", () => {
   });
 
   test("should handle topic input with Enter key", async ({ page }) => {
-    const topicInput = page.locator('input[placeholder="e.g. arrays, dynamic programming…"]');
+    const topicInput = page.getByPlaceholder(/Add topic/i);
 
     await topicInput.fill("Graphs");
     await topicInput.press("Enter");
@@ -78,9 +87,10 @@ test.describe("Daily Log Feature", () => {
   });
 
   test("should allow removing topics", async ({ page }) => {
+    const topicInput = page.getByPlaceholder(/Add topic/i);
     // Add a topic first
-    await page.fill('input[placeholder="e.g. arrays, dynamic programming…"]', "Trees");
-    await page.click('button:has-text("Add")');
+    await topicInput.fill("Trees");
+    await topicInput.press("Enter");
 
     // Verify topic appears
     await expect(page.locator("text=Trees")).toBeVisible();
@@ -96,7 +106,7 @@ test.describe("Daily Log Feature", () => {
     // Generate a note that's too long (>1000 chars)
     const longNote = "a".repeat(1001);
 
-    await page.fill('textarea[placeholder="What did you work on today?"]', longNote);
+    await page.getByPlaceholder(/What did you work on today/i).fill(longNote);
 
     // Submit should fail with validation error
     await page.click('button[type="submit"]');

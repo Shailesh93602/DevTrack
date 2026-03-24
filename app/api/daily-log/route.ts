@@ -31,10 +31,14 @@ export async function POST(request: NextRequest) {
     const validatedData = createDailyLogSchema.parse(body);
     console.log("POST /api/daily-log - Validated data:", JSON.stringify(validatedData, null, 2));
 
-    const log = await createDailyLog(user.id, {
-      ...validatedData,
-      topics: body.topics || [],
-    });
+    const log = await createDailyLog(
+      user.id,
+      {
+        ...validatedData,
+        topics: body.topics || [],
+      },
+      user.email
+    );
 
     return successResponse(log);
   } catch (error) {

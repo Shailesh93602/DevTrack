@@ -90,7 +90,7 @@
 
 - [x] Add active state highlight to sidebar links
 - [x] Add mobile-responsive sidebar (collapsible drawer)
-- [ ] Add loading skeletons to dashboard, logs, and problems pages
+- [x] Add loading skeletons to dashboard, logs, and problems pages — Implemented with centralized `SkeletonCards` components and Next.js `loading.tsx` conventions.
 
 ---
 
@@ -117,7 +117,7 @@
 
 ### Developer Experience
 
-- [ ] Add `prisma migrate dev` to the project README quickstart
+- [x] Add `prisma migrate dev` to the project README quickstart — Verified in existing README.md under "Initialize the database".
 - [x] Add `.env.example` values documentation
 - [x] Set up ESLint rule to flag `any` usage
 

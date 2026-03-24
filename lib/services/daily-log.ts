@@ -2,6 +2,7 @@ import { prisma } from "@/lib/db/prisma";
 import { Prisma } from "@prisma/client";
 import { parseUtcDate, normalizeToUtcMidnight } from "@/lib/utils/date";
 import type { CreateDailyLogInput, UpdateDailyLogInput, DailyLogQueryParams } from "@/lib/validations/daily-log";
+import { ensurePrismaUser } from "./user";
 
 export type DailyLogWithUser = Prisma.DailyLogGetPayload<{
   include: { user: { select: { id: true; email: true } } };
@@ -20,8 +21,12 @@ const defaultSelect = {
 
 export async function createDailyLog(
   userId: string,
-  data: CreateDailyLogInput
+  data: CreateDailyLogInput,
+  email?: string
 ) {
+  if (email) {
+    await ensurePrismaUser(userId, email);
+  }
   return prisma.dailyLog.create({
     data: {
       ...data,
@@ -97,8 +102,6 @@ export async function deleteDailyLog(userId: string, id: string) {
 }
 
 export async function getDailyLogByDate(userId: string, date: Date) {
-  // @db.Date stores date-only in Postgres. Normalize to UTC midnight so the
-  // comparison is timezone-safe regardless of the server's local timezone.
   const dateOnly = normalizeToUtcMidnight(date);
 
   return prisma.dailyLog.findFirst({
