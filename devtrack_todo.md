@@ -107,7 +107,7 @@
 - [x] Extract `formatLogDate` from `dashboard/page.tsx` into `lib/utils.ts`
 - [x] Add `error.tsx` boundary pages for dashboard routes
 - [x] Add `not-found.tsx` for the dashboard group
-- [ ] Audit all Prisma queries for missing `userId` scoping
+- [x] Audit all Prisma queries for missing `userId` scoping — All services (DailyLog, Project, DsaProblem, Milestone, Streak, Insights) and related API routes verified for proper ownership checks.
 
 ### Auth Improvements
 
