@@ -5,12 +5,12 @@ test.use({ storageState: "playwright/.auth/user.json" });
 test.describe("Project Milestones", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/dashboard/projects");
-    await expect(page.locator("text=Projects")).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Projects", exact: true })).toBeVisible();
   });
 
   test("should display milestones for a project", async ({ page }) => {
     // Create a project with milestones
-    await page.fill('input[placeholder="e.g. Personal Website"]', "Milestone Test Project");
+    await page.fill('input#name', "Milestone Test Project");
     await page.click('button[type="submit"]');
     await page.waitForLoadState("networkidle");
 
@@ -18,91 +18,95 @@ test.describe("Project Milestones", () => {
     await page.locator("text=Milestone Test Project").first().click();
 
     // Look for milestones section
-    const content = await page.content();
-    const hasMilestonesSection =
-      content.includes("Milestones") ||
-      content.includes("milestone") ||
-      content.includes("Add Milestone");
-
-    expect(hasMilestonesSection).toBeTruthy();
+    await expect(page.getByRole("heading", { name: "Milestones" })).toBeVisible();
   });
 
   test("should add a milestone to a project", async ({ page }) => {
     // Create a project
-    await page.fill('input[placeholder="e.g. Personal Website"]', "Add Milestone Project");
+    await page.fill('input#name', "Add Milestone Project");
     await page.click('button[type="submit"]');
     await page.waitForLoadState("networkidle");
 
     // Open project details
     await page.locator("text=Add Milestone Project").first().click();
 
-    // Try to add a milestone (if UI supports it)
-    const content = await page.content();
-    if (content.includes("Add Milestone") || content.includes("New Milestone")) {
-      await page.fill('input[placeholder*="milestone"]', "Initial Setup");
-      await page.click('button:has-text("Add")');
+    // Click Add Milestone button
+    await page.getByRole("button", { name: "Add Milestone" }).click();
 
-      // Verify milestone was added
-      await expect(page.locator("text=Initial Setup")).toBeVisible();
-    }
+    // Fill in milestone title
+    await page.fill('input#milestone-title', "Initial Setup");
+
+    // Submit
+    await page.getByRole("button", { name: "Add Milestone" }).click();
+
+    // Verify milestone was added
+    await expect(page.locator("text=Initial Setup")).toBeVisible();
   });
 
   test("should complete a milestone", async ({ page }) => {
     // Create a project with milestone
-    await page.fill('input[placeholder="e.g. Personal Website"]', "Complete Milestone Project");
+    await page.fill('input#name', "Complete Milestone Project");
     await page.click('button[type="submit"]');
     await page.waitForLoadState("networkidle");
 
     // Open project details
     await page.locator("text=Complete Milestone Project").first().click();
 
-    // Check if we can mark milestone as complete
-    const content = await page.content();
-    if (content.includes("checkbox") || content.includes("Complete")) {
-      // Click completion checkbox or button
-      const completeButton = page.locator('button[aria-label*="complete"]').first();
-      if (await completeButton.isVisible().catch(() => false)) {
-        await completeButton.click();
+    // Add a milestone first
+    await page.getByRole("button", { name: "Add Milestone" }).click();
+    await page.fill('input#milestone-title', "Test Milestone");
+    await page.getByRole("button", { name: "Add Milestone" }).click();
 
-        // Verify milestone is marked complete
-        await expect(page.locator("text=Completed").first()).toBeVisible();
-      }
-    }
+    // Complete the milestone using the checkbox
+    await page.getByLabel("Complete Test Milestone").check();
+
+    // Verify milestone is marked complete
+    await expect(page.getByText("Test Milestone")).toHaveClass(/line-through/);
   });
 
   test("should delete a milestone", async ({ page }) => {
     // Create a project
-    await page.fill('input[placeholder="e.g. Personal Website"]', "Delete Milestone Project");
+    await page.fill('input#name', "Delete Milestone Project");
     await page.click('button[type="submit"]');
     await page.waitForLoadState("networkidle");
 
     // Open project details
     await page.locator("text=Delete Milestone Project").first().click();
 
-    // Look for delete milestone button
-    const deleteButton = page.locator('button[aria-label*="Delete milestone"]').first();
-    if (await deleteButton.isVisible().catch(() => false)) {
-      await deleteButton.click();
+    // Add a milestone first
+    await page.getByRole("button", { name: "Add Milestone" }).click();
+    await page.fill('input#milestone-title', "Milestone to Delete");
+    await page.getByRole("button", { name: "Add Milestone" }).click();
 
-      // Confirm deletion
-      await page.click('button:has-text("Delete")');
-    }
+    // Delete the milestone
+    await page.getByLabel("Delete Milestone to Delete").click();
+
+    // Verify milestone is removed
+    await expect(page.locator("text=Milestone to Delete")).not.toBeVisible();
   });
 
   test("should update project progress when milestone is completed", async ({ page }) => {
     // Create a project
-    await page.fill('input[placeholder="e.g. Personal Website"]', "Progress Test Project");
+    await page.fill('input#name', "Progress Test Project");
     await page.click('button[type="submit"]');
     await page.waitForLoadState("networkidle");
 
-    // Verify project shows some form of progress
-    const content = await page.content();
-    const hasProgress =
-      content.includes("progress") ||
-      content.includes("Progress") ||
-      content.includes("%") ||
-      /\d+%/.test(content);
+    // Open project details
+    await page.locator("text=Progress Test Project").first().click();
 
-    expect(hasProgress).toBeTruthy();
+    // Verify project shows progress
+    await expect(page.getByText(/Progress/)).toBeVisible();
+    await expect(page.getByText(/0%/)).toBeVisible();
+
+    // Add a milestone
+    await page.getByRole("button", { name: "Add Milestone" }).click();
+    await page.fill('input#milestone-title', "First Milestone");
+    await page.getByRole("button", { name: "Add Milestone" }).click();
+
+    // Complete the milestone
+    await page.getByLabel("Complete First Milestone").check();
+
+    // Verify progress is now 100%
+    await expect(page.getByText(/100%/)).toBeVisible();
   });
 });

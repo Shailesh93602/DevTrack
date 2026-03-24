@@ -45,6 +45,7 @@ function ProblemItem({
             difficulty: problem.difficulty,
             pattern: problem.pattern,
             platform: problem.platform,
+            notes: problem.notes,
           }}
           onSuccess={() => onEdit(problem)}
         />
@@ -79,6 +80,11 @@ function ProblemItem({
           <span>•</span>
           <span>{formattedDate}</span>
         </div>
+        {problem.notes && (
+          <p className="text-muted-foreground mt-1 line-clamp-2 text-xs">
+            <span className="font-medium">Notes:</span> {problem.notes}
+          </p>
+        )}
       </div>
 
       <div className="flex shrink-0 items-center gap-1">

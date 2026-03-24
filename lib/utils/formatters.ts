@@ -1,9 +1,17 @@
-export function formatLogDate(date: Date): string {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+/**
+ * Convert Date to UTC YYYY-MM-DD string for safe comparison
+ * Avoids timezone issues with setHours(0,0,0,0) which uses local time
+ */
+function toUtcDateString(date: Date): string {
+  return date.toISOString().slice(0, 10);
+}
 
-  const logDate = new Date(date);
-  logDate.setHours(0, 0, 0, 0);
+export function formatLogDate(date: Date): string {
+  const todayStr = toUtcDateString(new Date());
+  const logDateStr = toUtcDateString(date);
+
+  const today = new Date(todayStr + "T00:00:00Z");
+  const logDate = new Date(logDateStr + "T00:00:00Z");
 
   const diffTime = today.getTime() - logDate.getTime();
   const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
@@ -15,6 +23,7 @@ export function formatLogDate(date: Date): string {
   return logDate.toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",
+    timeZone: "UTC",
   });
 }
 

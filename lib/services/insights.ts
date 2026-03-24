@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/db/prisma";
+import { calculateStreakFromDates } from "@/lib/services/streak";
 import type {
   Insight,
   InsightContext,
@@ -74,49 +75,9 @@ async function buildInsightContext(userId: string): Promise<InsightContext> {
     );
   }
 
-  // Calculate current streak
-  const dates = logs.map((log) =>
-    log.date.toISOString().slice(0, 10)
-  );
-
-  // Calculate longest streak from logs
-  let longestStreak = 0;
-  if (dates.length > 0) {
-    let currentStreakCount = 1;
-    longestStreak = 1;
-    for (let i = 1; i < dates.length; i++) {
-      const dateA = new Date(dates[i - 1] + "T00:00:00Z");
-      const dateB = new Date(dates[i] + "T00:00:00Z");
-      const diffMs = dateB.getTime() - dateA.getTime();
-      if (diffMs === 86_400_000) {
-        currentStreakCount++;
-        longestStreak = Math.max(longestStreak, currentStreakCount);
-      } else {
-        currentStreakCount = 1;
-      }
-    }
-  }
-
-  const todayStr = new Date().toISOString().slice(0, 10);
-  const yesterdayStr = new Date(Date.now() - 86_400_000).toISOString().slice(0, 10);
-
-  let currentStreak = 0;
-  if (dates.length > 0) {
-    const lastDate = dates.at(-1)!;
-    if (lastDate === todayStr || lastDate === yesterdayStr) {
-      currentStreak = 1;
-      for (let i = dates.length - 2; i >= 0; i--) {
-        const dateA = new Date(dates[i] + "T00:00:00Z");
-        const dateB = new Date(dates[i + 1] + "T00:00:00Z");
-        const diffMs = dateB.getTime() - dateA.getTime();
-        if (diffMs === 86_400_000) {
-          currentStreak++;
-        } else {
-          break;
-        }
-      }
-    }
-  }
+  // Calculate current and longest streak using shared service
+  const dates = logs.map((log) => log.date.toISOString().slice(0, 10));
+  const { currentStreak, longestStreak } = calculateStreakFromDates(dates);
 
   return {
     patternStats,
@@ -349,12 +310,36 @@ function applySuggestionRules(context: InsightContext): Insight[] {
 
 /**
  * Generate all insights for a user
+ * @param userId - User ID
+ * @param config - Insight configuration
+ * @param preFetchedContext - Optional pre-fetched context to avoid redundant DB queries
  */
 export async function generateInsights(
   userId: string,
-  config: InsightConfig = DEFAULT_INSIGHT_CONFIG
+  config: InsightConfig = DEFAULT_INSIGHT_CONFIG,
+  preFetchedContext?: Partial<InsightContext> & {
+    problems?: Array<{ pattern: string }>;
+    recentLogs?: Array<{ id: string }>;
+    lastLog?: { date: Date } | null;
+    logs?: Array<{ date: Date }>;
+  }
 ): Promise<Insight[]> {
-  const context = await buildInsightContext(userId);
+  let context: InsightContext;
+
+  if (preFetchedContext &&
+    preFetchedContext.patternStats !== undefined &&
+    preFetchedContext.totalProblems !== undefined &&
+    preFetchedContext.currentStreak !== undefined &&
+    preFetchedContext.longestStreak !== undefined) {
+    // Use fully pre-fetched context
+    context = preFetchedContext as InsightContext;
+  } else if (preFetchedContext) {
+    // Build context from partial pre-fetched data + DB queries for missing pieces
+    context = await buildInsightContextWithPartialData(userId, preFetchedContext);
+  } else {
+    // Fetch all data from DB
+    context = await buildInsightContext(userId);
+  }
 
   const allInsights = [
     ...applyStrengthRules(context, config),
@@ -369,4 +354,84 @@ export async function generateInsights(
   return allInsights.sort(
     (a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]
   );
+}
+
+/**
+ * Build insight context from partial pre-fetched data + DB queries for missing pieces
+ */
+async function buildInsightContextWithPartialData(
+  userId: string,
+  preFetched: Partial<InsightContext> & {
+    problems?: Array<{ pattern: string }>;
+    recentLogs?: Array<{ id: string }>;
+    lastLog?: { date: Date } | null;
+    logs?: Array<{ date: Date }>;
+  }
+): Promise<InsightContext> {
+  // Fetch missing data
+  const problems = preFetched.problems ?? await prisma.dSAProblem.findMany({
+    where: { userId },
+    select: { pattern: true },
+  });
+
+  const recentLogs = preFetched.recentLogs ?? await prisma.dailyLog.findMany({
+    where: { userId },
+    orderBy: { date: "desc" },
+    take: 7,
+    select: { id: true },
+  });
+
+  const lastLog = preFetched.lastLog ?? await prisma.dailyLog.findFirst({
+    where: { userId },
+    orderBy: { date: "desc" },
+    select: { date: true },
+  });
+
+  const logs = preFetched.logs ?? await prisma.dailyLog.findMany({
+    where: { userId },
+    select: { date: true },
+    orderBy: { date: "asc" },
+    take: 120,
+  });
+
+  // Calculate pattern stats
+  const patternCounts = new Map<string, number>();
+  for (const problem of problems) {
+    const normalized = problem.pattern.trim();
+    patternCounts.set(normalized, (patternCounts.get(normalized) ?? 0) + 1);
+  }
+
+  const totalProblems = problems.length;
+  const patternStats = Array.from(patternCounts.entries())
+    .map(([pattern, count]) => ({
+      pattern,
+      count,
+      percentage: totalProblems > 0 ? Math.round((count / totalProblems) * 100) : 0,
+    }))
+    .sort((a, b) => b.count - a.count);
+
+  // Calculate days since last log
+  let daysSinceLastLog: number | null = null;
+  if (lastLog) {
+    const lastDate = new Date(lastLog.date);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    lastDate.setHours(0, 0, 0, 0);
+    daysSinceLastLog = Math.floor(
+      (today.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24)
+    );
+  }
+
+  // Calculate current and longest streak using shared service
+  const dates = logs.map((log) => log.date.toISOString().slice(0, 10));
+  const { currentStreak, longestStreak } = calculateStreakFromDates(dates);
+
+  return {
+    patternStats,
+    totalProblems,
+    recentLogsCount: recentLogs.length,
+    daysSinceLastLog,
+    currentStreak,
+    longestStreak,
+  };
 }

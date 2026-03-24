@@ -7,6 +7,7 @@ export const dsaProblemSchema = z.object({
   difficulty: z.enum(DIFFICULTY_LITERALS),
   pattern: z.string().trim().min(1).max(100),
   platform: z.string().trim().min(1).max(50),
+  notes: z.string().trim().max(1000).optional(),
 });
 
 export const createDsaProblemSchema = dsaProblemSchema;

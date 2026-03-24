@@ -6,15 +6,8 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import {
-  FolderKanban,
-  Trash2,
-  CheckCircle2,
-  Clock,
-  AlertCircle,
-  Pencil,
-  ArrowRight,
-} from "lucide-react";
+import { FolderKanban, Trash2, Pencil, ArrowRight } from "lucide-react";
+import { PROJECT_STATUS_CONFIG } from "@/lib/constants/project";
 import { ProjectForm } from "./ProjectForm";
 
 export interface Project {
@@ -31,12 +24,6 @@ export interface Project {
 interface ProjectListProps {
   projects: Project[];
 }
-
-const statusConfig = {
-  IN_PROGRESS: { label: "In Progress", icon: Clock, color: "bg-blue-500" },
-  COMPLETED: { label: "Completed", icon: CheckCircle2, color: "bg-green-500" },
-  ON_HOLD: { label: "On Hold", icon: AlertCircle, color: "bg-amber-500" },
-};
 
 export function ProjectList({ projects }: ProjectListProps) {
   const router = useRouter();
@@ -93,7 +80,7 @@ export function ProjectList({ projects }: ProjectListProps) {
       )}
 
       {projects.map((project) => {
-        const status = statusConfig[project.status];
+        const status = PROJECT_STATUS_CONFIG[project.status];
         const StatusIcon = status.icon;
 
         return (
@@ -132,11 +119,13 @@ export function ProjectList({ projects }: ProjectListProps) {
                     href={`/dashboard/projects/${project.id}`}
                     className="flex items-center gap-2 hover:opacity-80"
                   >
-                    <div className={`h-2 w-2 rounded-full ${status.color}`} />
+                    <div
+                      className={`h-2 w-2 rounded-full ${status.dotClass}`}
+                    />
                     <h4 className="text-foreground font-medium">
                       {project.name}
                     </h4>
-                    <Badge variant="secondary" className="text-xs">
+                    <Badge variant={status.variant} className="text-xs">
                       <StatusIcon className="mr-1 h-3 w-3" />
                       {status.label}
                     </Badge>
@@ -158,6 +147,7 @@ export function ProjectList({ projects }: ProjectListProps) {
                       size="sm"
                       onClick={() => setEditingId(project.id)}
                       className="text-muted-foreground hover:text-foreground"
+                      aria-label={`Edit ${project.name}`}
                     >
                       <Pencil className="h-4 w-4" />
                     </Button>
@@ -189,6 +179,7 @@ export function ProjectList({ projects }: ProjectListProps) {
                         size="sm"
                         onClick={() => setDeleteConfirmId(project.id)}
                         className="text-muted-foreground hover:text-destructive"
+                        aria-label={`Delete ${project.name}`}
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>

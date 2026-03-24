@@ -1,4 +1,5 @@
 import { NextRequest } from "next/server";
+import { z } from "zod";
 import { createServerSupabaseClient } from "@/lib/auth/supabase-server";
 import {
   successResponse,
@@ -18,14 +19,24 @@ export async function GET(request: NextRequest) {
 
     const { searchParams } = new URL(request.url);
     const limitParam = searchParams.get("limit");
-    const limit = limitParam ? Number.parseInt(limitParam, 10) : undefined;
 
+    const limitSchema = z.coerce.number().int().positive().optional();
+    const parseResult = limitSchema.safeParse(limitParam || undefined);
+
+    if (!parseResult.success) {
+      throw new Error("INVALID_LIMIT");
+    }
+
+    const limit = parseResult.data;
     const analysis = await analyzePatterns(user.id, { limit });
 
     return successResponse(analysis);
   } catch (error) {
     if (error instanceof Error && error.message === "UNAUTHORIZED") {
       return handleAuthError(error);
+    }
+    if (error instanceof Error && error.message === "INVALID_LIMIT") {
+      return handleApiError(new Error("Invalid limit parameter. Must be a positive integer."));
     }
     return handleApiError(error);
   }

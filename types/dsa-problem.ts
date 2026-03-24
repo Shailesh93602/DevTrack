@@ -17,6 +17,7 @@ export interface DsaProblem {
   pattern: string;
   platform: string;
   solvedAt: string;
+  notes?: string | null;
 }
 
 export interface DsaProblemFormData {
@@ -24,6 +25,7 @@ export interface DsaProblemFormData {
   difficulty: DifficultyLevel;
   pattern: string;
   platform: string;
+  notes?: string;
 }
 
 export interface DsaProblemListProps {
@@ -41,6 +43,7 @@ export interface DsaProblemBase {
   difficulty: DifficultyLevel;
   pattern: string;
   platform: string;
+  notes?: string | null;
 }
 
 export interface ProblemItemProps {

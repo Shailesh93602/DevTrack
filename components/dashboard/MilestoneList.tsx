@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Plus, Trash2, CheckCircle2, Circle } from "lucide-react";
 
@@ -28,6 +29,7 @@ export function MilestoneList({ projectId, milestones }: MilestoneListProps) {
   const [isAdding, setIsAdding] = useState(false);
   const [newTitle, setNewTitle] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [togglingId, setTogglingId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
@@ -36,6 +38,7 @@ export function MilestoneList({ projectId, milestones }: MilestoneListProps) {
     if (!newTitle.trim()) return;
 
     setIsSubmitting(true);
+    setError(null);
     try {
       const response = await fetch(`/api/project/${projectId}/milestones`, {
         method: "POST",
@@ -52,6 +55,7 @@ export function MilestoneList({ projectId, milestones }: MilestoneListProps) {
       setIsAdding(false);
       router.refresh();
     } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to add milestone");
       console.error(err);
     } finally {
       setIsSubmitting(false);
@@ -62,6 +66,7 @@ export function MilestoneList({ projectId, milestones }: MilestoneListProps) {
     if (isCompleted) return; // Already completed
 
     setTogglingId(milestoneId);
+    setError(null);
     try {
       const response = await fetch(
         `/api/project/${projectId}/milestones/${milestoneId}/complete`,
@@ -71,6 +76,9 @@ export function MilestoneList({ projectId, milestones }: MilestoneListProps) {
       if (!response.ok) throw new Error("Failed to complete milestone");
       router.refresh();
     } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "Failed to complete milestone"
+      );
       console.error(err);
     } finally {
       setTogglingId(null);
@@ -79,6 +87,7 @@ export function MilestoneList({ projectId, milestones }: MilestoneListProps) {
 
   async function handleDelete(milestoneId: string) {
     setDeletingId(milestoneId);
+    setError(null);
     try {
       const response = await fetch(
         `/api/project/${projectId}/milestones/${milestoneId}`,
@@ -88,6 +97,9 @@ export function MilestoneList({ projectId, milestones }: MilestoneListProps) {
       if (!response.ok) throw new Error("Failed to delete milestone");
       router.refresh();
     } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "Failed to delete milestone"
+      );
       console.error(err);
     } finally {
       setDeletingId(null);
@@ -114,15 +126,15 @@ export function MilestoneList({ projectId, milestones }: MilestoneListProps) {
             <span className="text-muted-foreground">Progress</span>
             <span className="font-medium">{progress}%</span>
           </div>
-          <div className="bg-muted h-2 overflow-hidden rounded-full">
-            <div
-              className="bg-primary h-full transition-all"
-              style={{ width: `${progress}%` }}
-            />
-          </div>
+          <Progress value={progress} className="h-2" />
         </div>
       </CardHeader>
       <CardContent className="space-y-3">
+        {error && (
+          <p className="text-destructive text-sm" role="alert">
+            {error}
+          </p>
+        )}
         {milestones.length === 0 ? (
           <p className="text-muted-foreground py-4 text-center text-sm">
             No milestones yet. Add your first milestone to track progress.
@@ -143,6 +155,7 @@ export function MilestoneList({ projectId, milestones }: MilestoneListProps) {
                     }
                     disabled={isCompleted || togglingId === milestone.id}
                     className="mt-0.5"
+                    aria-label={`Complete ${milestone.title}`}
                   />
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">
@@ -173,6 +186,7 @@ export function MilestoneList({ projectId, milestones }: MilestoneListProps) {
                     onClick={() => handleDelete(milestone.id)}
                     disabled={deletingId === milestone.id}
                     className="text-muted-foreground hover:text-destructive h-auto p-1"
+                    aria-label={`Delete ${milestone.title}`}
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>

@@ -129,30 +129,30 @@
 
 ### Design Rule Violations (must fix)
 
-- [ ] **`ProjectList.tsx:36-39`** — Hardcoded colors in `statusConfig`: `bg-blue-500`, `bg-green-500`, `bg-amber-500`. Replace with semantic CSS-variable-mapped classes or data attributes (e.g. use `text-primary`, `text-destructive`, `text-muted-foreground` or a variant prop pattern). No raw Tailwind color classes allowed per design rules.
-- [ ] **`projects/[id]/page.tsx:13-15`** — Identical `statusConfig` with same hardcoded colors duplicated from `ProjectList.tsx`. Needs to be removed AND deduplicated (see architecture issue below).
-- [ ] **`MilestoneList.tsx:121`** — Inline `style={{ width: \`${progress}%\` }}` violates the no-inline-styles rule. The `<Progress>` component (already installed and used in `ProjectList.tsx`) should be used here instead.
+- [x] **`ProjectList.tsx:36-39`** — Hardcoded colors in `statusConfig`: `bg-blue-500`, `bg-green-500`, `bg-amber-500`. Replaced with semantic classes via shared `PROJECT_STATUS_CONFIG`.
+- [x] **`projects/[id]/page.tsx:13-15`** — Removed duplicated `statusConfig`, now using shared `PROJECT_STATUS_CONFIG` from `lib/constants/project.ts`.
+- [x] **`MilestoneList.tsx:121`** — Replaced inline `style={{ width: ... }}` with `<Progress>` component.
 
 ### Coding Rule Violations
 
-- [ ] **`lib/services/insights.ts:76-106`** — Streak calculation is re-implemented from scratch instead of calling `calculateStreakFromDates` from `@/lib/services/streak.ts`. This is a DRY violation and will diverge if streak logic changes. Import and reuse the existing function.
-- [ ] **`lib/services/dashboard.ts:126-127`** — `getConsistencyScore` uses `setHours(0, 0, 0, 0)` (local time) for week bucketing. Same class of timezone bug previously fixed in `getDashboardStats`. Scores near week boundaries will be wrong in non-UTC environments. Use UTC methods consistently.
+- [x] **`lib/services/insights.ts:76-106`** — Deduplicated streak calculation by importing `calculateStreakFromDates` from `@/lib/services/streak.ts`.
+- [x] **`lib/services/dashboard.ts:126-127`** — Fixed timezone bug in `getConsistencyScore` by using UTC methods (`setUTCDate`, `Date.UTC`).
 - [ ] **`lib/utils/formatters.ts:3-4`** — `formatLogDate` uses `setHours(0, 0, 0, 0)` (local time) to compare dates stored as `@db.Date` (UTC). Will misclassify "Today"/"Yesterday" near midnight in non-UTC timezones. Use UTC methods.
 
 ### API Rule Violations
 
-- [ ] **`app/api/dsa-problem/patterns/route.ts:21`** — `limit` query param is parsed with `parseInt` but not validated with a Zod schema. `parseInt("abc", 10)` returns `NaN`, which is passed directly to `analyzePatterns`. Add Zod validation (`z.coerce.number().int().positive().optional()`).
+- [x] **`app/api/dsa-problem/patterns/route.ts:21`** — Added Zod validation with `z.coerce.number().int().positive().optional()` for limit param.
 
 ### Component Rule Violations
 
-- [ ] **`MilestoneList.tsx` — Silent error swallowing** — `handleAdd`, `handleToggle`, and `handleDelete` catch errors with only `console.error`. Users get no feedback when operations fail. Add per-operation error state and surface it in the UI (same pattern as `ProjectList.tsx` which shows `deleteError`).
-- [ ] **`MilestoneList.tsx` — Missing aria-labels** — The `Checkbox` for each milestone has no `aria-label` (screen readers can't identify what is being checked). The delete `Button` has no `aria-label` either. Add descriptive labels: `aria-label={\`Complete ${milestone.title}\`}` and `aria-label={\`Delete ${milestone.title}\`}`.
+- [x] **`MilestoneList.tsx` — Silent error swallowing** — Added error state with UI feedback for `handleAdd`, `handleToggle`, and `handleDelete`.
+- [x] **`MilestoneList.tsx` — Missing aria-labels** — Added `aria-label={\`Complete ${milestone.title}\`}`and`aria-label={\`Delete ${milestone.title}\`}`.
 
 ### Architecture / Structure Issues
 
-- [ ] **Duplicated `statusConfig`** — The status label/color map is defined identically in both `ProjectList.tsx` and `projects/[id]/page.tsx`. Extract to a shared constant in `lib/utils/project.ts` or `types/project.ts` and import from both. Also resolves the hardcoded color issues above in one place.
-- [ ] **Duplicate route handler** — `app/api/project/[id]/milestones/[milestoneId]/route.ts` contains a POST handler that duplicates `complete/route.ts` and has a wrong path comment (`// POST .../complete`). The POST handler in `[milestoneId]/route.ts` is dead code (the component calls the `/complete` sub-route). Remove the POST handler and keep only DELETE in `[milestoneId]/route.ts`.
-- [ ] **Dashboard DB query fan-out** — `getDashboardStats` fires 12 parallel queries, and `generateInsights` internally fires 4 more (logs, problems, last log, user). That's 16+ DB hits per dashboard render. `generateInsights` re-fetches data already retrieved by `getDashboardStats`. Consider passing pre-fetched context to `generateInsights` instead of letting it re-query.
+- [x] **Duplicated `statusConfig`** — Extracted to shared constant in `lib/constants/project.ts` and imported in both `ProjectList.tsx` and `projects/[id]/page.tsx`.
+- [x] **Duplicate route handler** — Removed POST handler from `[milestoneId]/route.ts`, keeping only DELETE.
+- [x] **Dashboard DB query fan-out** — Optimized by passing pre-fetched context to `generateInsights`, reducing queries from 16+ to ~12.
 
 ---
 

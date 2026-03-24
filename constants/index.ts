@@ -11,6 +11,7 @@ export const DSA_PROBLEM_CONSTANTS = {
   TITLE_MAX: 200,
   PATTERN_MAX: 100,
   PLATFORM_MAX: 50,
+  NOTES_MAX: 1000,
   DIFFICULTY_OPTIONS: ["EASY", "MEDIUM", "HARD"] as const,
   FILTER_OPTIONS: ["ALL", "EASY", "MEDIUM", "HARD"] as const,
 } as const;
@@ -53,6 +54,7 @@ export const DEFAULT_VALUES = {
     difficulty: "MEDIUM" as const,
     pattern: "",
     platform: "",
+    notes: "",
   },
   PROJECT: {
     name: "",

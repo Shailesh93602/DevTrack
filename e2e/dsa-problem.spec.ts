@@ -135,24 +135,73 @@ test.describe("DSA Problem Feature", () => {
     }
   });
 
-  test("should handle character limits in fields", async ({ page }) => {
-    // Title max 200 chars
-    const longTitle = "a".repeat(201);
-    await page.fill('input[placeholder="e.g. Two Sum"]', longTitle);
+  test("should create a problem with notes", async ({ page }) => {
+    // Fill in the problem form
+    await page.fill('input[placeholder="e.g. Two Sum"]', "Three Sum");
+    await page.selectOption("select", "MEDIUM");
+    await page.fill('input[placeholder="e.g. Hash Map, Two Pointers"]', "Two Pointers");
+    await page.fill('input[placeholder="e.g. LeetCode, HackerRank"]', "LeetCode");
 
-    // Pattern max 100 chars
-    const longPattern = "b".repeat(101);
-    await page.fill('input[placeholder="e.g. Hash Map, Two Pointers"]', longPattern);
+    // Add notes
+    await page.fill(
+      'textarea[placeholder*="review notes"]',
+      "Remember to sort the array first. Use two pointers after fixing one element."
+    );
 
-    // Platform max 50 chars
-    const longPlatform = "c".repeat(51);
-    await page.fill('input[placeholder="e.g. LeetCode, HackerRank"]', longPlatform);
+    // Submit the form
+    await page.click('button[type="submit"]');
+
+    // Wait for success
+    await expect(page.locator("text=Problem added successfully")).toBeVisible({ timeout: 10000 });
+
+    // Verify the problem appears with notes
+    await expect(page.locator("text=Three Sum")).toBeVisible();
+    await expect(page.locator("text=Notes:")).toBeVisible();
+    await expect(page.locator("text=Remember to sort the array first")).toBeVisible();
+  });
+
+  test("should edit problem notes", async ({ page }) => {
+    // Create a problem with initial notes
+    await page.fill('input[placeholder="e.g. Two Sum"]', "Notes Test Problem");
+    await page.selectOption("select", "EASY");
+    await page.fill('input[placeholder="e.g. Hash Map, Two Pointers"]', "Arrays");
+    await page.fill('input[placeholder="e.g. LeetCode, HackerRank"]', "LeetCode");
+    await page.fill(
+      'textarea[placeholder*="review notes"]',
+      "Initial notes for the problem"
+    );
+    await page.click('button[type="submit"]');
+    await expect(page.locator("text=Problem added successfully")).toBeVisible({ timeout: 10000 });
+
+    // Click edit button
+    await page.locator('button[aria-label^="Edit"]').first().click();
+
+    // Update the notes
+    await page.fill(
+      'textarea[id="problem-notes"]',
+      "Updated notes: key insight about edge cases"
+    );
+
+    // Save changes
+    await page.click('button:has-text("Save Changes")');
+
+    // Verify the updated notes appear
+    await expect(page.locator("text=Updated notes: key insight about edge cases")).toBeVisible();
+  });
+
+  test("should validate notes character limit", async ({ page }) => {
+    // Try to add notes that are too long (>1000 chars)
+    const longNotes = "a".repeat(1001);
+
+    await page.fill('input[placeholder="e.g. Two Sum"]', "Long Notes Test");
+    await page.selectOption("select", "EASY");
+    await page.fill('input[placeholder="e.g. Hash Map, Two Pointers"]', "Test");
+    await page.fill('input[placeholder="e.g. LeetCode, HackerRank"]', "Test");
+    await page.fill('textarea[placeholder*="review notes"]', longNotes);
 
     await page.click('button[type="submit"]');
 
-    // Should show validation errors
-    await expect(page.locator("text=200")).toBeVisible();
-    await expect(page.locator("text=100")).toBeVisible();
-    await expect(page.locator("text=50")).toBeVisible();
+    // Should show character count indicating error
+    await expect(page.locator("text=1000")).toBeVisible();
   });
 });

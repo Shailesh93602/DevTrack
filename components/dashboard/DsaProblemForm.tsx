@@ -13,6 +13,7 @@ import type { DsaProblemFormProps } from "@/types/dsa-problem";
 import { DIFFICULTY_OPTIONS } from "@/types/dsa-problem";
 import { dsaProblemSchema } from "@/lib/validations";
 import { DEFAULT_VALUES } from "@/constants";
+import { Textarea } from "@/components/ui/textarea";
 
 type FormValues = z.infer<typeof dsaProblemSchema>;
 
@@ -27,9 +28,12 @@ export function DsaProblemForm({ problem, onSuccess }: DsaProblemFormProps) {
     TITLE_MAX,
     PATTERN_MAX,
     PLATFORM_MAX,
+    NOTES_MAX,
   } = useDsaProblemForm(problem);
 
-  const defaultValues: FormValues = problem ?? DEFAULT_VALUES.DSA_PROBLEM;
+  const defaultValues: FormValues = problem
+    ? { ...DEFAULT_VALUES.DSA_PROBLEM, ...problem, notes: problem.notes ?? "" }
+    : DEFAULT_VALUES.DSA_PROBLEM;
 
   const {
     register,
@@ -47,6 +51,7 @@ export function DsaProblemForm({ problem, onSuccess }: DsaProblemFormProps) {
   const patternValue = useWatch({ control, name: "pattern" }) ?? "";
   const platformValue = useWatch({ control, name: "platform" }) ?? "";
   const difficultyValue = useWatch({ control, name: "difficulty" });
+  const notesValue = useWatch({ control, name: "notes" }) ?? "";
 
   const submitLabel = useMemo(() => {
     if (isSubmitting) {
@@ -186,6 +191,33 @@ export function DsaProblemForm({ problem, onSuccess }: DsaProblemFormProps) {
             className="text-destructive text-xs"
           >
             {errors.platform.message}
+          </p>
+        )}
+      </div>
+
+      {/* Notes Field */}
+      <div className="space-y-1.5">
+        <div className="flex items-center justify-between">
+          <Label htmlFor="problem-notes">Notes (optional)</Label>
+          <span className="text-muted-foreground text-xs tabular-nums">
+            {notesValue.length}/{NOTES_MAX}
+          </span>
+        </div>
+        <Textarea
+          id="problem-notes"
+          placeholder="Add review notes, key insights, or things to remember about this problem..."
+          {...register("notes")}
+          aria-invalid={!!errors.notes}
+          aria-describedby={errors.notes ? "problem-notes-error" : undefined}
+          rows={3}
+        />
+        {errors.notes && (
+          <p
+            id="problem-notes-error"
+            role="alert"
+            className="text-destructive text-xs"
+          >
+            {errors.notes.message}
           </p>
         )}
       </div>

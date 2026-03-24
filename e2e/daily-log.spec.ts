@@ -107,18 +107,88 @@ test.describe("Daily Log Feature", () => {
     await expect(page.locator("text=Notes must be 1000 characters or less")).toBeVisible();
   });
 
-  test("should display daily log list", async ({ page }) => {
-    // Create a log first
+  test("should filter logs by date range", async ({ page }) => {
+    // Create logs for today and yesterday
     const today = new Date().toISOString().split("T")[0];
-    await page.fill('input[type="date"]', today);
-    await page.fill('input[type="number"]', "7");
-    await page.click('button[type="submit"]');
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yesterdayStr = yesterday.toISOString().split("T")[0];
 
-    // Wait for submission
+    // Create log for today
+    await page.fill('input[type="date"]', today);
+    await page.fill('input[type="number"]', "3");
+    await page.click('button[type="submit"]');
     await expect(page.locator('button[type="submit"]:has-text("Log day")')).toBeVisible({ timeout: 10000 });
 
-    // Verify log appears in the list
-    await expect(page.locator("text=Problems: 7")).toBeVisible();
+    // Create log for yesterday
+    await page.fill('input[type="date"]', yesterdayStr);
+    await page.fill('input[type="number"]', "5");
+    await page.click('button[type="submit"]');
+    await expect(page.locator('button[type="submit"]:has-text("Log day")')).toBeVisible({ timeout: 10000 });
+
+    // Verify both logs are visible
+    await expect(page.locator("text=Problems: 3")).toBeVisible();
+    await expect(page.locator("text=Problems: 5")).toBeVisible();
+
+    // Filter to last 7 days (should show both)
+    await page.getByLabel("Select date range").click();
+    await page.getByRole("option", { name: "Last 7 days" }).click();
+
+    // Verify both logs are still visible
+    await expect(page.locator("text=Problems: 3")).toBeVisible();
+    await expect(page.locator("text=Problems: 5")).toBeVisible();
+
+    // Verify filter indicator shows count
+    await expect(page.locator("text=Showing 2 of 2")).toBeVisible();
+  });
+
+  test("should show all logs when filter is set to all time", async ({ page }) => {
+    // Create a log for today
+    const today = new Date().toISOString().split("T")[0];
+    await page.fill('input[type="date"]', today);
+    await page.fill('input[type="number"]', "4");
+    await page.click('button[type="submit"]');
+    await expect(page.locator('button[type="submit"]:has-text("Log day")')).toBeVisible({ timeout: 10000 });
+
+    // Switch to "Last 30 days" then back to "All time"
+    await page.getByLabel("Select date range").click();
+    await page.getByRole("option", { name: "Last 30 days" }).click();
+
+    await page.getByLabel("Select date range").click();
+    await page.getByRole("option", { name: "All time" }).click();
+
+    // Verify log is still visible
+    await expect(page.locator("text=Problems: 4")).toBeVisible();
+  });
+
+  test("should load more logs when Load more button is clicked", async ({ page }) => {
+    // Create 12 logs to test pagination (10 shown initially, 2 more on load)
+    const today = new Date();
+
+    for (let i = 0; i < 12; i++) {
+      const date = new Date(today);
+      date.setDate(date.getDate() - i);
+      const dateStr = date.toISOString().split("T")[0];
+
+      await page.fill('input[type="date"]', dateStr);
+      await page.fill('input[type="number"]', String(i + 1));
+      await page.click('button[type="submit"]');
+      await expect(page.locator('button[type="submit"]:has-text("Log day")')).toBeVisible({ timeout: 10000 });
+    }
+
+    // Switch to "All time" filter to see all logs
+    await page.getByLabel("Select date range").click();
+    await page.getByRole("option", { name: "All time" }).click();
+
+    // Verify Load more button is visible (showing 10 of 12)
+    await expect(page.locator('button:has-text("Load more")')).toBeVisible();
+    await expect(page.locator('button:has-text("(2 remaining)")')).toBeVisible();
+
+    // Click Load more
+    await page.click('button:has-text("Load more")');
+
+    // Verify all 12 logs are now visible
+    await expect(page.locator('button:has-text("Load more")')).not.toBeVisible();
   });
 
   test("should delete a daily log", async ({ page }) => {

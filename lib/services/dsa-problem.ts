@@ -11,6 +11,7 @@ const defaultSelect = {
   pattern: true,
   platform: true,
   solvedAt: true,
+  notes: true,
   createdAt: true,
   updatedAt: true,
 } satisfies Prisma.DSAProblemSelect;
@@ -25,6 +26,7 @@ export async function createDsaProblem(
       difficulty: data.difficulty as Difficulty,
       pattern: data.pattern,
       platform: data.platform,
+      notes: data.notes,
       userId,
       solvedAt: new Date(),
     },
@@ -80,6 +82,7 @@ export async function updateDsaProblem(
     ...(data.difficulty && { difficulty: data.difficulty as Difficulty }),
     ...(data.pattern && { pattern: data.pattern }),
     ...(data.platform && { platform: data.platform }),
+    ...(data.notes !== undefined && { notes: data.notes }),
   };
 
   return prisma.dSAProblem.updateMany({

@@ -173,11 +173,13 @@ export function ProjectForm({ project, onSuccess }: ProjectFormProps) {
               }
             }}
             placeholder="Add technology (e.g., React, Node.js)"
+            aria-label="Tech stack input"
           />
           <Button
             type="button"
             variant="secondary"
             onClick={() => addTech(techStack, setValue)}
+            aria-label="Add tech"
           >
             Add
           </Button>

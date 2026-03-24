@@ -7,13 +7,8 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { createServerSupabaseClient } from "@/lib/auth/supabase-server";
 import { getProjectById } from "@/lib/services/project";
+import { PROJECT_STATUS_CONFIG } from "@/lib/constants/project";
 import { MilestoneList } from "@/components/dashboard/MilestoneList";
-
-const statusConfig = {
-  IN_PROGRESS: { label: "In Progress", color: "bg-blue-500" },
-  COMPLETED: { label: "Completed", color: "bg-green-500" },
-  ON_HOLD: { label: "On Hold", color: "bg-amber-500" },
-};
 
 interface ProjectDetailPageProps {
   params: Promise<{
@@ -36,7 +31,7 @@ export default async function ProjectDetailPage({
 
   if (!project) notFound();
 
-  const status = statusConfig[project.status];
+  const status = PROJECT_STATUS_CONFIG[project.status];
   const serializedMilestones = project.milestones.map((m) => ({
     id: m.id,
     title: m.title,
@@ -62,8 +57,8 @@ export default async function ProjectDetailPage({
           <h2 className="text-foreground text-xl font-semibold">
             {project.name}
           </h2>
-          <Badge variant="secondary">
-            <div className={`mr-1.5 h-2 w-2 rounded-full ${status.color}`} />
+          <Badge variant={status.variant}>
+            <div className={`mr-1.5 h-2 w-2 rounded-full ${status.dotClass}`} />
             {status.label}
           </Badge>
         </div>

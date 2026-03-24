@@ -49,6 +49,7 @@ model DSAProblem {
   pattern    String
   platform   String
   solvedAt   DateTime
+  notes      String?    // Review notes for the problem
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
 

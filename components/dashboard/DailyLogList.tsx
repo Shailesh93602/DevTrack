@@ -1,11 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { Trash2, Pencil } from "lucide-react";
+import { Trash2, Pencil, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Dialog,
   DialogContent,
@@ -13,30 +20,13 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { DailyLogForm } from "./DailyLogForm";
+import { formatLogDate } from "@/lib/utils/formatters";
 import type { SerializedDailyLog } from "@/types/daily-log";
+
+type DateRangeFilter = "7" | "30" | "all";
 
 interface DailyLogListProps {
   logs: SerializedDailyLog[];
-}
-
-function formatLogDate(isoString: string): string {
-  // Compare UTC dates to avoid local-timezone mismatches
-  const logDate = isoString.slice(0, 10);
-  const todayDate = new Date().toISOString().slice(0, 10);
-
-  const yesterday = new Date();
-  yesterday.setUTCDate(yesterday.getUTCDate() - 1);
-  const yesterdayDate = yesterday.toISOString().slice(0, 10);
-
-  if (logDate === todayDate) return "Today";
-  if (logDate === yesterdayDate) return "Yesterday";
-
-  return new Date(isoString).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-    timeZone: "UTC",
-  });
 }
 
 interface LogItemProps {
@@ -48,7 +38,7 @@ interface LogItemProps {
 
 function LogItem({ log, onDelete, onEdit, isDeleting }: LogItemProps) {
   const [isPendingConfirm, setIsPendingConfirm] = useState(false);
-  const formattedDate = formatLogDate(log.date);
+  const formattedDate = formatLogDate(new Date(log.date));
 
   function handleDeleteClick() {
     if (!isPendingConfirm) {
@@ -146,6 +136,35 @@ export function DailyLogList({ logs }: DailyLogListProps) {
   const [deleteError, setDeleteError] = useState<string | null>(null);
   const [editingLog, setEditingLog] = useState<SerializedDailyLog | null>(null);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [dateRangeFilter, setDateRangeFilter] =
+    useState<DateRangeFilter>("all");
+  const [displayLimit, setDisplayLimit] = useState(10);
+
+  // Filter logs based on selected date range
+  const filteredLogs = useMemo(() => {
+    if (dateRangeFilter === "all") return logs;
+
+    const days = parseInt(dateRangeFilter, 10);
+    const cutoffDate = new Date();
+    cutoffDate.setDate(cutoffDate.getDate() - days);
+    cutoffDate.setHours(0, 0, 0, 0);
+
+    return logs.filter((log) => {
+      const logDate = new Date(log.date);
+      return logDate >= cutoffDate;
+    });
+  }, [logs, dateRangeFilter]);
+
+  // Paginate filtered logs
+  const displayedLogs = useMemo(() => {
+    return filteredLogs.slice(0, displayLimit);
+  }, [filteredLogs, displayLimit]);
+
+  const hasMoreLogs = filteredLogs.length > displayLimit;
+
+  function handleLoadMore() {
+    setDisplayLimit((prev) => prev + 10);
+  }
 
   async function handleDelete(id: string) {
     setDeletingId(id);
@@ -193,22 +212,70 @@ export function DailyLogList({ logs }: DailyLogListProps) {
 
   return (
     <div>
+      {/* Date Range Filter */}
+      <div className="mb-4 flex items-center gap-2">
+        <Calendar className="text-muted-foreground h-4 w-4" />
+        <Select
+          value={dateRangeFilter}
+          onValueChange={(value) => {
+            setDateRangeFilter(value as DateRangeFilter);
+            setDisplayLimit(10); // Reset pagination when filter changes
+          }}
+          aria-label="Filter logs by date range"
+        >
+          <SelectTrigger className="w-[180px]" aria-label="Select date range">
+            <SelectValue placeholder="Show logs from..." />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="7">Last 7 days</SelectItem>
+            <SelectItem value="30">Last 30 days</SelectItem>
+            <SelectItem value="all">All time</SelectItem>
+          </SelectContent>
+        </Select>
+        {filteredLogs.length !== logs.length && (
+          <span className="text-muted-foreground text-xs">
+            Showing {filteredLogs.length} of {logs.length}
+          </span>
+        )}
+      </div>
+
       {deleteError && (
         <p role="alert" className="text-destructive mb-2 text-xs">
           {deleteError}
         </p>
       )}
-      {logs.map((log, index) => (
-        <div key={log.id}>
-          <LogItem
-            log={log}
-            onDelete={handleDelete}
-            onEdit={handleEdit}
-            isDeleting={deletingId === log.id}
-          />
-          {index < logs.length - 1 && <Separator />}
-        </div>
-      ))}
+      {filteredLogs.length === 0 ? (
+        <p className="text-muted-foreground py-4 text-sm">
+          No logs found for the selected date range.
+        </p>
+      ) : (
+        <>
+          {displayedLogs.map((log, index) => (
+            <div key={log.id}>
+              <LogItem
+                log={log}
+                onDelete={handleDelete}
+                onEdit={handleEdit}
+                isDeleting={deletingId === log.id}
+              />
+              {index < displayedLogs.length - 1 && <Separator />}
+            </div>
+          ))}
+
+          {/* Load More Button */}
+          {hasMoreLogs && (
+            <div className="flex justify-center py-4">
+              <Button
+                variant="outline"
+                onClick={handleLoadMore}
+                aria-label={`Load more logs (${filteredLogs.length - displayLimit} remaining)`}
+              >
+                Load more ({filteredLogs.length - displayLimit} remaining)
+              </Button>
+            </div>
+          )}
+        </>
+      )}
 
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
         <DialogContent className="sm:max-w-[500px]">

@@ -33,43 +33,67 @@ export async function getDashboardStats(userId: string): Promise<DashboardStats>
   const now = new Date();
   const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
 
-  const [totalProblemsResult, todaysLog, recentLogsResult, streakStats, totalProjectsResult, activeProjectsResult, easyCount, mediumCount, hardCount, consistencyScore, patternAnalysis, insights] =
-    await Promise.all([
-      prisma.dSAProblem.count({
-        where: { userId },
-      }),
-      prisma.dailyLog.findFirst({
-        where: {
-          userId,
-          date: {
-            gte: today,
-          },
+  // Fetch all data in parallel - these are the base queries
+  const [
+    totalProblemsResult,
+    todaysLog,
+    recentLogsResult,
+    streakStats,
+    totalProjectsResult,
+    activeProjectsResult,
+    easyCount,
+    mediumCount,
+    hardCount,
+    consistencyScore,
+    patternAnalysis,
+    problemsForInsights, // Fetch problems for insights generation
+    logsForInsights,     // Fetch logs for insights generation
+  ] = await Promise.all([
+    prisma.dSAProblem.count({
+      where: { userId },
+    }),
+    prisma.dailyLog.findFirst({
+      where: {
+        userId,
+        date: {
+          gte: today,
         },
-        select: {
-          problemsSolved: true,
-        },
-      }),
-      prisma.dailyLog.findMany({
-        where: { userId },
-        orderBy: { date: "desc" },
-        take: 5,
-        select: {
-          id: true,
-          date: true,
-          problemsSolved: true,
-          topics: true,
-        },
-      }),
-      calculateStreaks(userId),
-      prisma.project.count({ where: { userId } }),
-      prisma.project.count({ where: { userId, status: "IN_PROGRESS" } }),
-      prisma.dSAProblem.count({ where: { userId, difficulty: "EASY" } }),
-      prisma.dSAProblem.count({ where: { userId, difficulty: "MEDIUM" } }),
-      prisma.dSAProblem.count({ where: { userId, difficulty: "HARD" } }),
-      getConsistencyScore(userId),
-      analyzePatterns(userId, { limit: 1000 }),
-      generateInsights(userId),
-    ]);
+      },
+      select: {
+        problemsSolved: true,
+      },
+    }),
+    prisma.dailyLog.findMany({
+      where: { userId },
+      orderBy: { date: "desc" },
+      take: 5,
+      select: {
+        id: true,
+        date: true,
+        problemsSolved: true,
+        topics: true,
+      },
+    }),
+    calculateStreaks(userId),
+    prisma.project.count({ where: { userId } }),
+    prisma.project.count({ where: { userId, status: "IN_PROGRESS" } }),
+    prisma.dSAProblem.count({ where: { userId, difficulty: "EASY" } }),
+    prisma.dSAProblem.count({ where: { userId, difficulty: "MEDIUM" } }),
+    prisma.dSAProblem.count({ where: { userId, difficulty: "HARD" } }),
+    getConsistencyScore(userId),
+    analyzePatterns(userId, { limit: 1000 }),
+    // Pre-fetch data for insights to avoid redundant queries
+    prisma.dSAProblem.findMany({
+      where: { userId },
+      select: { pattern: true },
+    }),
+    prisma.dailyLog.findMany({
+      where: { userId },
+      select: { date: true },
+      orderBy: { date: "asc" },
+      take: 120,
+    }),
+  ]);
 
   const recentLogs = recentLogsResult.map((log) => ({
     id: log.id,
@@ -77,6 +101,54 @@ export async function getDashboardStats(userId: string): Promise<DashboardStats>
     problemsSolved: log.problemsSolved,
     topics: log.topics ?? [],
   }));
+
+  // Prepare pre-fetched context for insights generation
+  // This avoids redundant DB queries in generateInsights
+  const lastLog = recentLogsResult.length > 0 ? recentLogsResult[0] : null;
+
+  // Calculate pattern stats from pre-fetched problems
+  const patternCounts = new Map<string, number>();
+  for (const problem of problemsForInsights) {
+    const normalized = problem.pattern.trim();
+    patternCounts.set(normalized, (patternCounts.get(normalized) ?? 0) + 1);
+  }
+
+  const patternStats = Array.from(patternCounts.entries())
+    .map(([pattern, count]) => ({
+      pattern,
+      count,
+      percentage: problemsForInsights.length > 0 ? Math.round((count / problemsForInsights.length) * 100) : 0,
+    }))
+    .sort((a, b) => b.count - a.count);
+
+  // Calculate days since last log
+  let daysSinceLastLog: number | null = null;
+  if (lastLog) {
+    const lastDate = new Date(lastLog.date);
+    const todayDate = new Date();
+    todayDate.setHours(0, 0, 0, 0);
+    lastDate.setHours(0, 0, 0, 0);
+    daysSinceLastLog = Math.floor(
+      (todayDate.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24)
+    );
+  }
+
+  // Build pre-fetched context for insights
+  const preFetchedInsightContext = {
+    problems: problemsForInsights,
+    recentLogs: recentLogsResult.slice(0, 7),
+    lastLog: lastLog ? { date: lastLog.date } : null,
+    logs: logsForInsights,
+    patternStats,
+    totalProblems: problemsForInsights.length,
+    recentLogsCount: recentLogsResult.length,
+    daysSinceLastLog,
+    currentStreak: streakStats.currentStreak,
+    longestStreak: streakStats.longestStreak,
+  };
+
+  // Generate insights with pre-fetched context (saves 4 DB queries)
+  const insights = await generateInsights(userId, undefined, preFetchedInsightContext);
 
   return {
     totalProblems: totalProblemsResult,
@@ -119,12 +191,16 @@ async function getConsistencyScore(userId: string): Promise<number> {
     orderBy: { date: "asc" },
   });
 
-  // Group logs by week
+  // Group logs by week using UTC
   const weekMap = new Map<number, number>();
   for (const log of logs) {
-    const weekStart = new Date(log.date);
-    weekStart.setHours(0, 0, 0, 0);
-    weekStart.setDate(weekStart.getDate() - weekStart.getDay());
+    const logDate = new Date(log.date);
+    const weekStart = new Date(Date.UTC(
+      logDate.getUTCFullYear(),
+      logDate.getUTCMonth(),
+      logDate.getUTCDate()
+    ));
+    weekStart.setUTCDate(weekStart.getUTCDate() - weekStart.getUTCDay());
     const weekKey = weekStart.getTime();
     weekMap.set(weekKey, (weekMap.get(weekKey) ?? 0) + 1);
   }
@@ -132,10 +208,13 @@ async function getConsistencyScore(userId: string): Promise<number> {
   // Calculate score (0-100) based on weeks that met target
   let weeksMet = 0;
   for (let i = 0; i < weeksToCheck; i++) {
-    const checkDate = new Date(now);
-    checkDate.setDate(checkDate.getDate() - i * 7);
-    checkDate.setHours(0, 0, 0, 0);
-    checkDate.setDate(checkDate.getDate() - checkDate.getDay());
+    const checkDate = new Date(Date.UTC(
+      now.getUTCFullYear(),
+      now.getUTCMonth(),
+      now.getUTCDate()
+    ));
+    checkDate.setUTCDate(checkDate.getUTCDate() - i * 7);
+    checkDate.setUTCDate(checkDate.getUTCDate() - checkDate.getUTCDay());
     const logCount = weekMap.get(checkDate.getTime()) ?? 0;
     if (logCount >= targetLogsPerWeek) {
       weeksMet++;
