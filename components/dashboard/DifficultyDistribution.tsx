@@ -34,13 +34,13 @@ export function DifficultyDistribution({ data }: DifficultyDistributionProps) {
   }
 
   return (
-    <Card className="h-full rounded-lg border border-border shadow-none">
-      <CardHeader className="pb-3">
-        <CardTitle className="text-sm font-medium text-muted-foreground">
+    <Card className="h-full rounded-xl border border-border/60 bg-card/50 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <CardHeader className="border-b border-border/40 pb-4">
+        <CardTitle className="text-sm font-semibold text-foreground">
           Difficulty Distribution
         </CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="pt-4">
         <div className="h-64 w-full">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>

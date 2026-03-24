@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+export const dynamic = "force-dynamic";
 import { StatsCard } from "@/components/dashboard/stats-card";
 import { Separator } from "@/components/ui/separator";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";

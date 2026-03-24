@@ -3,12 +3,21 @@
 import { useState } from "react";
 import { logout } from "@/lib/auth/actions";
 import { Button } from "@/components/ui/button";
-import { Menu } from "lucide-react";
+import { Menu, LogOut } from "lucide-react";
 import {
   Dialog,
   DialogContent,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { SidebarContent } from "./sidebar";
 
 interface HeaderProps {
@@ -18,8 +27,12 @@ interface HeaderProps {
 export function Header({ email }: HeaderProps) {
   const [isOpen, setIsOpen] = useState(false);
 
+  const initials = email
+    ? email.substring(0, 2).toUpperCase()
+    : "U";
+
   return (
-    <header className="flex h-14 items-center justify-between border-b border-border bg-background px-6">
+    <header className="flex h-14 items-center justify-between border-b border-border bg-background/95 backdrop-blur px-6 supports-[backdrop-filter]:bg-background/60">
       <div className="flex items-center gap-2 lg:hidden">
         <Button
           variant="ghost"
@@ -41,17 +54,37 @@ export function Header({ email }: HeaderProps) {
         </DialogContent>
       </Dialog>
 
-      <div className="flex items-center gap-4">
-        {email && (
-          <span className="hidden text-sm text-muted-foreground sm:inline">
-            {email}
-          </span>
-        )}
-        <form action={logout}>
-          <Button variant="ghost" size="sm" type="submit">
-            Sign out
-          </Button>
-        </form>
+      <div className="flex flex-1 items-center justify-end gap-4">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="relative h-8 w-8 rounded-full border border-border">
+              <Avatar className="h-8 w-8">
+                <AvatarFallback className="bg-primary/10 text-primary text-xs font-medium">
+                  {initials}
+                </AvatarFallback>
+              </Avatar>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="w-56" align="end" forceMount>
+            <DropdownMenuLabel className="font-normal">
+              <div className="flex flex-col space-y-1">
+                <p className="text-sm font-medium leading-none">Account</p>
+                <p className="text-xs leading-none text-muted-foreground">
+                  {email || "User"}
+                </p>
+              </div>
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem asChild>
+              <form action={logout} className="w-full">
+                <button type="submit" className="flex w-full items-center cursor-pointer">
+                  <LogOut className="mr-2 h-4 w-4 text-muted-foreground" />
+                  <span>Log out</span>
+                </button>
+              </form>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </header>
   );

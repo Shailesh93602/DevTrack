@@ -38,10 +38,13 @@ export function InsightsList({ insights, maxInsights = 3 }: InsightsListProps) {
 
   if (displayInsights.length === 0) {
     return (
-      <Card className="border-border rounded-lg border shadow-none">
-        <CardContent className="py-8 text-center">
-          <ClipboardList className="text-muted-foreground mx-auto h-8 w-8" />
-          <p className="text-muted-foreground mt-3 text-sm">
+      <Card className="rounded-xl border-dashed border-2 border-border/60 bg-muted/20 shadow-sm">
+        <CardContent className="py-10 text-center">
+          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
+            <ClipboardList className="h-6 w-6 text-primary" />
+          </div>
+          <p className="font-semibold text-foreground">No Insights Yet</p>
+          <p className="mt-1 text-sm text-muted-foreground">
             Start logging activity to get personalized insights.
           </p>
         </CardContent>
@@ -50,39 +53,42 @@ export function InsightsList({ insights, maxInsights = 3 }: InsightsListProps) {
   }
 
   return (
-    <Card className="border-border rounded-lg border shadow-none">
-      <CardHeader className="pb-3">
-        <CardTitle className="text-muted-foreground text-sm font-medium">
-          Insights
+    <Card className="rounded-xl border border-border/60 bg-card/50 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <CardHeader className="border-b border-border/40 pb-4">
+        <CardTitle className="flex items-center gap-2 text-sm font-semibold text-foreground">
+          <Sparkles className="h-4 w-4 text-primary" />
+          Smart Insights
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-6 pt-5">
         {displayInsights.map((insight) => (
-          <div key={insight.id} className="flex gap-3">
+          <div key={insight.id} className="group flex gap-4">
             <div
-              className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-md border ${priorityVariants[insight.priority]}`}
+              className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full border shadow-sm ${priorityVariants[insight.priority]}`}
             >
               {typeIcons[insight.type]}
             </div>
-            <div className="flex-1 space-y-1">
-              <p className="text-foreground text-sm font-medium">
+            <div className="flex-1 space-y-1.5 pt-0.5">
+              <p className="text-sm font-semibold tracking-tight text-foreground">
                 {insight.title}
               </p>
-              <p className="text-muted-foreground text-xs leading-relaxed">
+              <p className="text-sm leading-snug text-muted-foreground">
                 {insight.message}
               </p>
               {insight.metric && (
-                <Badge variant="secondary" className="text-xs">
-                  {insight.metric.label}: {insight.metric.value}
-                </Badge>
+                <div className="pt-1">
+                  <Badge variant="secondary" className="bg-muted font-medium hover:bg-muted">
+                    {insight.metric.label}: <span className="ml-1 font-bold text-foreground">{insight.metric.value}</span>
+                  </Badge>
+                </div>
               )}
               {insight.action && (
-                <div className="pt-1">
+                <div className="pt-2">
                   <Button
                     asChild
-                    variant="link"
+                    variant="outline"
                     size="sm"
-                    className="h-auto p-0 text-xs"
+                    className="h-8 bg-background text-xs font-medium transition-colors group-hover:bg-accent"
                   >
                     <Link href={insight.action.href}>
                       {insight.action.label}
