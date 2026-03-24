@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { toUtcDateString } from "@/lib/utils/date";
 
 interface ActivityHeatmapProps {
   data: { date: string; count: number }[];
@@ -21,7 +22,7 @@ export function ActivityHeatmap({ data }: ActivityHeatmapProps) {
     for (let i = daysToShow - 1; i >= 0; i--) {
       const d = new Date(today);
       d.setDate(today.getDate() - i);
-      const dateStr = d.toISOString().slice(0, 10);
+      const dateStr = toUtcDateString(d);
       dates.push({
         date: dateStr,
         count: dataMap.get(dateStr) ?? 0,

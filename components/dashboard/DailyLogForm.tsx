@@ -11,9 +11,8 @@ import { cn } from "@/lib/utils";
 import {
   useDailyLogForm,
   submitDailyLog,
-  toDateInputValue,
-  getTodayString,
 } from "@/hooks/useDailyLogForm";
+import { toDateInputValue, getTodayUtcString } from "@/lib/utils/date";
 import type { DailyLogFormProps } from "@/types";
 import { createDailyLogSchema, type DailyLogFormInput } from "@/lib/validations";
 
@@ -44,7 +43,7 @@ export function DailyLogForm({ log }: DailyLogFormProps) {
   } = useForm({
     resolver: zodResolver(createDailyLogSchema),
     defaultValues: {
-      date: log ? toDateInputValue(log.date) : getTodayString(),
+      date: log ? toDateInputValue(log.date) : getTodayUtcString(),
       problemsSolved: log?.problemsSolved ?? 0,
       topics: log?.topics ?? [],
       notes: log?.notes ?? "",
@@ -60,7 +59,7 @@ export function DailyLogForm({ log }: DailyLogFormProps) {
       // Reset form on success (only for new logs)
       if (!isEditing) {
         reset({
-          date: getTodayString(),
+          date: getTodayUtcString(),
           problemsSolved: 0,
           notes: "",
         });

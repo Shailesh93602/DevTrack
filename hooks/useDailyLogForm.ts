@@ -111,10 +111,4 @@ export async function submitDailyLog(
   return result;
 }
 
-export function toDateInputValue(isoString: string): string {
-  return isoString.slice(0, 10);
-}
 
-export function getTodayString(): string {
-  return new Date().toISOString().slice(0, 10);
-}
