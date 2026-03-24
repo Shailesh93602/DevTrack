@@ -2,7 +2,7 @@ import { prisma } from "@/lib/db/prisma";
 import { Prisma } from "@prisma/client";
 import { parseUtcDate, normalizeToUtcMidnight } from "@/lib/utils/date";
 import type { CreateDailyLogInput, UpdateDailyLogInput, DailyLogQueryParams } from "@/lib/validations/daily-log";
-import { ensurePrismaUser } from "./user";
+import { ensureUserInDb } from "./user";
 
 export type DailyLogWithUser = Prisma.DailyLogGetPayload<{
   include: { user: { select: { id: true; email: true } } };
@@ -25,7 +25,7 @@ export async function createDailyLog(
   email?: string
 ) {
   if (email) {
-    await ensurePrismaUser(userId, email);
+    await ensureUserInDb(userId, email);
   }
   return prisma.dailyLog.create({
     data: {

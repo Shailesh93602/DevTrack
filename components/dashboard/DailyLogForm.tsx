@@ -55,9 +55,12 @@ export function DailyLogForm({ log, onSuccess }: DailyLogFormProps) {
   async function onSubmit(values: DailyLogFormInput) {
     setSubmitError(null);
     try {
+      console.log("DailyLogForm: submitting values", values);
       const result = isEditing 
         ? await updateDailyLog(log.id, values)
         : await createDailyLog(values);
+      
+      console.log("DailyLogForm: result", result);
 
       if (!result.success) {
         throw new Error(result.error.message);
