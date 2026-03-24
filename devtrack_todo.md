@@ -163,3 +163,29 @@
 3. **Insights Engine** — 9 rule types with priority-based display
 4. **Project Tracker** — Milestones, progress tracking, activity logs
 5. **Dashboard UX** — Simplified stats, better spacing, icon-enhanced empty states
+
+---
+
+## Project Audit & Refactoring (10/10 Standard)
+
+### Phase 1: Infrastructure & Utils
+
+- [ ] **Centralize Date Utilities** — Create `@/lib/utils/date.ts` to handle all UTC midnight normalization, ISO slicing, and formatting. Replace all scattered `new Date(Date.UTC(...))` and `toISOString().slice(0,10)` calls.
+- [ ] **Unified Zod Schemas** — Align `dailyLogFormSchema` and `dailyLogSchema`. Use `z.preprocess` or similar to handle date coercion consistently between forms and API.
+- [ ] **Centralized Serialization** — Move `serializeLog` from `logs/page.tsx` and other scattered places to a dedicated `@/lib/utils/serialization.ts` or add to service layer.
+- [ ] **Remove `any` Usage** — Audit all components (starting with `DailyLogForm.tsx`) and routes to replace `any` with proper types/interfaces.
+
+### Phase 2: Service Layer & API
+
+- [ ] **Standardize Pagination** — Create a shared utility for parsing `limit` and `offset` from `searchParams` and generating the count/metadata response.
+- [ ] **Deduplicate Logic** — Remove redundant validation checks in `POST` handlers that are already covered by `handleApiError`.
+- [ ] **Centralize Error Logging** — Use a unified utility for server-side error logging instead of scattered `console.error`.
+
+### Phase 3: Component Architecture
+
+- [ ] **Refactor `DailyLogForm`** — Clean up the split logic between `useDailyLogForm` hook and `useForm`. Ensure all form values are type-safe.
+- [ ] **File Line Audit** — Split overly large components (>200 lines) into smaller sub-components (e.g., `TopicSelector`, `LogHeader`).
+- [ ] **Naming Convention Sync** — Ensure all variables and props follow a consistent pattern (e.g., `isEditing` vs `editing`, `handleX` for events).
+- [ ] **Centralize Layout Constants** — Move magic numbers (e.g., `120` days in streaks, `86400000` ms) and business limits (`NOTES_MAX`, `TOPICS_MAX`) to `@/lib/constants`.
+- [ ] **Logic Unification in Services** — Refactor `insights.ts` and `streak.ts` to deduplicate logic (e.g., `buildInsightContext` vs `buildInsightContextWithPartialData`). Use optional parameters and shared helper functions.
+- [ ] **API Wrapper Centralization** — Move all `fetch` calls from hooks (like `submitDailyLog` in `useDailyLogForm.ts`) to a dedicated `@/lib/api` directory with consistent error handling and type-safe payloads.
