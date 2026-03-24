@@ -1,21 +1,28 @@
 import { z } from "zod";
+import {
+  DEFAULT_PAGE_LIMIT,
+  MAX_PAGE_LIMIT,
+  PROJECT_DESCRIPTION_MAX_LENGTH,
+  PROJECT_TECH_STACK_MAX_COUNT,
+  TOPIC_MAX_LENGTH,
+} from "@/lib/constants";
 
 // Server-side schema (for API/DB operations)
 export const createProjectSchema = z.object({
   name: z.string().trim().min(1).max(100),
-  description: z.string().trim().max(500).optional(),
+  description: z.string().trim().max(PROJECT_DESCRIPTION_MAX_LENGTH).optional(),
   status: z.enum(["IN_PROGRESS", "COMPLETED", "ON_HOLD"]).default("IN_PROGRESS"),
   dueDate: z.coerce.date().optional(),
-  techStack: z.array(z.string().trim().min(1).max(50)).max(20).default([]),
+  techStack: z.array(z.string().trim().min(1).max(TOPIC_MAX_LENGTH)).max(PROJECT_TECH_STACK_MAX_COUNT).default([]),
 });
 
 // Client-side form schema (for React Hook Form) - no defaults, required fields
 export const projectFormSchema = z.object({
   name: z.string().trim().min(1).max(100),
-  description: z.string().trim().max(500).optional(),
+  description: z.string().trim().max(PROJECT_DESCRIPTION_MAX_LENGTH).optional(),
   status: z.enum(["IN_PROGRESS", "COMPLETED", "ON_HOLD"]),
   dueDate: z.date().optional(),
-  techStack: z.array(z.string().trim().min(1).max(50)).max(20),
+  techStack: z.array(z.string().trim().min(1).max(TOPIC_MAX_LENGTH)).max(PROJECT_TECH_STACK_MAX_COUNT),
 });
 
 export const updateProjectSchema = createProjectSchema.partial();
@@ -26,7 +33,7 @@ export const projectIdSchema = z.object({
 
 export const projectQuerySchema = z.object({
   status: z.enum(["IN_PROGRESS", "COMPLETED", "ON_HOLD"]).optional(),
-  limit: z.coerce.number().int().min(1).max(100).default(50),
+  limit: z.coerce.number().int().min(1).max(MAX_PAGE_LIMIT).default(DEFAULT_PAGE_LIMIT),
   offset: z.coerce.number().int().min(0).default(0),
 });
 

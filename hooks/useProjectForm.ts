@@ -1,19 +1,13 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { UseFormSetValue } from "react-hook-form";
-import type { CreateProjectInput } from "@/lib/validations";
-import type { Project } from "@/types";
-import { PROJECT_CONSTANTS } from "@/constants";
+import type { CreateProjectInput } from "@/lib/validations/project";
+import { PROJECT_TECH_STACK_MAX_COUNT as TECH_STACK_MAX } from "@/lib/constants";
 
-const { TECH_STACK_MAX } = PROJECT_CONSTANTS;
-
-export function useProjectForm(project?: Project) {
+export function useProjectForm() {
   const router = useRouter();
   const [techInput, setTechInput] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
-
-  const isEditing = !!project;
 
   const addTech = (
     techStack: string[],
@@ -46,11 +40,8 @@ export function useProjectForm(project?: Project) {
 
   return {
     techInput,
-    isSubmitting,
     submitError,
-    isEditing,
     setTechInput,
-    setIsSubmitting,
     setSubmitError,
     addTech,
     removeTech,
@@ -58,26 +49,4 @@ export function useProjectForm(project?: Project) {
     router,
     TECH_STACK_MAX,
   };
-}
-
-export async function submitProject(
-  projectData: CreateProjectInput,
-  isEditing: boolean,
-  projectId?: string
-) {
-  const url = isEditing ? `/api/project/${projectId}` : "/api/project";
-  const method = isEditing ? "PATCH" : "POST";
-
-  const response = await fetch(url, {
-    method,
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(projectData),
-  });
-
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    throw new Error(errorData.error?.message || "Failed to save project");
-  }
-
-  return response.json();
 }

@@ -1,114 +1,68 @@
 import { useState } from "react";
-import { useRouter } from "next/navigation";
-import type { SerializedDailyLog } from "@/types";
-import { DAILY_LOG_CONSTANTS } from "@/constants";
+import { useRouter as useNextRouter } from "next/navigation";
+import type { UseFormSetValue } from "react-hook-form";
+import type { DailyLogFormInput } from "@/lib/validations/daily-log";
+import {
+  TOPICS_MAX_COUNT as TOPICS_MAX,
+  TOPIC_MAX_LENGTH as TOPIC_LENGTH_MAX,
+} from "@/lib/constants";
 
-const { NOTES_MAX, TOPICS_MAX, TOPIC_LENGTH_MAX } = DAILY_LOG_CONSTANTS;
-
-export function useDailyLogForm(log?: SerializedDailyLog | null) {
-  const router = useRouter();
-  const [topics, setTopics] = useState<string[]>(log?.topics ?? []);
+export function useDailyLogForm() {
+  const router = useNextRouter();
   const [topicInput, setTopicInput] = useState("");
   const [topicError, setTopicError] = useState<string | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
-  const isEditing = !!log;
-
-  const handleAddTopic = () => {
+  const handleAddTopic = (
+    currentTopics: string[],
+    setValue: UseFormSetValue<DailyLogFormInput>
+  ) => {
     const value = topicInput.trim();
     if (!value) return;
+    
     if (value.length > TOPIC_LENGTH_MAX) {
-      setTopicError("Topic must be 50 characters or less");
+      setTopicError(`Topic must be ${TOPIC_LENGTH_MAX} characters or less`);
       return;
     }
-    if (topics.includes(value)) {
+    
+    if (currentTopics.includes(value)) {
       setTopicError("Topic already added");
       return;
     }
-    if (topics.length >= TOPICS_MAX) {
+    
+    if (currentTopics.length >= TOPICS_MAX) {
       setTopicError(`Maximum ${TOPICS_MAX} topics`);
       return;
     }
+    
     setTopicError(null);
-    setTopics((prev) => [...prev, value]);
+    setValue("topics", [...currentTopics, value], { shouldValidate: true });
     setTopicInput("");
   };
 
-  const handleRemoveTopic = (index: number) => {
-    setTopics((prev) => prev.filter((_, i) => i !== index));
-  };
-
-  const handleTopicKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      handleAddTopic();
-    }
+  const handleRemoveTopic = (
+    index: number,
+    currentTopics: string[],
+    setValue: UseFormSetValue<DailyLogFormInput>
+  ) => {
+    setValue("topics", currentTopics.filter((_, i) => i !== index), {
+      shouldValidate: true,
+    });
   };
 
   const clearTopicError = () => setTopicError(null);
 
   return {
-    topics,
     topicInput,
     topicError,
     submitError,
-    isEditing,
-    setTopics,
     setTopicInput,
-    setTopicError,
     setSubmitError,
     handleAddTopic,
     handleRemoveTopic,
-    handleTopicKeyDown,
     clearTopicError,
     router,
-    NOTES_MAX,
   };
-}
-
-export async function submitDailyLog(
-  values: {
-    date: string;
-    problemsSolved: number;
-    topics: string[];
-    notes?: string | null;
-  },
-  topics: string[],
-  isEditing: boolean,
-  logId?: string
-) {
-  const body = {
-    date: values.date,
-    problemsSolved: values.problemsSolved,
-    topics,
-    notes: values.notes?.trim() || undefined,
-  };
-
-  const url = isEditing ? `/api/daily-log/${logId}` : "/api/daily-log";
-  const method = isEditing ? "PUT" : "POST";
-
-  const response = await fetch(url, {
-    method,
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  });
-
-  const result = (await response.json()) as {
-    success: boolean;
-    error?: { message?: string; code?: string };
-  };
-
-  if (!result.success) {
-    if (result.error?.code === "DUPLICATE_ENTRY") {
-      throw new Error("A log for this date already exists.");
-    } else {
-      throw new Error(
-        result.error?.message ?? "Something went wrong. Please try again."
-      );
-    }
-  }
-
-  return result;
 }
 
 
