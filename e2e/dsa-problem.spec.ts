@@ -240,10 +240,10 @@ test.describe("DSA Problem Feature", () => {
     await page.click('button[type="submit"]');
     await expect(page.locator("text=Problem added successfully")).toBeVisible();
  
-    await page.getByPlaceholder(/Search problems/i).fill("Search Target");
+    await page.getByPlaceholder(/Search title or pattern/i).fill("Search Target");
     await expect(page.locator("text=Search Target Problem")).toBeVisible();
     
-    await page.getByPlaceholder(/Search problems/i).fill("NonExistent");
+    await page.getByPlaceholder(/Search title or pattern/i).fill("NonExistent");
     await expect(page.locator("text=Search Target Problem")).not.toBeVisible();
     await expect(page.locator("text=No problems match this search")).toBeVisible();
   });
