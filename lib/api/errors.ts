@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { ZodError } from "zod";
+import { z, ZodError } from "zod";
 import { Prisma } from "@prisma/client";
 
 export type ApiError = {
@@ -34,7 +34,7 @@ export function handleApiError(error: unknown): NextResponse<ApiResponse<never>>
       "Validation failed",
       400,
       "VALIDATION_ERROR",
-      error.flatten().fieldErrors
+      z.flattenError(error).fieldErrors
     );
   }
 

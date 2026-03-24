@@ -1,9 +1,8 @@
 import { NextRequest } from "next/server";
-import { z } from "zod";
+// Removed z import
 import { createServerSupabaseClient } from "@/lib/auth/supabase-server";
 import {
   successResponse,
-  errorResponse,
   handleAuthError,
   handleApiError,
 } from "@/lib/api/errors";
@@ -28,26 +27,15 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     console.log("POST /api/daily-log - Raw body:", JSON.stringify(body, null, 2));
 
-    try {
-      const validatedData = createDailyLogSchema.parse(body);
-      console.log("POST /api/daily-log - Validated data:", JSON.stringify(validatedData, null, 2));
+    const validatedData = createDailyLogSchema.parse(body);
+    console.log("POST /api/daily-log - Validated data:", JSON.stringify(validatedData, null, 2));
 
-      const log = await createDailyLog(user.id, {
-        ...validatedData,
-        topics: body.topics || [],
-      });
+    const log = await createDailyLog(user.id, {
+      ...validatedData,
+      topics: body.topics || [],
+    });
 
-      return successResponse(log);
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        const fieldErrors = error.flatten().fieldErrors;
-        console.error("POST /api/daily-log - Zod validation failed:", JSON.stringify(fieldErrors, null, 2));
-        return errorResponse("Validation failed", 400, "VALIDATION_ERROR", fieldErrors);
-      } else if (error instanceof Error) {
-        console.error("POST /api/daily-log - Error:", error.message);
-      }
-      throw error;
-    }
+    return successResponse(log);
   } catch (error) {
     if (error instanceof Error && error.message === "UNAUTHORIZED") {
       return handleAuthError(error);

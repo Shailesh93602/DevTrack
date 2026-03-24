@@ -1,5 +1,4 @@
 import { NextRequest } from "next/server";
-import { z } from "zod";
 import { createServerSupabaseClient } from "@/lib/auth/supabase-server";
 import {
   successResponse,
@@ -41,30 +40,19 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     const body = await request.json();
     console.log("PUT /api/daily-log/[id] - Raw body:", JSON.stringify(body, null, 2));
 
-    try {
-      const validatedData = updateDailyLogSchema.parse(body);
-      console.log("PUT /api/daily-log/[id] - Validated data:", JSON.stringify(validatedData, null, 2));
+    const validatedData = updateDailyLogSchema.parse(body);
+    console.log("PUT /api/daily-log/[id] - Validated data:", JSON.stringify(validatedData, null, 2));
 
-      const updatedLog = await updateDailyLog(user.id, validatedId.id, {
-        ...validatedData,
-        topics: body.topics, // Only update topics if provided in body
-      });
+    const updatedLog = await updateDailyLog(user.id, validatedId.id, {
+      ...validatedData,
+      topics: body.topics, // Only update topics if provided in body
+    });
 
-      if (!updatedLog) {
-        return errorResponse("Failed to update daily log", 500, "UPDATE_FAILED");
-      }
-
-      return successResponse(updatedLog);
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        const fieldErrors = error.flatten().fieldErrors;
-        console.error("PUT /api/daily-log/[id] - Zod validation failed:", JSON.stringify(fieldErrors, null, 2));
-        return errorResponse("Validation failed", 400, "VALIDATION_ERROR", fieldErrors);
-      } else if (error instanceof Error) {
-        console.error("PUT /api/daily-log/[id] - Error:", error.message);
-      }
-      throw error;
+    if (!updatedLog) {
+      return errorResponse("Failed to update daily log", 500, "UPDATE_FAILED");
     }
+
+    return successResponse(updatedLog);
   } catch (error) {
     if (error instanceof Error && error.message === "UNAUTHORIZED") {
       return handleAuthError(error);

@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { AlertCircle, RefreshCcw } from "lucide-react";
 
-export default function Error({
+export default function DashboardError({
   error,
   reset,
 }: {
@@ -30,7 +30,7 @@ export default function Error({
           <RefreshCcw className="h-4 w-4" />
           Try Again
         </Button>
-        <Button variant="outline" onClick={() => window.location.href = "/dashboard"}>
+        <Button variant="outline" onClick={() => globalThis.location.href = "/dashboard"}>
           Return to Dashboard
         </Button>
       </div>
