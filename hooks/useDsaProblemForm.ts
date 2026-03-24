@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import type { DsaProblemInput } from "@/lib/validations";
 
 interface DsaProblem {
   id: string;
@@ -49,13 +50,7 @@ export function useDsaProblemForm(problem?: DsaProblem | null) {
 }
 
 export async function submitDsaProblem(
-  values: {
-    title: string;
-    difficulty: any;
-    pattern: string;
-    platform: string;
-    notes?: string | null;
-  },
+  values: DsaProblemInput,
   isEditing: boolean,
   problemId?: string
 ) {

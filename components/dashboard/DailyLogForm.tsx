@@ -15,14 +15,7 @@ import {
   getTodayString,
 } from "@/hooks/useDailyLogForm";
 import type { DailyLogFormProps } from "@/types";
-import { createDailyLogSchema } from "@/lib/validations";
-
-type FormValues = {
-  date: string;
-  problemsSolved: number;
-  topics: string[];
-  notes?: string | null;
-};
+import { createDailyLogSchema, type DailyLogFormInput } from "@/lib/validations";
 
 export function DailyLogForm({ log }: DailyLogFormProps) {
   const {
@@ -48,7 +41,7 @@ export function DailyLogForm({ log }: DailyLogFormProps) {
     control,
     reset,
     formState: { errors, isSubmitting },
-  } = useForm<any>({
+  } = useForm({
     resolver: zodResolver(createDailyLogSchema),
     defaultValues: {
       date: log ? toDateInputValue(log.date) : getTodayString(),
@@ -60,7 +53,7 @@ export function DailyLogForm({ log }: DailyLogFormProps) {
 
   const notes = useWatch({ control, name: "notes" }) ?? "";
 
-  async function onSubmit(values: any) {
+  async function onSubmit(values: DailyLogFormInput) {
     try {
       await submitDailyLog(values, topics, isEditing, log?.id);
 
@@ -121,7 +114,7 @@ export function DailyLogForm({ log }: DailyLogFormProps) {
             id="log-problems"
             type="number"
             min={0}
-            {...register("problemsSolved")}
+            {...register("problemsSolved", { valueAsNumber: true })}
             aria-invalid={!!errors.problemsSolved}
             aria-describedby={
               errors.problemsSolved ? "log-problems-error" : undefined

@@ -1,4 +1,14 @@
 import { prisma } from "@/lib/db/prisma";
+import { 
+  toUtcDateString, 
+  isNextDay, 
+  getTodayUtcString, 
+  getYesterdayUtcString,
+  parseUtcDate,
+  DATE_CONSTANTS
+} from "@/lib/utils/date";
+
+const { STREAK_CUTOFF_DAYS } = DATE_CONSTANTS;
 
 export interface StreakResult {
   currentStreak: number;
@@ -6,31 +16,12 @@ export interface StreakResult {
 }
 
 /**
- * Convert Date to UTC YYYY-MM-DD string for safe comparison
- * Avoids timezone issues with setHours(0,0,0,0) which uses local time
- */
-function toUtcDateString(date: Date): string {
-  return date.toISOString().slice(0, 10);
-}
-
-/**
- * Check if dateB is exactly 1 day after dateA
- * Both inputs are YYYY-MM-DD strings
- */
-function isNextDay(a: string, b: string): boolean {
-  const dateA = new Date(a + "T00:00:00Z");
-  const dateB = new Date(b + "T00:00:00Z");
-  const diffMs = dateB.getTime() - dateA.getTime();
-  return diffMs === 86_400_000; // Exactly 24 hours
-}
-
-/**
  * Calculate current streak from sorted unique dates
  * Must be consecutive from today or yesterday
  */
 function calculateCurrentStreak(uniqueDates: string[]): number {
-  const today = toUtcDateString(new Date());
-  const yesterday = toUtcDateString(new Date(Date.now() - 86_400_000));
+  const today = getTodayUtcString();
+  const yesterday = getYesterdayUtcString();
   const lastDate = uniqueDates.at(-1)!;
 
   // Only count streak if last log is today or yesterday
@@ -48,14 +39,14 @@ function calculateCurrentStreak(uniqueDates: string[]): number {
     if (currentDate === expectedDate) {
       // Found the expected date, count it and move to previous day
       currentStreak++;
-      const expectedDateObj = new Date(expectedDate + "T00:00:00Z");
+      const expectedDateObj = parseUtcDate(expectedDate);
       expectedDateObj.setUTCDate(expectedDateObj.getUTCDate() - 1);
       expectedDate = toUtcDateString(expectedDateObj);
       dateIndex--;
     } else {
       // Gap detected - check if it's before expected date
-      const currentDateObj = new Date(currentDate + "T00:00:00Z");
-      const expectedDateObj = new Date(expectedDate + "T00:00:00Z");
+      const currentDateObj = parseUtcDate(currentDate);
+      const expectedDateObj = parseUtcDate(expectedDate);
 
       if (currentDateObj.getTime() < expectedDateObj.getTime()) {
         // Gap exists, streak ends
@@ -102,14 +93,12 @@ export function calculateStreakFromDates(dates: string[]): StreakResult {
 
 /**
  * Fetch user's daily logs and calculate streak statistics
- * Optimized: only fetches last 120 days for current streak
+ * Optimized: only fetches last STREAK_CUTOFF_DAYS days for current streak
  * Longest streak is persisted to avoid full table scans
  */
 export async function calculateStreaks(userId: string): Promise<StreakResult> {
-  // Only fetch last 120 days - sufficient for current streak calc
-  // Current streaks beyond 120 days are extremely rare
   const cutoffDate = new Date();
-  cutoffDate.setDate(cutoffDate.getDate() - 120);
+  cutoffDate.setDate(cutoffDate.getDate() - STREAK_CUTOFF_DAYS);
 
   const logs = await prisma.dailyLog.findMany({
     where: { userId, date: { gte: cutoffDate } },

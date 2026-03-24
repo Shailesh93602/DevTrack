@@ -12,30 +12,11 @@ import { getDailyLogs } from "@/lib/services/daily-log";
 import {
   DailyLogForm,
 } from "@/components/dashboard/DailyLogForm";
-import { type SerializedDailyLog } from "@/types";
 import { DailyLogList } from "@/components/dashboard/DailyLogList";
+import { serializeLog } from "@/lib/utils/serialization";
+import { getTodayUtcString, toUtcDateString } from "@/lib/utils/date";
 
-type RawLog = {
-  id: string;
-  date: Date;
-  problemsSolved: number;
-  topics: string[];
-  notes: string | null;
-};
-
-function serializeLog(log: RawLog): SerializedDailyLog {
-  return {
-    id: log.id,
-    date: log.date.toISOString(),
-    problemsSolved: log.problemsSolved,
-    topics: log.topics,
-    notes: log.notes,
-  };
-}
-
-function getTodayUTCString(): string {
-  return new Date().toISOString().slice(0, 10);
-}
+// Replaced raw types and utilities with unified imports
 
 export default async function DailyLogsPage() {
   const supabase = await createServerSupabaseClient();
@@ -47,8 +28,8 @@ export default async function DailyLogsPage() {
 
   const { logs } = await getDailyLogs(user.id, { limit: 50, offset: 0 });
 
-  const todayUTC = getTodayUTCString();
-  const rawTodaysLog = logs.find((log) => log.date.toISOString().slice(0, 10) === todayUTC) ?? null;
+  const todayUTC = getTodayUtcString();
+  const rawTodaysLog = logs.find((log) => toUtcDateString(log.date) === todayUTC) ?? null;
 
   const todaysLog = rawTodaysLog ? serializeLog(rawTodaysLog) : null;
   const allLogs = logs.map(serializeLog);

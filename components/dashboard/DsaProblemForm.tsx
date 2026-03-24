@@ -10,10 +10,9 @@ import { cn } from "@/lib/utils";
 import { useDsaProblemForm, submitDsaProblem } from "@/hooks/useDsaProblemForm";
 import type { DsaProblemFormProps } from "@/types/dsa-problem";
 import { DIFFICULTY_OPTIONS } from "@/types/dsa-problem";
-import { dsaProblemSchema } from "@/lib/validations";
+import { dsaProblemSchema, type DsaProblemInput } from "@/lib/validations";
 import { DEFAULT_VALUES } from "@/constants";
 import { Textarea } from "@/components/ui/textarea";
-
 
 export function DsaProblemForm({ problem, onSuccess }: DsaProblemFormProps) {
   const {
@@ -29,7 +28,7 @@ export function DsaProblemForm({ problem, onSuccess }: DsaProblemFormProps) {
     NOTES_MAX,
   } = useDsaProblemForm(problem);
 
-  const defaultValues: any = problem
+  const defaultValues: Partial<DsaProblemInput> = problem
     ? { ...DEFAULT_VALUES.DSA_PROBLEM, ...problem, notes: problem.notes ?? "" }
     : DEFAULT_VALUES.DSA_PROBLEM;
 
@@ -40,7 +39,7 @@ export function DsaProblemForm({ problem, onSuccess }: DsaProblemFormProps) {
     control,
     reset,
     formState: { errors, isSubmitting },
-  } = useForm<any>({
+  } = useForm<DsaProblemInput>({
     resolver: zodResolver(dsaProblemSchema),
     defaultValues,
   });
@@ -58,7 +57,7 @@ export function DsaProblemForm({ problem, onSuccess }: DsaProblemFormProps) {
     return isEditing ? "Save Changes" : "Add Problem";
   }, [isSubmitting, isEditing]);
 
-  async function onSubmit(values: any) {
+  async function onSubmit(values: DsaProblemInput) {
     try {
       await submitDsaProblem(values, isEditing, problem?.id);
 
@@ -110,7 +109,7 @@ export function DsaProblemForm({ problem, onSuccess }: DsaProblemFormProps) {
           id="problem-difficulty"
           value={difficultyValue}
           onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-            setValue("difficulty", e.target.value as any)
+            setValue("difficulty", e.target.value as DsaProblemInput["difficulty"])
           }
           className={cn(
             "border-input flex h-9 w-full rounded-md border bg-transparent px-3 py-1 text-sm shadow-sm transition-colors",

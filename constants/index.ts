@@ -81,6 +81,15 @@ export const API_CONSTANTS = {
 } as const;
 
 // ============================================
+// Date Constants
+// ============================================
+export const DATE_CONSTANTS = {
+  MS_PER_DAY: 86_400_000,
+  STREAK_CUTOFF_DAYS: 120, // max history to fetch for current streak
+  RECONCILIATION_DAYS: 2, // allowance for 'approaching record' insight
+} as const;
+
+// ============================================
 // Re-export for convenience
 // ============================================
 export const CONSTANTS = {
@@ -89,4 +98,5 @@ export const CONSTANTS = {
   PROJECT: PROJECT_CONSTANTS,
   FORM: FORM_CONSTANTS,
   API: API_CONSTANTS,
+  DATE: DATE_CONSTANTS,
 } as const;

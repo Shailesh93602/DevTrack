@@ -171,9 +171,9 @@
 ### Phase 1: Infrastructure & Utils
 
 - [ ] **Centralize Date Utilities** — Create `@/lib/utils/date.ts` to handle all UTC midnight normalization, ISO slicing, and formatting. Replace all scattered `new Date(Date.UTC(...))` and `toISOString().slice(0,10)` calls.
-- [ ] **Unified Zod Schemas** — Align `dailyLogFormSchema` and `dailyLogSchema`. Use `z.preprocess` or similar to handle date coercion consistently between forms and API.
+- [x] **Unified Zod Schemas** — Align `dailyLogFormSchema` and `dailyLogSchema`. Use `z.preprocess` or similar to handle date coercion consistently between forms and API.
 - [ ] **Centralized Serialization** — Move `serializeLog` from `logs/page.tsx` and other scattered places to a dedicated `@/lib/utils/serialization.ts` or add to service layer.
-- [ ] **Remove `any` Usage** — Audit all components (starting with `DailyLogForm.tsx`) and routes to replace `any` with proper types/interfaces.
+- [x] **Remove `any` Usage** — Audit all components (starting with `DailyLogForm.tsx`) and routes to replace `any` with proper types/interfaces.
 
 ### Phase 2: Service Layer & API
 

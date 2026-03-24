@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/db/prisma";
 import { Prisma } from "@prisma/client";
+import { parseUtcDate, normalizeToUtcMidnight } from "@/lib/utils/date";
 import type { CreateDailyLogInput, UpdateDailyLogInput, DailyLogQueryParams } from "@/lib/validations/daily-log";
 
 export type DailyLogWithUser = Prisma.DailyLogGetPayload<{
@@ -21,11 +22,10 @@ export async function createDailyLog(
   userId: string,
   data: CreateDailyLogInput
 ) {
-  const [year, month, day] = data.date.split('-').map(Number);
   return prisma.dailyLog.create({
     data: {
       ...data,
-      date: new Date(Date.UTC(year, month - 1, day)),
+      date: parseUtcDate(data.date),
       userId,
     },
     select: defaultSelect,
@@ -70,9 +70,7 @@ export async function updateDailyLog(
   data: UpdateDailyLogInput & { topics?: string[] }
 ) {
   const { date, ...rest } = data;
-  const dateUpdate = date
-    ? { date: new Date(Date.UTC(...date.split('-').map(Number).map((v, i) => i === 1 ? v - 1 : v) as [number, number, number])) }
-    : {};
+  const dateUpdate = date ? { date: parseUtcDate(date) } : {};
 
   const updateData: Prisma.DailyLogUpdateInput = {
     ...rest,
@@ -101,9 +99,7 @@ export async function deleteDailyLog(userId: string, id: string) {
 export async function getDailyLogByDate(userId: string, date: Date) {
   // @db.Date stores date-only in Postgres. Normalize to UTC midnight so the
   // comparison is timezone-safe regardless of the server's local timezone.
-  const dateOnly = new Date(
-    Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate())
-  );
+  const dateOnly = normalizeToUtcMidnight(date);
 
   return prisma.dailyLog.findFirst({
     where: { userId, date: dateOnly },

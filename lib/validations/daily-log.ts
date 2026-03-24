@@ -1,24 +1,15 @@
 import { z } from "zod";
 
-// Server-side schema (for API/DB operations)
 export const dailyLogSchema = z.object({
-  date: z.coerce.date(),
-  problemsSolved: z.coerce.number().int().min(0).default(0),
-  topics: z.array(z.string().trim().min(1).max(50)).max(20).default([]),
-  notes: z.string().trim().max(1000).optional(),
-});
-
-// Client-side form schema (for React Hook Form)
-export const dailyLogFormSchema = z.object({
-  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Select a valid date"),
-  problemsSolved: z.coerce.number().int().min(0, "Cannot be negative"),
+  date: z.string().regex(/^\d{4}-\d{2}-\d{2}(T.*)?$/, "Select a valid date").transform(d => d.slice(0, 10)),
+  problemsSolved: z.number().int().min(0, "Cannot be negative").default(0),
   topics: z.array(z.string().trim().min(1).max(50)).max(20).optional().default([]),
   notes: z.string().trim().max(1000).optional().nullable(),
 });
 
-export const createDailyLogSchema = dailyLogFormSchema;
+export const createDailyLogSchema = dailyLogSchema;
 
-export const updateDailyLogSchema = dailyLogFormSchema.partial();
+export const updateDailyLogSchema = dailyLogSchema.partial();
 
 export const dailyLogIdSchema = z.object({
   id: z.string().min(1, "ID is required"),
@@ -32,7 +23,7 @@ export const dailyLogQuerySchema = z.object({
 });
 
 export type DailyLogInput = z.infer<typeof dailyLogSchema>;
-export type DailyLogFormInput = z.infer<typeof dailyLogFormSchema>;
+export type DailyLogFormInput = z.infer<typeof dailyLogSchema>;
 export type CreateDailyLogInput = z.infer<typeof createDailyLogSchema>;
 export type UpdateDailyLogInput = z.infer<typeof updateDailyLogSchema>;
 export type DailyLogIdParams = z.infer<typeof dailyLogIdSchema>;

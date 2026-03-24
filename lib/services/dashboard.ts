@@ -2,6 +2,7 @@ import { prisma } from "@/lib/db/prisma";
 import { calculateStreaks } from "@/lib/services/streak";
 import { analyzePatterns } from "@/lib/services/dsa-problem";
 import { generateInsights } from "@/lib/services/insights";
+import { normalizeToUtcMidnight, toUtcDateString } from "@/lib/utils/date";
 import type { PatternAnalysis } from "@/types/dsa-problem";
 import type { Insight } from "@/types/insights";
 
@@ -43,7 +44,7 @@ export interface DashboardStats {
 export async function getDashboardStats(userId: string): Promise<DashboardStats> {
   // Use UTC date to match @db.Date column storage (timezone-safe)
   const now = new Date();
-  const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+  const today = normalizeToUtcMidnight(now);
 
   // Fetch all data in parallel - these are the base queries
   const [
@@ -190,7 +191,7 @@ export async function getDashboardStats(userId: string): Promise<DashboardStats>
     patternAnalysis,
     insights,
     activityData: logsForInsights.map(log => ({
-      date: log.date.toISOString().slice(0, 10),
+      date: toUtcDateString(log.date),
       count: 1
     })),
     trends: {
@@ -270,11 +271,7 @@ async function getConsistencyScore(userId: string): Promise<number> {
   const weekMap = new Map<number, number>();
   for (const log of logs) {
     const logDate = new Date(log.date);
-    const weekStart = new Date(Date.UTC(
-      logDate.getUTCFullYear(),
-      logDate.getUTCMonth(),
-      logDate.getUTCDate()
-    ));
+    const weekStart = normalizeToUtcMidnight(logDate);
     weekStart.setUTCDate(weekStart.getUTCDate() - weekStart.getUTCDay());
     const weekKey = weekStart.getTime();
     weekMap.set(weekKey, (weekMap.get(weekKey) ?? 0) + 1);
@@ -283,11 +280,7 @@ async function getConsistencyScore(userId: string): Promise<number> {
   // Calculate score (0-100) based on weeks that met target
   let weeksMet = 0;
   for (let i = 0; i < weeksToCheck; i++) {
-    const checkDate = new Date(Date.UTC(
-      now.getUTCFullYear(),
-      now.getUTCMonth(),
-      now.getUTCDate()
-    ));
+    const checkDate = normalizeToUtcMidnight(now);
     checkDate.setUTCDate(checkDate.getUTCDate() - i * 7);
     checkDate.setUTCDate(checkDate.getUTCDate() - checkDate.getUTCDay());
     const logCount = weekMap.get(checkDate.getTime()) ?? 0;

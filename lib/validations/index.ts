@@ -10,6 +10,7 @@ export {
   updateDailyLogSchema,
   dailyLogIdSchema,
   type DailyLogInput,
+  type DailyLogFormInput,
   type CreateDailyLogInput,
   type UpdateDailyLogInput,
   type DailyLogIdParams,

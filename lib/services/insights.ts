@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/db/prisma";
 import { calculateStreakFromDates } from "@/lib/services/streak";
+import { toUtcDateString } from "@/lib/utils/date";
 import type {
   Insight,
   InsightContext,
@@ -76,7 +77,7 @@ async function buildInsightContext(userId: string): Promise<InsightContext> {
   }
 
   // Calculate current and longest streak using shared service
-  const dates = logs.map((log) => log.date.toISOString().slice(0, 10));
+  const dates = logs.map((log) => toUtcDateString(log.date));
   const { currentStreak, longestStreak } = calculateStreakFromDates(dates);
 
   return {
@@ -423,7 +424,7 @@ async function buildInsightContextWithPartialData(
   }
 
   // Calculate current and longest streak using shared service
-  const dates = logs.map((log) => log.date.toISOString().slice(0, 10));
+  const dates = logs.map((log) => toUtcDateString(log.date));
   const { currentStreak, longestStreak } = calculateStreakFromDates(dates);
 
   return {

@@ -1,20 +1,16 @@
-/**
- * Convert Date to UTC YYYY-MM-DD string for safe comparison
- * Avoids timezone issues with setHours(0,0,0,0) which uses local time
- */
-function toUtcDateString(date: Date): string {
-  return date.toISOString().slice(0, 10);
-}
+import { toUtcDateString, parseUtcDate, DATE_CONSTANTS } from "./date";
+
+const { MS_PER_DAY } = DATE_CONSTANTS;
 
 export function formatLogDate(date: Date): string {
   const todayStr = toUtcDateString(new Date());
   const logDateStr = toUtcDateString(date);
 
-  const today = new Date(todayStr + "T00:00:00Z");
-  const logDate = new Date(logDateStr + "T00:00:00Z");
+  const today = parseUtcDate(todayStr);
+  const logDate = parseUtcDate(logDateStr);
 
   const diffTime = today.getTime() - logDate.getTime();
-  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+  const diffDays = Math.floor(diffTime / MS_PER_DAY);
 
   if (diffDays === 0) return "Today";
   if (diffDays === 1) return "Yesterday";
