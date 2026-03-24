@@ -42,7 +42,8 @@ test.describe("Daily Log Feature", () => {
     await responsePromise;
  
     // Wait for the log to appear in the history list (it should say "5 problems")
-    await expect(page.locator("text=5 problems")).toBeVisible({ timeout: 15000 });
+    // We use getByText with a regular expression for flexibility
+    await expect(page.locator('main').getByText(/5 problems/i)).toBeVisible({ timeout: 15000 });
   });
 
   test("should validate required fields and appear in history", async ({ page }) => {
@@ -51,13 +52,13 @@ test.describe("Daily Log Feature", () => {
     date.setDate(date.getDate() - 2);
     const dateStr = date.toISOString().split("T")[0];
     
-    await page.fill('input[type="date"]', dateStr);
+    await page.fill('input#log-date', dateStr);
     
     // Try to submit with default 0 problems
     await page.click('button[type="submit"]');
 
     // Wait for the item to render in the history (which will say "0 problems")
-    await expect(page.locator("text=0 problems")).toBeVisible({ timeout: 15000 });
+    await expect(page.locator('main').getByText(/0 problems/i)).toBeVisible({ timeout: 15000 });
   });
 
   test("should prevent duplicate entries for same date", async ({ page }) => {

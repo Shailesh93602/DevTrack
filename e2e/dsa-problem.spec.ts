@@ -12,9 +12,8 @@ test.describe("DSA Problem Feature", () => {
     // Wait for initial load to finish (skeletons vanish)
     await expect(page.locator('.animate-pulse')).toHaveCount(0, { timeout: 15000 });
 
-    await page.click('button:has-text("Add Problem")');
-    // Fill in the problem form using labels
-    await page.getByLabel(/problem title/i).fill("Two Sum");
+    // Fill in the problem form using ID for title
+    await page.fill('input#problem-title', "Two Sum");
 
     // Select difficulty
     await page.getByLabel(/difficulty/i).click();

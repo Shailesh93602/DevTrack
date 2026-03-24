@@ -71,7 +71,7 @@ test.describe("Project Milestones", () => {
 
   test("should delete a milestone", async ({ page }) => {
     // Create a project
-    await page.fill('input#name', "Delete Milestone Project");
+    await page.fill('input#project-name', "Delete Milestone Project");
     await page.click('button[type="submit"]');
     await page.waitForLoadState("networkidle");
 
@@ -92,7 +92,7 @@ test.describe("Project Milestones", () => {
 
   test("should update project progress when milestone is completed", async ({ page }) => {
     // Create a project
-    await page.fill('input#name', "Progress Test Project");
+    await page.fill('input#project-name', "Progress Test Project");
     await page.click('button[type="submit"]');
     await page.waitForLoadState("networkidle");
 
