@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { createServerSupabaseClient } from "@/lib/auth/supabase-server";
 import { getProjectById } from "@/lib/services/project";
-import { PROJECT_STATUS_CONFIG } from "@/lib/constants/project";
+import { PROJECT_STATUS_CONFIG } from "@/lib/constants";
 import { MilestoneList } from "@/components/dashboard/MilestoneList";
 import { serializeMilestone } from "@/lib/utils/serialization";
 

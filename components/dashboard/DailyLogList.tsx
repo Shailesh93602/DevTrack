@@ -3,6 +3,7 @@
 import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { Trash2, Pencil, Calendar } from "lucide-react";
+import { deleteDailyLog } from "@/lib/api/daily-log";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -62,18 +63,18 @@ function LogItem({ log, onDelete, onEdit, isDeleting }: LogItemProps) {
         </div>
 
         {log.topics.length > 0 && (
-          <div className="flex flex-wrap gap-1" role="list" aria-label="Topics">
+          <ul className="flex flex-wrap gap-1" aria-label="Topics">
             {log.topics.map((topic: string) => (
               <Badge
                 key={topic}
                 variant="secondary"
-                role="listitem"
+                asChild
                 className="text-xs"
               >
-                {topic}
+                <li>{topic}</li>
               </Badge>
             ))}
-          </div>
+          </ul>
         )}
 
         {log.notes && (
@@ -144,7 +145,7 @@ export function DailyLogList({ logs }: DailyLogListProps) {
   const filteredLogs = useMemo(() => {
     if (dateRangeFilter === "all") return logs;
 
-    const days = parseInt(dateRangeFilter, 10);
+    const days = Number.parseInt(dateRangeFilter, 10);
     const cutoffDate = new Date();
     cutoffDate.setDate(cutoffDate.getDate() - days);
     cutoffDate.setHours(0, 0, 0, 0);
@@ -170,22 +171,21 @@ export function DailyLogList({ logs }: DailyLogListProps) {
     setDeletingId(id);
     setDeleteError(null);
 
-    const response = await fetch(`/api/daily-log/${id}`, { method: "DELETE" });
-    const result = (await response.json()) as {
-      success: boolean;
-      error?: { message?: string };
-    };
+    try {
+      const result = await deleteDailyLog(id);
 
-    setDeletingId(null);
+      if (!result.success) {
+        throw new Error(result.error.message);
+      }
 
-    if (!result.success) {
+      router.refresh();
+    } catch (err) {
       setDeleteError(
-        result.error?.message ?? "Failed to delete log. Please try again."
+        err instanceof Error ? err.message : "Failed to delete log. Please try again."
       );
-      return;
+    } finally {
+      setDeletingId(null);
     }
-
-    router.refresh();
   }
 
   function handleEdit(log: SerializedDailyLog) {

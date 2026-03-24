@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { FolderKanban, Trash2, Pencil, ArrowRight } from "lucide-react";
-import { PROJECT_STATUS_CONFIG } from "@/lib/constants/project";
+import { PROJECT_STATUS_CONFIG } from "@/lib/constants";
 import { ProjectForm } from "./ProjectForm";
 
 export interface Project {
