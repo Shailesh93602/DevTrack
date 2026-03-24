@@ -10,31 +10,9 @@ import {
 import { createServerSupabaseClient } from "@/lib/auth/supabase-server";
 import { getProjects } from "@/lib/services/project";
 import { ProjectForm } from "@/components/dashboard/ProjectForm";
-import { ProjectList, type Project } from "@/components/dashboard/ProjectList";
+import { ProjectList } from "@/components/dashboard/ProjectList";
 
-type RawProject = {
-  id: string;
-  name: string;
-  description: string | null;
-  status: "IN_PROGRESS" | "COMPLETED" | "ON_HOLD";
-  progress: number;
-  dueDate: Date | null;
-  techStack: string[];
-  createdAt: Date;
-};
-
-function serializeProject(project: RawProject): Project {
-  return {
-    id: project.id,
-    name: project.name,
-    description: project.description,
-    status: project.status,
-    progress: project.progress,
-    dueDate: project.dueDate?.toISOString() ?? null,
-    techStack: project.techStack,
-    createdAt: project.createdAt.toISOString(),
-  };
-}
+import { serializeProject } from "@/lib/utils/serialization";
 
 export default async function ProjectsPage() {
   const supabase = await createServerSupabaseClient();

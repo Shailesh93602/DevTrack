@@ -9,6 +9,7 @@ import { createServerSupabaseClient } from "@/lib/auth/supabase-server";
 import { getProjectById } from "@/lib/services/project";
 import { PROJECT_STATUS_CONFIG } from "@/lib/constants/project";
 import { MilestoneList } from "@/components/dashboard/MilestoneList";
+import { serializeMilestone } from "@/lib/utils/serialization";
 
 interface ProjectDetailPageProps {
   params: Promise<{
@@ -32,13 +33,7 @@ export default async function ProjectDetailPage({
   if (!project) notFound();
 
   const status = PROJECT_STATUS_CONFIG[project.status];
-  const serializedMilestones = project.milestones.map((m) => ({
-    id: m.id,
-    title: m.title,
-    description: m.description,
-    completedAt: m.completedAt?.toISOString() ?? null,
-    order: m.order,
-  }));
+  const serializedMilestones = project.milestones.map(serializeMilestone);
 
   return (
     <div className="space-y-6">

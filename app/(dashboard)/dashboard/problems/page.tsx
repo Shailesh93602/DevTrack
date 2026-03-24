@@ -13,27 +13,8 @@ import { analyzePatterns } from "@/lib/services/pattern-intelligence";
 import { DsaProblemForm } from "@/components/dashboard/DsaProblemForm";
 import { PaginatedProblemList } from "@/components/dashboard/PaginatedProblemList";
 import { PatternIntelligencePanel } from "@/components/dashboard/PatternIntelligencePanel";
-import type { DsaProblem } from "@/types/dsa-problem";
 
-type RawProblem = {
-  id: string;
-  title: string;
-  difficulty: "EASY" | "MEDIUM" | "HARD";
-  pattern: string;
-  platform: string;
-  solvedAt: Date;
-};
-
-function serializeProblem(problem: RawProblem): DsaProblem {
-  return {
-    id: problem.id,
-    title: problem.title,
-    difficulty: problem.difficulty,
-    pattern: problem.pattern,
-    platform: problem.platform,
-    solvedAt: problem.solvedAt.toISOString(),
-  };
-}
+import { serializeProblem } from "@/lib/utils/serialization";
 
 export default async function DsaProblemsPage() {
   const supabase = await createServerSupabaseClient();
