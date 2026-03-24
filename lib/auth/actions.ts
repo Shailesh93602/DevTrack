@@ -64,24 +64,85 @@ export async function signup(
     return { error: signUpError.message };
   }
 
-  // Create user in local database
+  // Create user in local database if it doesn't exist
   if (signUpData.user) {
-    await prisma.user.create({
-      data: {
-        id: signUpData.user.id,
-        email: signUpData.user.email!,
-      },
-    });
+    try {
+      await prisma.user.upsert({
+        where: { id: signUpData.user.id },
+        update: { email: signUpData.user.email! },
+        create: {
+          id: signUpData.user.id,
+          email: signUpData.user.email!,
+        },
+      });
+    } catch (e) {
+      console.error("Failed to create user in Prisma:", e);
+      // We don't return error here because Supabase account is created, 
+      // but it might cause issues later. 
+    }
   }
 
   // Auto-login after signup
+  // Note: This only works if email confirmation is disabled or already handled
   const { error: signInError } = await supabase.auth.signInWithPassword(parsed.data);
 
   if (signInError) {
+    // If sign-in fails, it might be because email confirmation is required
+    if (signInError.message.includes("Email not confirmed")) {
+      return { error: "Account created! Please check your email to confirm your account." };
+    }
     return { error: "Account created but sign-in failed. Please sign in manually." };
   }
 
   redirect("/dashboard");
+}
+
+export async function forgotPassword(
+  _prev: AuthFormState,
+  formData: FormData
+): Promise<AuthFormState> {
+  const email = formData.get("email") as string;
+  if (!email || !email.includes("@")) {
+    return { error: "Please enter a valid email address." };
+  }
+
+  const supabase = await createServerSupabaseClient();
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/auth/reset-password`,
+  });
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  return { error: "Check your email for the password reset link." }; // "error" here is used to display message in AuthForm's error box
+}
+
+export async function resetPassword(
+  _prev: AuthFormState,
+  formData: FormData
+): Promise<AuthFormState> {
+  const password = formData.get("password") as string;
+  
+  const parsed = z.string()
+    .min(8, "Password must be at least 8 characters")
+    .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
+    .regex(/[a-z]/, "Password must contain at least one lowercase letter")
+    .regex(/\d/, "Password must contain at least one digit")
+    .safeParse(password);
+
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0].message };
+  }
+
+  const supabase = await createServerSupabaseClient();
+  const { error } = await supabase.auth.updateUser({ password });
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  redirect("/login?message=Password updated successfully");
 }
 
 export async function logout() {

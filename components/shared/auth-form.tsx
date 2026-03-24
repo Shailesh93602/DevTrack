@@ -3,6 +3,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/shared/PasswordInput";
@@ -46,7 +47,7 @@ export function AuthForm({ mode }: AuthFormProps) {
     handleSubmit,
     formState: { errors },
   } = useForm<LoginFormData | SignupFormData>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(schema) as any,
     defaultValues: {
       email: "",
       password: "",
@@ -59,7 +60,7 @@ export function AuthForm({ mode }: AuthFormProps) {
   })();
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <div className="space-y-2">
         <label
           htmlFor="email"
@@ -90,9 +91,22 @@ export function AuthForm({ mode }: AuthFormProps) {
           className="h-11"
           {...register("password")}
         />
+        
+        {mode === "login" && (
+          <div className="flex justify-end">
+            <Link
+              href="/forgot-password"
+              className="text-muted-foreground hover:text-foreground text-xs transition-colors"
+            >
+              Forgot password?
+            </Link>
+          </div>
+        )}
+
         {errors.password && (
           <p className="text-destructive text-sm">{errors.password.message}</p>
         )}
+        
         {mode === "signup" && !errors.password && (
           <ul className="text-muted-foreground ml-1 space-y-1 text-xs">
             <li>• At least 8 characters</li>
@@ -104,7 +118,7 @@ export function AuthForm({ mode }: AuthFormProps) {
       </div>
 
       {serverError && (
-        <div className="bg-destructive/10 text-destructive rounded-md p-3 text-sm">
+        <div className="bg-destructive/10 text-destructive border border-destructive/20 rounded-md p-3 text-sm">
           {serverError}
         </div>
       )}
