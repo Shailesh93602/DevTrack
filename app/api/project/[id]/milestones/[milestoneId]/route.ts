@@ -27,6 +27,9 @@ export async function DELETE(
       return handleApiError(new Error("Milestone not found"));
     }
 
+    const { revalidatePath } = await import("next/cache");
+    revalidatePath("/dashboard");
+
     return successResponse({ success: true });
   } catch (error) {
     if (error instanceof Error && error.message === "UNAUTHORIZED") {

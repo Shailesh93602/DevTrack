@@ -31,6 +31,9 @@ export async function POST(
 
     const event = await addSessionActivity(user.id, id, validatedData);
 
+    const { revalidatePath } = await import("next/cache");
+    revalidatePath("/dashboard");
+
     return successResponse(event);
   } catch (error) {
     if (error instanceof Error && error.message === "UNAUTHORIZED") {

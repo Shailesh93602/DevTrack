@@ -29,6 +29,10 @@ export async function POST(request: NextRequest) {
     const validatedData = createDailyLogSchema.parse(body);
 
     const log = await createDailyLog(user.id, validatedData, user.email);
+    
+    // Revalidate dashboard to reflect new log/stats
+    const { revalidatePath } = await import("next/cache");
+    revalidatePath("/dashboard");
 
     return successResponse(log);
   } catch (error) {

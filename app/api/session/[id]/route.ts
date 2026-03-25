@@ -64,6 +64,9 @@ export async function PATCH(
 
     const session = await endSession(user.id, id, validatedData);
 
+    const { revalidatePath } = await import("next/cache");
+    revalidatePath("/dashboard");
+
     return successResponse(session);
   } catch (error) {
     if (error instanceof Error && error.message === "UNAUTHORIZED") {

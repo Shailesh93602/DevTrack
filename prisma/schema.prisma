@@ -36,10 +36,6 @@ model DailyLog {
 
   // One log per user per day; also serves as the primary lookup index.
   @@unique([userId, date])
-  // Index for user-scoped queries and streak calculations
-  @@index([userId])
-  // Composite index for date-range queries by user (streak calc, recent logs)
-  @@index([userId, date])
 }
 
 model DSAProblem {
@@ -97,7 +93,7 @@ model Milestone {
   user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([projectId, order])
-  @@index([userId])
+  @@index([userId, completedAt])
 }
 
 model ProjectActivityLog {

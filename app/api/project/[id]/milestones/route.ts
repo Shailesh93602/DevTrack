@@ -30,6 +30,9 @@ export async function POST(
       return handleApiError(new Error("Project not found"));
     }
 
+    const { revalidatePath } = await import("next/cache");
+    revalidatePath("/dashboard");
+
     return successResponse(milestone);
   } catch (error) {
     if (error instanceof Error && error.message === "UNAUTHORIZED") {

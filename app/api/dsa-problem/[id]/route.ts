@@ -43,6 +43,9 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
       return errorResponse("Failed to delete DSA problem", 500, "DELETE_FAILED");
     }
 
+    const { revalidatePath } = await import("next/cache");
+    revalidatePath("/dashboard");
+
     return successResponse({ message: "DSA problem deleted successfully" });
   } catch (error) {
     if (error instanceof Error && error.message === "UNAUTHORIZED") {
@@ -77,6 +80,9 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
     if (!result) {
       return errorResponse("Failed to update DSA problem", 500, "UPDATE_FAILED");
     }
+
+    const { revalidatePath } = await import("next/cache");
+    revalidatePath("/dashboard");
 
     return successResponse(result);
   } catch (error) {

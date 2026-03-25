@@ -49,6 +49,9 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       return errorResponse("Failed to update daily log", 500, "UPDATE_FAILED");
     }
 
+    const { revalidatePath } = await import("next/cache");
+    revalidatePath("/dashboard");
+
     return successResponse(updatedLog);
   } catch (error) {
     if (error instanceof Error && error.message === "UNAUTHORIZED") {
@@ -80,6 +83,9 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
     if (result.count === 0) {
       return errorResponse("Failed to delete daily log", 500, "DELETE_FAILED");
     }
+
+    const { revalidatePath } = await import("next/cache");
+    revalidatePath("/dashboard");
 
     return successResponse({ message: "Daily log deleted successfully" });
   } catch (error) {

@@ -26,6 +26,9 @@ export async function POST(
       return handleApiError(new Error("Milestone not found or already completed"));
     }
 
+    const { revalidatePath } = await import("next/cache");
+    revalidatePath("/dashboard");
+
     return successResponse(milestone);
   } catch (error) {
     if (error instanceof Error && error.message === "UNAUTHORIZED") {

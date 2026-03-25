@@ -22,6 +22,9 @@ export async function DELETE(
     const { id } = await params;
     const result = await deleteProject(user.id, id);
 
+    const { revalidatePath } = await import("next/cache");
+    revalidatePath("/dashboard");
+
     return successResponse({ success: true, count: result.count });
   } catch (error) {
     if (error instanceof Error && error.message === "UNAUTHORIZED") {

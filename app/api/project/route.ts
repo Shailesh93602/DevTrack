@@ -25,6 +25,9 @@ export async function POST(request: NextRequest) {
     const validatedData = createProjectSchema.parse(body);
 
     const project = await createProject(user.id, validatedData);
+    
+    const { revalidatePath } = await import("next/cache");
+    revalidatePath("/dashboard");
 
     return successResponse(project);
   } catch (error) {

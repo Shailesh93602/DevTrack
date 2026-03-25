@@ -29,6 +29,9 @@ export async function POST(request: NextRequest) {
 
     const problem = await createDsaProblem(user.id, validatedData);
 
+    const { revalidatePath } = await import("next/cache");
+    revalidatePath("/dashboard");
+
     return successResponse(problem);
   } catch (error) {
     if (error instanceof Error && error.message === "UNAUTHORIZED") {
