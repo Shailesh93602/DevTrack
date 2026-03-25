@@ -74,14 +74,14 @@ export async function getDashboardStats(userId: string): Promise<DashboardStats>
   const [
     totalProblems,
     difficultyCounts,
-    recentProblems, // for patterns and insights window
-    windowLogs,     // for streaks, heatmap, consistency (last 120 days)
-    recentLogsResult, // top 5 most recent
+    recentProblems,
+    windowLogs,
+    recentLogsResult,
     projectsRaw,
     user,
     completedMilestonesCount,
     activeSession,
-  ] = await Promise.all([
+  ] = (await Promise.all([
     prisma.dSAProblem.count({ where: { userId } }),
     prisma.dSAProblem.groupBy({
       by: ["difficulty"],
@@ -116,7 +116,17 @@ export async function getDashboardStats(userId: string): Promise<DashboardStats>
       where: { userId, completedAt: { not: null } },
     }),
     getActiveSession(userId),
-  ]);
+  ])) as [
+    number,
+    { difficulty: string; _count: number }[],
+    { pattern: string; solvedAt: Date; difficulty: string }[],
+    { id: string; date: Date; problemsSolved: number; topics: unknown; createdAt: Date }[],
+    { id: string; date: Date; problemsSolved: number; topics: unknown }[],
+    { status: string }[],
+    { longestStreak: number } | null,
+    number,
+    SessionWithActivities | null
+  ];
 
   // --- In-Memory Aggregations ---
 
@@ -129,10 +139,10 @@ export async function getDashboardStats(userId: string): Promise<DashboardStats>
   }
 
   // 2. Todays stats from windowLogs or recent query
-  const todaysLog = windowLogs.find(l => normalizeToUtcMidnight(l.date).getTime() === today.getTime());
+  const todaysLog = windowLogs.find((l) => normalizeToUtcMidnight(l.date).getTime() === today.getTime());
 
   // 3. Recent logs
-  const recentLogs = recentLogsResult.map((l: any) => ({
+  const recentLogs = recentLogsResult.map((l) => ({
     id: l.id,
     date: l.date,
     problemsSolved: l.problemsSolved,
@@ -140,19 +150,19 @@ export async function getDashboardStats(userId: string): Promise<DashboardStats>
   }));
 
   // 4. Streaks (use window data for current, User table for longest)
-  const logDates = windowLogs.map(l => toUtcDateString(l.date));
+  const logDates = windowLogs.map((l) => toUtcDateString(l.date));
   const { currentStreak, longestStreak: windowLongest } = calculateStreakFromDates(logDates);
   // Respect the all-time longest from user record if it's higher
   const longestStreak = Math.max(windowLongest, user?.longestStreak ?? 0);
 
   // 5. Projects
   const totalProjects = projectsRaw.length;
-  const activeProjects = projectsRaw.filter(p => p.status === "IN_PROGRESS").length;
-  const completedProjects = projectsRaw.filter(p => p.status === "COMPLETED").length;
+  const activeProjects = projectsRaw.filter((p) => p.status === "IN_PROGRESS").length;
+  const completedProjects = projectsRaw.filter((p) => p.status === "COMPLETED").length;
 
   // 6. Insights & Weekly Stats
-  const patternAnalysis = calculatePatternAnalysisLocal(recentProblems as any);
-  const patternStats = calculatePatternStats(recentProblems as any);
+  const patternAnalysis = calculatePatternAnalysisLocal(recentProblems);
+  const patternStats = calculatePatternStats(recentProblems);
   const lastLog = recentLogsResult.length > 0 ? recentLogsResult[0] : null;
 
   const preFetchedInsightContext = {
@@ -220,7 +230,7 @@ export async function getDashboardStats(userId: string): Promise<DashboardStats>
     consistencyScore: calculateConsistencyScoreLocal(windowLogs, now),
     patternAnalysis,
     insights,
-    activityData: windowLogs.map((log: any) => ({
+    activityData: windowLogs.map((log) => ({
       date: toUtcDateString(log.date),
       count: 1
     })),

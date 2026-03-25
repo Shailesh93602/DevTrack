@@ -25,34 +25,48 @@ export function SessionTracker({ initialActiveSession }: SessionTrackerProps) {
   const [elapsedTime, setElapsedTime] = useState<string>("00:00:00");
   const [isEnding, setIsEnding] = useState(false);
   const [isStarting, setIsStarting] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const calculateElapsed = useCallback(() => {
-    if (!activeSession) return "00:00:00";
-    const start = new Date(activeSession.startedAt).getTime();
-    const now = Date.now();
-    const diff = Math.max(0, now - start);
+    if (!activeSession || !activeSession.startedAt) return "00:00:00";
     
-    const hours = Math.floor(diff / 3600000);
-    const minutes = Math.floor((diff % 3600000) / 60000);
-    const seconds = Math.floor((diff % 60000) / 1000);
-    
-    return [hours, minutes, seconds]
-      .map(v => v.toString().padStart(2, '0'))
-      .join(':');
+    try {
+      const start = new Date(activeSession.startedAt).getTime();
+      const now = Date.now();
+      const diff = Math.max(0, now - start);
+      
+      const hours = Math.floor(diff / 3600000);
+      const minutes = Math.floor((diff % 3600000) / 60000);
+      const seconds = Math.floor((diff % 60000) / 1000);
+      
+      return [hours, minutes, seconds]
+        .map(v => v.toString().padStart(2, '0'))
+        .join(':');
+    } catch (e) {
+      console.error("Timer calculation error:", e);
+      return "00:00:00";
+    }
   }, [activeSession]);
 
   useEffect(() => {
-    if (!activeSession) {
+    if (!activeSession || !isMounted) {
       setElapsedTime("00:00:00");
       return;
     }
+
+    // Immediate calculation to avoid flash of 00:00:00 on hydration
+    setElapsedTime(calculateElapsed());
 
     const interval = setInterval(() => {
       setElapsedTime(calculateElapsed());
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [activeSession, calculateElapsed]);
+  }, [activeSession, calculateElapsed, isMounted]);
 
   const handleStartSession = async () => {
     setIsStarting(true);
@@ -74,6 +88,7 @@ export function SessionTracker({ initialActiveSession }: SessionTrackerProps) {
         toast.error(result.error.message || "Failed to start session");
       }
     } catch (error) {
+      console.error("Session start error:", error);
       toast.error("An error occurred");
     } finally {
       setIsStarting(false);
@@ -100,6 +115,7 @@ export function SessionTracker({ initialActiveSession }: SessionTrackerProps) {
         toast.error(result.error.message || "Failed to end session");
       }
     } catch (error) {
+      console.error("Session end error:", error);
       toast.error("An error occurred");
     } finally {
       setIsEnding(false);
@@ -122,7 +138,7 @@ export function SessionTracker({ initialActiveSession }: SessionTrackerProps) {
       if (result.success) {
         setActiveSession({
           ...activeSession,
-          activities: [result.data, ...activeSession.activities]
+          activities: [result.data, ...(activeSession.activities ?? [])]
         });
         toast.success("Activity logged!");
       }
@@ -133,7 +149,7 @@ export function SessionTracker({ initialActiveSession }: SessionTrackerProps) {
   };
 
   return (
-    <Card className="border-border/40 bg-card/30 backdrop-blur-md shadow-xl overflow-hidden relative">
+    <Card className="border-border/40 bg-card/30 backdrop-blur-md shadow-xl overflow-hidden relative min-h-[300px]">
       <div className="absolute top-0 right-0 p-4 opacity-10 pointer-events-none">
         <Clock className="w-24 h-24" />
       </div>
@@ -144,7 +160,7 @@ export function SessionTracker({ initialActiveSession }: SessionTrackerProps) {
             <Activity className="w-5 h-5 text-primary" />
             Session Mode
           </CardTitle>
-          {activeSession && (
+          {isMounted && activeSession && (
             <Badge variant="outline" className="animate-pulse bg-primary/10 text-primary border-primary/20">
               Live
             </Badge>
@@ -153,7 +169,11 @@ export function SessionTracker({ initialActiveSession }: SessionTrackerProps) {
       </CardHeader>
 
       <CardContent>
-        {!activeSession ? (
+        {!isMounted ? (
+          <div className="py-12 flex items-center justify-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+          </div>
+        ) : !activeSession ? (
           <div className="py-6 flex flex-col items-center text-center">
             <p className="text-muted-foreground mb-6 text-sm max-w-[250px]">
               Ready to focus? Start a timed session to track your progress and activities.
@@ -170,7 +190,10 @@ export function SessionTracker({ initialActiveSession }: SessionTrackerProps) {
         ) : (
           <div className="space-y-6 py-2">
             <div className="text-center">
-               <div className="text-5xl font-mono font-black tracking-tighter text-foreground mb-1 tabular-nums">
+               <div 
+                 className="text-5xl font-mono font-black tracking-tighter text-foreground mb-1 tabular-nums"
+                 suppressHydrationWarning
+               >
                  {elapsedTime}
                </div>
                <p className="text-xs text-muted-foreground uppercase tracking-widest font-bold opacity-60">
@@ -210,7 +233,7 @@ export function SessionTracker({ initialActiveSession }: SessionTrackerProps) {
                  End & Save Session
                </Button>
                
-               {activeSession.activities.length > 0 && (
+               {(activeSession.activities?.length ?? 0) > 0 && (
                  <div className="pt-2 border-t border-border/40">
                     <p className="text-[10px] font-bold text-muted-foreground/60 uppercase tracking-widest mb-3">
                       Recent Events ({activeSession.activities.length})
@@ -220,8 +243,10 @@ export function SessionTracker({ initialActiveSession }: SessionTrackerProps) {
                         <div key={event.id} className="flex items-start gap-2 text-xs bg-muted/20 p-2 rounded-lg border border-border/20">
                           <Activity className="w-3 h-3 text-primary mt-0.5" />
                           <div>
-                            <span className="font-semibold block">{event.activityType.replace('_', ' ')}</span>
-                            <span className="text-muted-foreground opacity-70 italic">{formatDistanceToNow(new Date(event.createdAt), { addSuffix: true })}</span>
+                            <span className="font-semibold block">{event.activityType?.replace('_', ' ') || "Activity"}</span>
+                            <span className="text-muted-foreground opacity-70 italic">
+                              {event.createdAt ? formatDistanceToNow(new Date(event.createdAt), { addSuffix: true }) : "just now"}
+                            </span>
                           </div>
                         </div>
                       ))}
