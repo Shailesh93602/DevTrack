@@ -177,6 +177,11 @@
   --success-message:            oklch(0.96 0 0);
   --success-message-foreground: oklch(0.42 0.1 142);
 
+  /* Chart fill colors — difficulty stacks */
+  --chart-easy:   oklch(0.65 0.12 142);    /* green */
+  --chart-medium: oklch(0.68 0.14 80);     /* amber */
+  --chart-hard:   oklch(0.58 0.18 27);     /* red */
+
   /* Charts — grayscale steps */
   --chart-1: oklch(0.18 0 0);
   --chart-2: oklch(0.40 0 0);
@@ -253,6 +258,11 @@
   /* Success message colors */
   --success-message:            oklch(0.20 0 0);
   --success-message-foreground: oklch(0.55 0.1 142);
+
+  /* Chart fill colors — difficulty stacks (vibrant for dark bg) */
+  --chart-easy:   oklch(0.72 0.14 142);    /* brighter green */
+  --chart-medium: oklch(0.75 0.16 80);     /* brighter amber */
+  --chart-hard:   oklch(0.65 0.18 27);     /* red stays consistent but holds well */
 
   /* Charts — grayscale steps */
   --chart-1: oklch(0.88 0 0);
