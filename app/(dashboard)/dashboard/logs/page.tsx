@@ -9,7 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { createServerSupabaseClient } from "@/lib/auth/supabase-server";
-import { getDailyLogs } from "@/lib/services/daily-log";
+import { getDailyLogs, type DailyLogSummary } from "@/lib/services/daily-log";
 import { DailyLogForm } from "@/components/dashboard/DailyLogForm";
 import { DailyLogList } from "@/components/dashboard/DailyLogList";
 import { serializeLog } from "@/lib/utils/serialization";
@@ -29,7 +29,7 @@ export default async function DailyLogsPage() {
 
   const todayUTC = getTodayUtcString();
   const rawTodaysLog =
-    logs.find((log) => toUtcDateString(log.date) === todayUTC) ?? null;
+    logs.find((log: DailyLogSummary) => toUtcDateString(log.date) === todayUTC) ?? null;
 
   const todaysLog = rawTodaysLog ? serializeLog(rawTodaysLog) : null;
   const allLogs = logs.map(serializeLog);

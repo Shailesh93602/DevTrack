@@ -24,6 +24,17 @@ const defaultSelect = {
   updatedAt: true,
 } satisfies Prisma.DailyLogSelect;
 
+export type DailyLogSummary = Prisma.DailyLogGetPayload<{
+  select: typeof defaultSelect;
+}>;
+
+export interface GetDailyLogsResult {
+  logs: DailyLogSummary[];
+  total: number;
+  limit: number;
+  offset: number;
+}
+
 export async function createDailyLog(
   userId: string,
   data: CreateDailyLogInput,
@@ -52,7 +63,7 @@ export async function createDailyLog(
 export async function getDailyLogs(
   userId: string,
   params: DailyLogQueryParams
-) {
+): Promise<GetDailyLogsResult> {
   const { startDate, endDate, limit, offset } = params;
 
   const where: Prisma.DailyLogWhereInput = { userId };
