@@ -4,7 +4,7 @@ import { createServerSupabaseClient } from "@/lib/auth/supabase-server";
 import { ensureUserInDb } from "@/lib/services/user";
 import { redirect } from "next/navigation";
 
-import { authSchema, passwordSchema } from "@/lib/validations/auth";
+import { authSchema, passwordSchema } from "@/lib/validations";
 
 export type AuthFormState = {
   error?: string;

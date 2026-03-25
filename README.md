@@ -30,16 +30,27 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Learn More
+## Design Guidelines
 
-To learn more about Next.js, take a look at the following resources:
+### Dark Mode Strategy
+DevTrack uses a **strictly semantic CSS variable system** for theme management. 
+- **Rule**: Do NOT use `dark:` Tailwind prefixes.
+- **Implementation**: All colors are defined as variables in `globals.css` that transition based on the `.dark` class on the `<html>` element.
+- **Anti-FOUC**: A blocking inline script in `app/layout.tsx` detects the user's theme preference and applies the correct class before the first paint, preventing "Flash of Unstyled Content".
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### SVG & Charts
+To ensure compatibility across all browsers (including those with strict SVG attribute rendering), charts and indicators must use the HEX-based CSS variables:
+- Grid: `var(--chart-grid)`
+- Muted: `var(--chart-muted)`
+- Primary: `var(--primary)`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Accessibility (a11y)
+- All interactive elements must have unique `id` for testing and `aria-label` for screen readers.
+- Use semantic HTML tags (`main`, `nav`, `section`, `ul/li`) to provide meaningful document structure.
+- Maintain a minimum touch target of **44x44px** for mobile-exclusive controls.
 
 ## Deploy on Vercel
+<truncated-original-content>
 
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 

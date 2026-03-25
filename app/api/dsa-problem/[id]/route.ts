@@ -14,7 +14,7 @@ import {
 import {
   dsaProblemIdSchema,
   updateDsaProblemSchema,
-} from "@/lib/validations/dsa-problem";
+} from "@/lib/validations";
 
 interface RouteParams {
   params: Promise<{ id: string }>;

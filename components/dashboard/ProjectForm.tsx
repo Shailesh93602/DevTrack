@@ -17,7 +17,7 @@ import type { ProjectFormProps } from "@/types";
 import { DEFAULT_VALUES } from "@/lib/constants";
 import { TechSelector } from "./project/TechSelector";
 import { createProject, updateProject } from "@/lib/api/project";
-import { type ProjectFormInput, projectFormSchema } from "@/lib/validations/project";
+import { type ProjectFormInput, projectFormSchema } from "@/lib/validations";
 
 export function ProjectForm({ project, onSuccess }: ProjectFormProps) {
   const {

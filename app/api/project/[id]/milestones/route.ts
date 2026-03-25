@@ -6,7 +6,7 @@ import {
   handleApiError,
 } from "@/lib/api/errors";
 import { createMilestone } from "@/lib/services/milestone";
-import { createMilestoneSchema } from "@/lib/validations/milestone";
+import { createMilestoneSchema } from "@/lib/validations";
 
 export async function POST(
   request: NextRequest,

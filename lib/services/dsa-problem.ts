@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/db/prisma";
 import { Prisma, Difficulty } from "@prisma/client";
 import { INSIGHTS_QUERY_LIMIT } from "@/lib/constants";
-import type { CreateDsaProblemInput, DsaProblemQueryParams, UpdateDsaProblemInput } from "@/lib/validations/dsa-problem";
+import type { CreateDsaProblemInput, DsaProblemQueryParams, UpdateDsaProblemInput } from "@/lib/validations";
 import type { PatternAnalysis } from "@/types/dsa-problem";
 
 const defaultSelect = {

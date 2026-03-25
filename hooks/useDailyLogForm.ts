@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useRouter as useNextRouter } from "next/navigation";
 import type { UseFormSetValue } from "react-hook-form";
-import type { DailyLogFormInput } from "@/lib/validations/daily-log";
+import type { DailyLogFormInput } from "@/lib/validations";
 import {
   TOPICS_MAX_COUNT as TOPICS_MAX,
   TOPIC_MAX_LENGTH as TOPIC_LENGTH_MAX,

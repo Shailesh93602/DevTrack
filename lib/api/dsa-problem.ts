@@ -1,5 +1,5 @@
 import { type ApiResponse } from "./errors";
-import { type DsaProblemInput } from "@/lib/validations/dsa-problem";
+import { type DsaProblemInput } from "@/lib/validations";
 
 /**
  * API Wrapper for DSA Problem operations

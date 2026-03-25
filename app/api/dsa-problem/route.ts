@@ -12,7 +12,7 @@ import {
 import {
   createDsaProblemSchema,
   dsaProblemQuerySchema,
-} from "@/lib/validations/dsa-problem";
+} from "@/lib/validations";
 import { parseQueryParams } from "@/lib/utils/api";
 
 export async function POST(request: NextRequest) {

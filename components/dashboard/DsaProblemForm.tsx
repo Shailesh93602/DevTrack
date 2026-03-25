@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useDsaProblemForm } from "@/hooks/useDsaProblemForm";
 import type { DsaProblemFormProps } from "@/types/dsa-problem";
-import { dsaProblemSchema, type DsaProblemInput } from "@/lib/validations/dsa-problem";
+import { dsaProblemSchema, type DsaProblemInput } from "@/lib/validations";
 import { DEFAULT_VALUES, NOTES_MAX_LENGTH } from "@/lib/constants";
 import { ProblemDetails } from "./dsa-problem/ProblemDetails";
 import { createDsaProblem, updateDsaProblem } from "@/lib/api/dsa-problem";

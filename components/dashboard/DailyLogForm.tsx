@@ -12,7 +12,7 @@ import { createDailyLog, updateDailyLog } from "@/lib/api/daily-log";
 import { toDateInputValue, getTodayUtcString } from "@/lib/utils/date";
 import { NOTES_MAX_LENGTH as NOTES_MAX } from "@/lib/constants";
 import type { DailyLogFormProps } from "@/types";
-import { createDailyLogSchema, type DailyLogFormInput } from "@/lib/validations/daily-log";
+import { createDailyLogSchema, type DailyLogFormInput } from "@/lib/validations";
 
 import { TopicSelector } from "./daily-log/TopicSelector";
 import { NotesSection } from "./daily-log/NotesSection";

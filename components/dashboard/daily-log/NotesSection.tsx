@@ -2,7 +2,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { type UseFormRegister } from "react-hook-form";
-import { type DailyLogFormInput } from "@/lib/validations/daily-log";
+import { type DailyLogFormInput } from "@/lib/validations";
 
 interface NotesSectionProps {
   notes: string;

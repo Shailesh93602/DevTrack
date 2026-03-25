@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { UseFormSetValue } from "react-hook-form";
-import type { CreateProjectInput } from "@/lib/validations/project";
+import type { CreateProjectInput } from "@/lib/validations";
 import { PROJECT_TECH_STACK_MAX_COUNT as TECH_STACK_MAX } from "@/lib/constants";
 
 export function useProjectForm() {

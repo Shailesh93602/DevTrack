@@ -1,5 +1,5 @@
 import { type ApiResponse } from "./errors";
-import { type CreateProjectInput, type UpdateProjectInput } from "@/lib/validations/project";
+import { type CreateProjectInput, type UpdateProjectInput } from "@/lib/validations";
 
 /**
  * API Wrapper for Project operations

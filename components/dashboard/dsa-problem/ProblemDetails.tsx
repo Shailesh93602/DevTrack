@@ -4,7 +4,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Difficulty } from "@prisma/client";
 import { DIFFICULTY_OPTIONS } from "@/types/dsa-problem";
 import { type UseFormRegister, type FieldErrors, type UseFormSetValue } from "react-hook-form";
-import { type DsaProblemInput } from "@/lib/validations/dsa-problem";
+import { type DsaProblemInput } from "@/lib/validations";
 
 interface ProblemDetailsProps {
   register: UseFormRegister<DsaProblemInput>;

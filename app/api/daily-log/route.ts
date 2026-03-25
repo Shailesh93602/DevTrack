@@ -13,7 +13,7 @@ import {
 import {
   createDailyLogSchema,
   dailyLogQuerySchema,
-} from "@/lib/validations/daily-log";
+} from "@/lib/validations";
 import { parseQueryParams } from "@/lib/utils/api";
 
 export async function POST(request: NextRequest) {

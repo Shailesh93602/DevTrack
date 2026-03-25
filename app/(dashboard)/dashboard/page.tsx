@@ -18,6 +18,7 @@ import { TrendsCard } from "@/components/dashboard/TrendsCard";
 import { PeakTimeCard } from "@/components/dashboard/PeakTimeCard";
 import { formatLogDate } from "@/lib/utils/formatters";
 import { BookOpen } from "lucide-react";
+import { CardErrorBoundary } from "@/components/shared/CardErrorBoundary";
 
 export default async function DashboardPage() {
   const supabase = await createServerSupabaseClient();
@@ -67,23 +68,33 @@ export default async function DashboardPage() {
           <h3 className="text-foreground text-sm font-semibold">
             Weekly Progress
           </h3>
-          <WeeklyProgressChart data={stats.weeklyProgress} />
+          <CardErrorBoundary fallbackTitle="Could not load weekly progress">
+            <WeeklyProgressChart data={stats.weeklyProgress} />
+          </CardErrorBoundary>
         </div>
         <div className="space-y-4 lg:col-span-1">
           <h3 className="text-foreground text-sm font-semibold">
             Difficulty
           </h3>
-          <DifficultyDistribution data={stats.difficultyDistribution} />
+          <CardErrorBoundary fallbackTitle="Could not load distribution">
+            <DifficultyDistribution data={stats.difficultyDistribution} />
+          </CardErrorBoundary>
         </div>
         <div className="space-y-4 lg:col-span-1">
           <h3 className="text-foreground text-sm font-semibold">Insights</h3>
-          <InsightsList insights={stats.insights} />
+          <CardErrorBoundary fallbackTitle="Could not load insights">
+            <InsightsList insights={stats.insights} />
+          </CardErrorBoundary>
         </div>
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <TrendsCard trends={stats.trends} />
-        <PeakTimeCard peakTime={stats.peakTime} />
+        <CardErrorBoundary fallbackTitle="Could not load trends">
+          <TrendsCard trends={stats.trends} />
+        </CardErrorBoundary>
+        <CardErrorBoundary fallbackTitle="Could not load peak time stats">
+          <PeakTimeCard peakTime={stats.peakTime} />
+        </CardErrorBoundary>
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
@@ -91,27 +102,33 @@ export default async function DashboardPage() {
           <h3 className="text-foreground text-sm font-semibold">
             Strongest Pattern
           </h3>
-          <Card className="border-border rounded-lg border shadow-none">
-            <CardContent className="pt-6">
-              <PatternCard analysis={stats.patternAnalysis} type="strongest" />
-            </CardContent>
-          </Card>
+          <CardErrorBoundary fallbackTitle="Could not load pattern analysis">
+            <Card className="border-border rounded-lg border shadow-none">
+              <CardContent className="pt-6">
+                <PatternCard analysis={stats.patternAnalysis} type="strongest" />
+              </CardContent>
+            </Card>
+          </CardErrorBoundary>
         </div>
         <div className="space-y-4">
           <h3 className="text-foreground text-sm font-semibold">
             Needs Practice
           </h3>
-          <Card className="border-border rounded-lg border shadow-none">
-            <CardContent className="pt-6">
-              <PatternCard analysis={stats.patternAnalysis} type="weakest" />
-            </CardContent>
-          </Card>
+          <CardErrorBoundary fallbackTitle="Could not load pattern analysis">
+            <Card className="border-border rounded-lg border shadow-none">
+              <CardContent className="pt-6">
+                <PatternCard analysis={stats.patternAnalysis} type="weakest" />
+              </CardContent>
+            </Card>
+          </CardErrorBoundary>
         </div>
       </div>
 
       <div className="space-y-4">
         <h3 className="text-foreground text-sm font-semibold">Activity</h3>
-        <ActivityHeatmap data={stats.activityData} />
+        <CardErrorBoundary fallbackTitle="Could not load heatmap">
+          <ActivityHeatmap data={stats.activityData} />
+        </CardErrorBoundary>
       </div>
 
       <div className="space-y-4">

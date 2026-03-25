@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { type UseFormSetValue } from "react-hook-form";
-import { type CreateProjectInput } from "@/lib/validations/project";
+import { type CreateProjectInput } from "@/lib/validations";
 
 interface TechSelectorProps {
   techStack: string[];

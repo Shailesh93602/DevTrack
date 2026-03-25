@@ -9,7 +9,7 @@ import { createProject, getProjects } from "@/lib/services/project";
 import {
   createProjectSchema,
   projectQuerySchema,
-} from "@/lib/validations/project";
+} from "@/lib/validations";
 import { parseQueryParams } from "@/lib/utils/api";
 
 export async function POST(request: NextRequest) {
