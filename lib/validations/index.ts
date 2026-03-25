@@ -38,6 +38,7 @@ export {
   projectIdSchema,
   projectQuerySchema,
   type CreateProjectInput,
+  type ProjectFormInput,
   type UpdateProjectInput,
   type ProjectIdParams,
   type ProjectQueryParams,
@@ -64,3 +65,17 @@ export {
   type SignupFormData,
   type AuthFormInput,
 } from "./auth";
+
+export {
+  startSessionSchema,
+  endSessionSchema,
+  createSessionEventSchema,
+  sessionIdSchema,
+  sessionQuerySchema,
+  type StartSessionInput,
+  type EndSessionInput,
+  type CreateSessionEventInput,
+  type SessionIdParams,
+  type SessionQueryParams,
+  type SessionActivityType,
+} from "./session";

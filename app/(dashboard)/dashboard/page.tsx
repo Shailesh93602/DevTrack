@@ -19,6 +19,7 @@ import { formatLogDate } from "@/lib/utils/formatters";
 import { BookOpen, History } from "lucide-react";
 import { CardErrorBoundary } from "@/components/shared/CardErrorBoundary";
 import { RecommendationsCard } from "@/components/dashboard/RecommendationsCard";
+import { SessionTracker } from "@/components/dashboard/SessionTracker";
 
 export default async function DashboardPage() {
   const supabase = await createServerSupabaseClient();
@@ -66,10 +67,19 @@ export default async function DashboardPage() {
         />
       </div>
 
-      {/* Personalized Recommendations */}
-      <CardErrorBoundary fallbackTitle="Could not load recommendations">
-        <RecommendationsCard recommendations={stats.recommendations} />
-      </CardErrorBoundary>
+      {/* Personalized Recommendations & Session Tracker */}
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
+        <div className="lg:col-span-8">
+          <CardErrorBoundary fallbackTitle="Could not load recommendations">
+            <RecommendationsCard recommendations={stats.recommendations} />
+          </CardErrorBoundary>
+        </div>
+        <div className="lg:col-span-4">
+          <CardErrorBoundary fallbackTitle="Could not load session tracker">
+            <SessionTracker initialActiveSession={stats.activeSession} />
+          </CardErrorBoundary>
+        </div>
+      </div>
 
       {/* Main Analysis Block: Score & Chart */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-12 lg:items-stretch">

@@ -4,6 +4,8 @@ import { generateInsights } from "@/lib/services/insights";
 import { computeScoreFromAggregates } from "@/lib/services/scoring";
 import { generateRecommendations } from "@/lib/services/recommendations";
 import { normalizeToUtcMidnight, toUtcDateString } from "@/lib/utils/date";
+import { getActiveSession } from "@/lib/services/session";
+import { SessionWithActivities } from "@/types/session";
 import {
   CONSISTENCY_TARGET_LOGS_PER_WEEK,
   CONSISTENCY_WEEKS_CHECK,
@@ -53,6 +55,7 @@ export interface DashboardStats {
   weeklyProgress: WeeklyDataPoint[];
   developerScore: DeveloperScore;
   recommendations: Recommendation[];
+  activeSession: SessionWithActivities | null;
 }
 
 export async function getDashboardStats(userId: string): Promise<DashboardStats> {
@@ -77,6 +80,7 @@ export async function getDashboardStats(userId: string): Promise<DashboardStats>
     projectsRaw,
     user,
     completedMilestonesCount,
+    activeSession,
   ] = await Promise.all([
     prisma.dSAProblem.count({ where: { userId } }),
     prisma.dSAProblem.groupBy({
@@ -111,6 +115,7 @@ export async function getDashboardStats(userId: string): Promise<DashboardStats>
     prisma.milestone.count({
       where: { userId, completedAt: { not: null } },
     }),
+    getActiveSession(userId),
   ]);
 
   // --- In-Memory Aggregations ---
@@ -127,11 +132,11 @@ export async function getDashboardStats(userId: string): Promise<DashboardStats>
   const todaysLog = windowLogs.find(l => normalizeToUtcMidnight(l.date).getTime() === today.getTime());
 
   // 3. Recent logs
-  const recentLogs = recentLogsResult.map(l => ({
+  const recentLogs = recentLogsResult.map((l: any) => ({
     id: l.id,
     date: l.date,
     problemsSolved: l.problemsSolved,
-    topics: l.topics ?? []
+    topics: (l.topics as string[]) ?? []
   }));
 
   // 4. Streaks (use window data for current, User table for longest)
@@ -146,8 +151,8 @@ export async function getDashboardStats(userId: string): Promise<DashboardStats>
   const completedProjects = projectsRaw.filter(p => p.status === "COMPLETED").length;
 
   // 6. Insights & Weekly Stats
-  const patternAnalysis = calculatePatternAnalysisLocal(recentProblems);
-  const patternStats = calculatePatternStats(recentProblems);
+  const patternAnalysis = calculatePatternAnalysisLocal(recentProblems as any);
+  const patternStats = calculatePatternStats(recentProblems as any);
   const lastLog = recentLogsResult.length > 0 ? recentLogsResult[0] : null;
 
   const preFetchedInsightContext = {
@@ -215,7 +220,7 @@ export async function getDashboardStats(userId: string): Promise<DashboardStats>
     consistencyScore: calculateConsistencyScoreLocal(windowLogs, now),
     patternAnalysis,
     insights,
-    activityData: windowLogs.map(log => ({
+    activityData: windowLogs.map((log: any) => ({
       date: toUtcDateString(log.date),
       count: 1
     })),
@@ -224,6 +229,7 @@ export async function getDashboardStats(userId: string): Promise<DashboardStats>
     weeklyProgress,
     developerScore,
     recommendations,
+    activeSession,
   };
 }
 
