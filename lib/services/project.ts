@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/db/prisma";
-import { Prisma, ProjectActivityType } from "@prisma/client";
+import { Prisma, ProjectActivityType, ProjectStatus } from "@prisma/client";
 import type {
   CreateProjectInput,
   UpdateProjectInput,
@@ -44,7 +44,7 @@ export interface ProjectSummary {
   userId: string;
   name: string;
   description: string | null;
-  status: string;
+  status: ProjectStatus;
   progress: number;
   dueDate: Date | null;
   techStack: string[];
