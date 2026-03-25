@@ -71,14 +71,16 @@ export function TopicSelector({
               className="border-border bg-muted text-foreground inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-xs"
             >
               {topic}
-              <button
+              <Button
                 type="button"
+                variant="ghost"
+                size="icon-xs"
                 onClick={() => handleRemoveTopic(index, topics, setValue)}
                 aria-label={`Remove topic ${topic}`}
-                className="focus-visible:ring-ring ml-0.5 rounded-full opacity-60 transition-opacity hover:opacity-100 focus:outline-none focus-visible:ring-1"
+                className="ml-0.5 rounded-full opacity-60 hover:opacity-100"
               >
                 <X className="h-3 w-3" aria-hidden="true" />
-              </button>
+              </Button>
             </li>
           ))}
         </ul>

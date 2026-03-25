@@ -56,14 +56,16 @@ export function TechSelector({
             className="bg-muted inline-flex items-center gap-1 rounded px-2 py-1 text-xs"
           >
             {tech}
-            <button
+            <Button
               type="button"
+              variant="ghost"
+              size="icon-xs"
               onClick={() => removeTech(index, techStack, setValue)}
-              className="text-muted-foreground hover:text-foreground"
+              className="text-muted-foreground hover:text-foreground h-auto p-0"
               aria-label={`Remove ${tech}`}
             >
               <X className="h-3 w-3" aria-hidden="true" />
-            </button>
+            </Button>
           </li>
         ))}
       </ul>

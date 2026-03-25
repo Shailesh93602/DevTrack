@@ -315,10 +315,13 @@
     line-height: var(--leading-normal);
   }
 
-  /* Heading defaults */
-  h1 { font-size: var(--text-3xl); font-weight: 600; letter-spacing: var(--tracking-tight); line-height: var(--leading-tight); }
-  h2 { font-size: var(--text-2xl); font-weight: 600; letter-spacing: var(--tracking-tight); line-height: var(--leading-tight); }
-  h3 { font-size: var(--text-xl);  font-weight: 600; line-height: var(--leading-tight); }
-  h4 { font-size: var(--text-lg);  font-weight: 500; line-height: var(--leading-tight); }
-  h5, h6 { font-size: var(--text-base); font-weight: 500; }
+  /* Interactive elements */
+  button, a, [role="button"], label[for] {
+    cursor: pointer;
+  }
+
+  /* Reset for disabled states */
+  button:disabled, a:disabled, [disabled] {
+    cursor: not-allowed;
+  }
 }

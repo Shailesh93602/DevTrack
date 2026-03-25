@@ -79,10 +79,14 @@ export function Header({ email }: HeaderProps) {
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
               <form action={logout} className="w-full">
-                <button type="submit" className="flex w-full items-center cursor-pointer">
+                <Button 
+                  type="submit" 
+                  variant="ghost" 
+                  className="h-9 w-full justify-start rounded-md px-2 text-sm font-normal transition-colors hover:bg-muted"
+                >
                   <LogOut className="mr-2 h-4 w-4 text-muted-foreground" />
                   <span>Log out</span>
-                </button>
+                </Button>
               </form>
             </DropdownMenuItem>
           </DropdownMenuContent>
