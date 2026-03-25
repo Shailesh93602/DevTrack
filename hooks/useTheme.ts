@@ -27,7 +27,7 @@ function resolveTheme(theme: Theme): ResolvedTheme {
 
 export function useTheme() {
   const [mounted, setMounted] = useState(false);
-  const [theme, setThemeState] = useState<Theme>("system");
+  const [theme, setTheme] = useState<Theme>("system");
   const [resolvedTheme, setResolvedTheme] = useState<ResolvedTheme>("light");
   const themeRef = useRef(theme);
   useEffect(() => {
@@ -40,7 +40,7 @@ export function useTheme() {
       (localStorage.getItem(STORAGE_KEY) as Theme | null) ?? "system";
     const resolved = resolveTheme(stored);
     requestAnimationFrame(() => {
-      setThemeState(stored);
+      setTheme(stored);
       setResolvedTheme(resolved);
       setMounted(true);
     });
@@ -69,14 +69,14 @@ export function useTheme() {
     return () => mq.removeEventListener("change", handler);
   }, [theme, mounted]);
 
-  const setTheme = useCallback((next: Theme) => {
+  const updateTheme = useCallback((next: Theme) => {
     localStorage.setItem(STORAGE_KEY, next);
-    setThemeState(next);
+    setTheme(next);
   }, []);
 
   const toggleTheme = useCallback(() => {
-    setTheme(resolvedTheme === "dark" ? "light" : "dark");
-  }, [resolvedTheme, setTheme]);
+    updateTheme(resolvedTheme === "dark" ? "light" : "dark");
+  }, [resolvedTheme, updateTheme]);
 
-  return { theme, resolvedTheme, setTheme, toggleTheme, mounted };
+  return { theme, resolvedTheme, setTheme: updateTheme, toggleTheme, mounted };
 }
