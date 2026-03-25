@@ -91,6 +91,7 @@
   /* Success message colors */
   --color-success-message:            var(--success-message);
   --color-success-message-foreground: var(--success-message-foreground);
+  --color-success-message-border:     var(--success-message-border);
 
   /* Sidebar */
   --color-sidebar:                    var(--sidebar);
@@ -176,6 +177,7 @@
   /* Success message colors */
   --success-message:            oklch(0.96 0 0);
   --success-message-foreground: oklch(0.42 0.1 142);
+  --success-message-border:     oklch(0.91 0 0);
 
   /* Chart fill colors — difficulty stacks (Hex for SVG compatibility) */
   --chart-easy:   #22c55e;    /* green-500 */
@@ -260,6 +262,7 @@
   /* Success message colors */
   --success-message:            oklch(0.20 0 0);
   --success-message-foreground: oklch(0.55 0.1 142);
+  --success-message-border:     oklch(1 0 0 / 10%);
 
   /* Chart fill colors — difficulty stacks (Vibrant Hex for dark bg) */
   --chart-easy:   #4ade80;    /* green-400 */

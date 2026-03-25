@@ -44,12 +44,14 @@ export default function ForgotPasswordPage() {
           </div>
 
           {state?.error && (
-            <div className={`p-3 rounded-md text-sm ${
-              state.error.includes("Check your email") 
-                ? "bg-primary/10 text-primary border border-primary/20" 
-                : "bg-destructive/10 text-destructive border border-destructive/20"
-            }`}>
+            <div className="bg-destructive/10 text-destructive border border-destructive/20 p-3 rounded-md text-sm">
               {state.error}
+            </div>
+          )}
+
+          {state?.message && (
+            <div className="bg-primary/10 text-primary border border-primary/20 p-3 rounded-md text-sm">
+              {state.message}
             </div>
           )}
 

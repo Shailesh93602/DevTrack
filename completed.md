@@ -15,6 +15,8 @@
 - [x] **UX Improvements** — Simplified stats (4 key metrics), consistent headers, icon-enhanced empty states.
 
 ### Core Tracking Features
+- [x] **Secure Auth Lifecycle** — Implemented PKCE code-for-session exchange and email OTP verification routes.
+- [x] **Password Recovery Flow** — Complete forgot-password and reset-password workflows with secure redirects.
 - [x] **Streak System** — Full implementation with proper consecutive day handling and UTC-safe logic.
 - [x] **Pattern Analysis** — Strong/weak pattern identification (Daily Logs & DSA Problems).
 - [x] **Insights Engine** — Rule-based intelligence (9 rules) with priority-based display.
