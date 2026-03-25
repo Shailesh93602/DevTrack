@@ -93,7 +93,7 @@ export default async function ProjectDetailPage({
                     Tech Stack
                   </p>
                   <div className="flex flex-wrap gap-1">
-                    {project.techStack.map((tech) => (
+                    {project.techStack.map((tech: string) => (
                       <Badge key={tech} variant="outline" className="text-xs">
                         {tech}
                       </Badge>
@@ -124,7 +124,7 @@ export default async function ProjectDetailPage({
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
-                  {project.activityLogs.slice(0, 5).map((log) => (
+                  {project.activityLogs.slice(0, 5).map((log: any) => (
                     <div key={log.id} className="flex items-start gap-2">
                       <div className="bg-muted mt-1.5 h-1.5 w-1.5 rounded-full" />
                       <div>

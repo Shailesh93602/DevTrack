@@ -39,10 +39,17 @@ export async function createDsaProblem(
   });
 }
 
+export interface GetDsaProblemsResult {
+  problems: Prisma.DSAProblemGetPayload<{ select: typeof defaultSelect }>[];
+  total: number;
+  limit: number;
+  offset: number;
+}
+
 export async function getDsaProblems(
   userId: string,
   params: DsaProblemQueryParams
-) {
+): Promise<GetDsaProblemsResult> {
   const { difficulty, pattern, platform, limit, offset } = params;
 
   const where: Prisma.DSAProblemWhereInput = { userId };
@@ -70,7 +77,7 @@ export async function getDsaProblems(
     prisma.dSAProblem.count({ where }),
   ]);
 
-  return { problems, total, limit, offset };
+  return { problems, total, limit, offset } as GetDsaProblemsResult;
 }
 
 export async function getDsaProblemById(userId: string, id: string) {

@@ -39,7 +39,30 @@ export async function createProject(userId: string, data: CreateProjectInput) {
   });
 }
 
-export async function getProjects(userId: string, params: ProjectQueryParams) {
+export interface ProjectSummary {
+  id: string;
+  userId: string;
+  name: string;
+  description: string | null;
+  status: string;
+  progress: number;
+  dueDate: Date | null;
+  techStack: string[];
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface GetProjectsResult {
+  projects: ProjectSummary[];
+  total: number;
+  limit: number;
+  offset: number;
+}
+
+export async function getProjects(
+  userId: string,
+  params: ProjectQueryParams
+): Promise<GetProjectsResult> {
   const { status, limit, offset } = params;
 
   const where: Prisma.ProjectWhereInput = { userId };
@@ -56,7 +79,7 @@ export async function getProjects(userId: string, params: ProjectQueryParams) {
     prisma.project.count({ where }),
   ]);
 
-  return { projects, total, limit, offset };
+  return { projects, total, limit, offset } as GetProjectsResult;
 }
 
 export type ProjectWithDetails = Prisma.ProjectGetPayload<{
