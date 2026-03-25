@@ -43,13 +43,14 @@ export function TrendsCard({ trends }: TrendsCardProps) {
   };
 
   return (
-    <Card className="rounded-lg border border-border shadow-none h-full">
-      <CardHeader className="pb-3">
-        <CardTitle className="text-sm font-medium text-muted-foreground">
+    <Card className="rounded-xl border border-border/60 bg-card/50 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-background/60 h-full transition-all hover:bg-card/60">
+      <CardHeader className="border-b border-border/40 pb-4">
+        <CardTitle className="flex items-center gap-2 text-sm font-semibold text-foreground">
+          <TrendingUp className="h-4 w-4 text-primary" />
           Productivity Trends
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-6 pt-5">
         {renderTrend(problemDiff, "Problems Solved")}
         {renderTrend(logDiff, "Coding Days")}
       </CardContent>

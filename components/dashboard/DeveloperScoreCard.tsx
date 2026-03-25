@@ -2,6 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { DeveloperScore, SubScore } from "@/types/scoring";
+import { BrainCircuit } from "lucide-react";
 
 // ─── Sub-score bar ────────────────────────────────────────────────────────────
 
@@ -60,11 +61,12 @@ export function DeveloperScoreCard({ score }: DeveloperScoreCardProps) {
 
   return (
     <Card
-      className="rounded-xl border border-border/60 shadow-sm bg-card/50 backdrop-blur supports-[backdrop-filter]:bg-background/60"
+      className="rounded-xl border border-border/60 shadow-sm bg-card/50 backdrop-blur supports-[backdrop-filter]:bg-background/60 h-full transition-all hover:bg-card/60"
       id="developer-score-card"
     >
-      <CardHeader className="pb-3 flex flex-row items-center justify-between space-y-0">
-        <CardTitle className="text-sm font-medium text-muted-foreground">
+      <CardHeader className="border-b border-border/40 pb-4 flex flex-row items-center justify-between space-y-0">
+        <CardTitle className="flex items-center gap-2 text-sm font-semibold text-foreground tracking-tight">
+          <BrainCircuit className="h-4 w-4 text-primary" />
           Developer Score
         </CardTitle>
         <span
@@ -75,11 +77,11 @@ export function DeveloperScoreCard({ score }: DeveloperScoreCardProps) {
         </span>
       </CardHeader>
 
-      <CardContent className="space-y-5">
+      <CardContent className="space-y-6 pt-6">
         {/* Big total */}
         <div className="flex items-end gap-2">
           <span
-            className="text-5xl font-bold tracking-tight text-foreground tabular-nums"
+            className="text-4xl sm:text-5xl font-bold tracking-tight text-foreground tabular-nums drop-shadow-sm"
             aria-label={`Total developer score: ${score.total} out of 100`}
           >
             {score.total}

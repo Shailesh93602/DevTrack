@@ -53,9 +53,9 @@ export function InsightsList({ insights, maxInsights = 3 }: InsightsListProps) {
   }
 
   return (
-    <Card className="rounded-xl border border-border/60 bg-card/50 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <Card className="rounded-xl border border-border/60 bg-card/50 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-all hover:bg-card/60">
       <CardHeader className="border-b border-border/40 pb-4">
-        <CardTitle className="flex items-center gap-2 text-sm font-semibold text-foreground">
+        <CardTitle className="flex items-center gap-2 text-sm font-semibold text-foreground tracking-tight">
           <Sparkles className="h-4 w-4 text-primary" />
           Smart Insights
         </CardTitle>

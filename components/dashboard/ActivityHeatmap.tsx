@@ -68,13 +68,13 @@ export function ActivityHeatmap({ data }: ActivityHeatmapProps) {
   };
 
   return (
-    <Card className="rounded-lg border border-border shadow-none overflow-hidden">
-      <CardHeader className="pb-3 px-4">
-        <CardTitle className="text-sm font-medium text-muted-foreground">
-          Consistency (Last 90 Days)
+    <Card className="rounded-xl border border-border/60 bg-card/50 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-all hover:bg-card/60">
+      <CardHeader className="border-b border-border/40 pb-4">
+        <CardTitle className="text-sm font-semibold text-foreground tracking-tight">
+          Consistency Heatmap (90 Days)
         </CardTitle>
       </CardHeader>
-      <CardContent className="px-4 pb-4">
+      <CardContent className="pt-8">
         <div className="flex gap-1 overflow-x-auto pb-1">
           {weeks.map((week, wi) => {
             const weekKey = week.find(d => d !== null)?.date ?? `week-${wi}`;
