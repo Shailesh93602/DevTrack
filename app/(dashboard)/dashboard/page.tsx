@@ -28,7 +28,6 @@ export default async function DashboardPage() {
   if (!user) redirect("/login");
 
   const stats = await getDashboardStats(user.id);
-  const weeklyStats = await getWeeklyProblemStats(user.id, 8);
   return (
     <div className="space-y-6">
       <div>
@@ -68,7 +67,7 @@ export default async function DashboardPage() {
           <h3 className="text-foreground text-sm font-semibold">
             Weekly Progress
           </h3>
-          <WeeklyProgressChart data={weeklyStats} />
+          <WeeklyProgressChart data={stats.weeklyProgress} />
         </div>
         <div className="space-y-4 lg:col-span-1">
           <h3 className="text-foreground text-sm font-semibold">

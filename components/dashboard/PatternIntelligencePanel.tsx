@@ -47,17 +47,17 @@ export function PatternIntelligencePanel({ analysis }: PatternIntelligencePanelP
                 <Progress value={masteryProgress[p.pattern] ?? 0} className="h-2" />
                 <div className="flex gap-1 text-xs">
                   {p.easyCount > 0 && (
-                    <Badge variant="secondary" className="bg-green-100 text-green-800">
+                    <Badge variant="secondary" className="bg-[var(--difficulty-easy)]/10 text-[var(--difficulty-easy)]">
                       {p.easyCount} Easy
                     </Badge>
                   )}
                   {p.mediumCount > 0 && (
-                    <Badge variant="secondary" className="bg-yellow-100 text-yellow-800">
+                    <Badge variant="secondary" className="bg-[var(--difficulty-medium)]/10 text-[var(--difficulty-medium)]">
                       {p.mediumCount} Medium
                     </Badge>
                   )}
                   {p.hardCount > 0 && (
-                    <Badge variant="secondary" className="bg-red-100 text-red-800">
+                    <Badge variant="secondary" className="bg-[var(--difficulty-hard)]/10 text-[var(--difficulty-hard)]">
                       {p.hardCount} Hard
                     </Badge>
                   )}

@@ -1,15 +1,14 @@
 import { prisma } from "@/lib/db/prisma";
-import { calculateStreaks } from "@/lib/services/streak";
-import { analyzePatterns } from "@/lib/services/dsa-problem";
+import { calculateStreakFromDates } from "@/lib/services/streak";
 import { generateInsights } from "@/lib/services/insights";
 import { normalizeToUtcMidnight, toUtcDateString } from "@/lib/utils/date";
 import {
   CONSISTENCY_TARGET_LOGS_PER_WEEK,
   CONSISTENCY_WEEKS_CHECK,
   DAYS_IN_WEEK,
-  INSIGHTS_QUERY_LIMIT,
   MS_PER_DAY,
   RECENT_LOGS_DISPLAY_LIMIT,
+  STREAK_ANALYSIS_DAYS,
 } from "@/lib/constants";
 import type { PatternAnalysis } from "@/types/dsa-problem";
 import type { Insight } from "@/types/insights";
@@ -47,136 +46,216 @@ export interface DashboardStats {
     count: number;
     label: string;
   } | null;
+  weeklyProgress: WeeklyDataPoint[];
 }
 
 export async function getDashboardStats(userId: string): Promise<DashboardStats> {
-  // Use UTC date to match @db.Date column storage (timezone-safe)
   const now = new Date();
   const today = normalizeToUtcMidnight(now);
+  
+  // Cutoff for time-windowed stats (Heatmap, Streaks, Insights)
+  const windowCutoff = new Date(today);
+  windowCutoff.setUTCDate(today.getUTCDate() - (STREAK_ANALYSIS_DAYS));
 
-  // Fetch all data in parallel - these are the base queries
+  // Fetch data in parallel with targeted queries
   const [
-    totalProblemsResult,
-    todaysLog,
-    recentLogsResult,
-    streakStats,
-    totalProjectsResult,
-    activeProjectsResult,
-    easyCount,
-    mediumCount,
-    hardCount,
-    consistencyScore,
-    patternAnalysis,
-    problemsForInsights, // Fetch problems for insights generation
-    logsForInsights,     // Fetch logs for insights generation
-    logsForPeak,          // Fetch logs for peak time analysis
+    totalProblems,
+    difficultyCounts,
+    recentProblems, // for patterns and insights window
+    windowLogs,     // for streaks, heatmap, consistency (last 120 days)
+    recentLogsResult, // top 5 most recent
+    projectsRaw,
+    user
   ] = await Promise.all([
-    prisma.dSAProblem.count({
+    prisma.dSAProblem.count({ where: { userId } }),
+    prisma.dSAProblem.groupBy({
+      by: ["difficulty"],
       where: { userId },
+      _count: true,
     }),
-    prisma.dailyLog.findFirst({
-      where: {
-        userId,
-        date: {
-          gte: today,
-        },
-      },
-      select: {
-        problemsSolved: true,
-      },
+    prisma.dSAProblem.findMany({
+      where: { userId, solvedAt: { gte: windowCutoff } },
+      select: { pattern: true, solvedAt: true, difficulty: true },
+      orderBy: { solvedAt: "desc" },
+    }),
+    prisma.dailyLog.findMany({
+      where: { userId, date: { gte: windowCutoff } },
+      select: { id: true, date: true, problemsSolved: true, topics: true, createdAt: true },
+      orderBy: { date: "asc" },
     }),
     prisma.dailyLog.findMany({
       where: { userId },
       orderBy: { date: "desc" },
       take: RECENT_LOGS_DISPLAY_LIMIT,
-      select: {
-        id: true,
-        date: true,
-        problemsSolved: true,
-        topics: true,
-      },
+      select: { id: true, date: true, problemsSolved: true, topics: true },
     }),
-    calculateStreaks(userId),
-    prisma.project.count({ where: { userId } }),
-    prisma.project.count({ where: { userId, status: "IN_PROGRESS" } }),
-    prisma.dSAProblem.count({ where: { userId, difficulty: "EASY" } }),
-    prisma.dSAProblem.count({ where: { userId, difficulty: "MEDIUM" } }),
-    prisma.dSAProblem.count({ where: { userId, difficulty: "HARD" } }),
-    getConsistencyScore(userId),
-    analyzePatterns(userId, { limit: 1000 }),
-    // Pre-fetch data for insights to avoid redundant queries
-    prisma.dSAProblem.findMany({
+    prisma.project.findMany({
       where: { userId },
-      select: { pattern: true, solvedAt: true },
+      select: { status: true }
     }),
-    prisma.dailyLog.findMany({
-      where: { userId },
-      select: { date: true },
-      orderBy: { date: "asc" },
-      take: INSIGHTS_QUERY_LIMIT,
-    }),
-    prisma.dailyLog.findMany({
-      where: { userId },
-      select: { createdAt: true },
-    }),
+    prisma.user.findUnique({
+      where: { id: userId },
+      select: { longestStreak: true }
+    })
   ]);
 
-  const recentLogs = recentLogsResult.map((log) => ({
-    id: log.id,
-    date: log.date,
-    problemsSolved: log.problemsSolved,
-    topics: log.topics ?? [],
+  // --- In-Memory Aggregations ---
+
+  // 1. Difficulty distribution from groupBy result
+  const difficultyDistribution = { easy: 0, medium: 0, hard: 0 };
+  for (const group of difficultyCounts) {
+    if (group.difficulty === "EASY") difficultyDistribution.easy = group._count;
+    else if (group.difficulty === "MEDIUM") difficultyDistribution.medium = group._count;
+    else if (group.difficulty === "HARD") difficultyDistribution.hard = group._count;
+  }
+
+  // 2. Todays stats from windowLogs or recent query
+  const todaysLog = windowLogs.find(l => normalizeToUtcMidnight(l.date).getTime() === today.getTime());
+
+  // 3. Recent logs
+  const recentLogs = recentLogsResult.map(l => ({
+    id: l.id,
+    date: l.date,
+    problemsSolved: l.problemsSolved,
+    topics: l.topics ?? []
   }));
 
-  // Prepare pre-fetched context for insights generation
-  // This avoids redundant DB queries in generateInsights
+  // 4. Streaks (use window data for current, User table for longest)
+  const logDates = windowLogs.map(l => toUtcDateString(l.date));
+  const { currentStreak, longestStreak: windowLongest } = calculateStreakFromDates(logDates);
+  // Respect the all-time longest from user record if it's higher
+  const longestStreak = Math.max(windowLongest, user?.longestStreak ?? 0);
+
+  // 5. Projects
+  const totalProjects = projectsRaw.length;
+  const activeProjects = projectsRaw.filter(p => p.status === "IN_PROGRESS").length;
+
+  // 6. Insights & Weekly Stats
+  const patternAnalysis = calculatePatternAnalysisLocal(recentProblems);
+  const patternStats = calculatePatternStats(recentProblems);
   const lastLog = recentLogsResult.length > 0 ? recentLogsResult[0] : null;
 
-  // Build pre-fetched context for insights
-  const patternStats = calculatePatternStats(problemsForInsights);
-  const daysSinceLastLog = calculateDaysSinceLastLog(lastLog);
-  
   const preFetchedInsightContext = {
-    problems: problemsForInsights,
+    problems: recentProblems,
     recentLogs: recentLogsResult.slice(0, DAYS_IN_WEEK),
     lastLog: lastLog ? { date: lastLog.date } : null,
-    logs: logsForInsights,
+    logs: windowLogs,
     patternStats,
-    totalProblems: problemsForInsights.length,
+    totalProblems: totalProblems, // use global count
     recentLogsCount: recentLogsResult.length,
-    daysSinceLastLog,
-    currentStreak: streakStats.currentStreak,
-    longestStreak: streakStats.longestStreak,
+    daysSinceLastLog: calculateDaysSinceLastLog(lastLog),
+    currentStreak,
+    longestStreak,
   };
 
-  // Generate insights with pre-fetched context (saves 4 DB queries)
+  const weeklyProgress = calculateWeeklyStatsLocal(recentProblems, now, 8);
   const insights = await generateInsights(userId, undefined, preFetchedInsightContext);
 
-  const stats: DashboardStats = {
-    totalProblems: totalProblemsResult,
+  return {
+    totalProblems,
     todaysProblems: todaysLog?.problemsSolved ?? 0,
     recentLogs,
-    currentStreak: streakStats.currentStreak,
-    longestStreak: streakStats.longestStreak,
-    totalProjects: totalProjectsResult,
-    activeProjects: activeProjectsResult,
-    difficultyDistribution: {
-      easy: easyCount,
-      medium: mediumCount,
-      hard: hardCount,
-    },
-    consistencyScore,
+    currentStreak,
+    longestStreak,
+    totalProjects,
+    activeProjects,
+    difficultyDistribution,
+    consistencyScore: calculateConsistencyScoreLocal(windowLogs, now),
     patternAnalysis,
     insights,
-    activityData: logsForInsights.map(log => ({
+    activityData: windowLogs.map(log => ({
       date: toUtcDateString(log.date),
       count: 1
     })),
-    trends: calculateTrends(problemsForInsights, logsForInsights, today),
-    peakTime: calculatePeakTime(logsForPeak),
+    trends: calculateTrends(recentProblems, windowLogs, today),
+    peakTime: calculatePeakTime(windowLogs),
+    weeklyProgress,
   };
+}
 
-  return stats;
+// Helper to avoid full analyzePatterns DB trip
+function calculatePatternAnalysisLocal(problems: { pattern: string }[]): PatternAnalysis {
+  const total = problems.length;
+  if (total === 0) {
+    return {
+      patterns: [],
+      summary: { totalProblems: 0, uniquePatterns: 0, mostPracticed: null, leastPracticed: null }
+    };
+  }
+
+  const patternCounts = new Map<string, number>();
+  for (const p of problems) {
+    const normalized = p.pattern.trim();
+    patternCounts.set(normalized, (patternCounts.get(normalized) ?? 0) + 1);
+  }
+
+  const patterns = Array.from(patternCounts.entries())
+    .map(([pattern, count]) => ({ pattern, count, percentage: Math.round((count / total) * 100) }))
+    .sort((a, b) => (b.count - a.count) || a.pattern.localeCompare(b.pattern));
+
+  const mostPracticed = patterns[0];
+  const leastPracticed = patterns.at(-1) ?? null;
+
+  return {
+    patterns,
+    summary: {
+      totalProblems: total,
+      uniquePatterns: patterns.length,
+      mostPracticed,
+      leastPracticed: leastPracticed?.count === mostPracticed?.count ? null : leastPracticed
+    }
+  };
+}
+
+function calculateConsistencyScoreLocal(logs: { date: Date }[], now: Date): number {
+  const weeksToCheck = CONSISTENCY_WEEKS_CHECK;
+  const targetLogsPerWeek = CONSISTENCY_TARGET_LOGS_PER_WEEK;
+
+  const weekMap = new Map<number, number>();
+  for (const log of logs) {
+    const weekStart = normalizeToUtcMidnight(log.date);
+    weekStart.setUTCDate(weekStart.getUTCDate() - weekStart.getUTCDay());
+    const weekKey = weekStart.getTime();
+    weekMap.set(weekKey, (weekMap.get(weekKey) ?? 0) + 1);
+  }
+
+  let weeksMet = 0;
+  for (let i = 0; i < weeksToCheck; i++) {
+    const checkDate = normalizeToUtcMidnight(now);
+    checkDate.setUTCDate(checkDate.getUTCDate() - i * DAYS_IN_WEEK);
+    checkDate.setUTCDate(checkDate.getUTCDate() - checkDate.getUTCDay());
+    if ((weekMap.get(checkDate.getTime()) ?? 0) >= targetLogsPerWeek) weeksMet++;
+  }
+
+  return Math.round((weeksMet / weeksToCheck) * 100);
+}
+
+function calculateWeeklyStatsLocal(
+  problems: { solvedAt: Date, difficulty: string }[], 
+  now: Date, 
+  weeks: number
+): WeeklyDataPoint[] {
+  const buckets = initializeWeekBuckets(now, weeks);
+  for (const problem of problems) {
+    const solvedDate = new Date(problem.solvedAt);
+    const bucket = buckets.find(b => solvedDate >= b.start && solvedDate <= b.end);
+    if (bucket) {
+      bucket.count++;
+      if (problem.difficulty === "EASY") bucket.easy++;
+      else if (problem.difficulty === "MEDIUM") bucket.medium++;
+      else if (problem.difficulty === "HARD") bucket.hard++;
+    }
+  }
+
+  return buckets.map(b => ({
+    week: b.label,
+    count: b.count,
+    easy: b.easy,
+    medium: b.medium,
+    hard: b.hard,
+    weekStart: b.start,
+    weekEnd: b.end,
+  }));
 }
 
 // --- Helper Functions ---
@@ -268,89 +347,7 @@ export interface WeeklyDataPoint {
   weekEnd?: Date;
 }
 
-async function getConsistencyScore(userId: string): Promise<number> {
-  const weeksToCheck = CONSISTENCY_WEEKS_CHECK;
-  const targetLogsPerWeek = CONSISTENCY_TARGET_LOGS_PER_WEEK;
-
-  const now = new Date();
-  const startDate = new Date(now);
-  startDate.setDate(startDate.getDate() - CONSISTENCY_WEEKS_CHECK * DAYS_IN_WEEK);
-
-  const logs = await prisma.dailyLog.findMany({
-    where: {
-      userId,
-      date: { gte: startDate },
-    },
-    select: { date: true },
-    orderBy: { date: "asc" },
-  });
-
-  // Group logs by week using UTC
-  const weekMap = new Map<number, number>();
-  for (const log of logs) {
-    const logDate = new Date(log.date);
-    const weekStart = normalizeToUtcMidnight(logDate);
-    weekStart.setUTCDate(weekStart.getUTCDate() - weekStart.getUTCDay());
-    const weekKey = weekStart.getTime();
-    weekMap.set(weekKey, (weekMap.get(weekKey) ?? 0) + 1);
-  }
-
-  // Calculate score (0-100) based on weeks that met target
-  let weeksMet = 0;
-  for (let i = 0; i < weeksToCheck; i++) {
-    const checkDate = normalizeToUtcMidnight(now);
-    checkDate.setUTCDate(checkDate.getUTCDate() - i * DAYS_IN_WEEK);
-    checkDate.setUTCDate(checkDate.getUTCDate() - checkDate.getUTCDay());
-    const logCount = weekMap.get(checkDate.getTime()) ?? 0;
-    if (logCount >= targetLogsPerWeek) {
-      weeksMet++;
-    }
-  }
-
-  return Math.round((weeksMet / weeksToCheck) * 100);
-}
-
-export async function getWeeklyProblemStats(userId: string, weeks: number = 8): Promise<WeeklyDataPoint[]> {
-  const now = new Date();
-  const startDate = new Date(now);
-  startDate.setDate(startDate.getDate() - weeks * DAYS_IN_WEEK);
-  startDate.setHours(0, 0, 0, 0);
-
-  const problems = await prisma.dSAProblem.findMany({
-    where: {
-      userId,
-      solvedAt: { gte: startDate },
-    },
-    select: { solvedAt: true, difficulty: true },
-  });
-
-  const buckets = initializeWeekBuckets(now, weeks);
-
-  // Count problems per week
-  for (const problem of problems) {
-    const solvedDate = new Date(problem.solvedAt);
-    const bucket = buckets.find(b => solvedDate >= b.start && solvedDate <= b.end);
-    
-    if (bucket) {
-      bucket.count++;
-      if (problem.difficulty === "EASY") bucket.easy++;
-      if (problem.difficulty === "MEDIUM") bucket.medium++;
-      if (problem.difficulty === "HARD") bucket.hard++;
-    }
-  }
-
-  return buckets.map(b => ({
-    week: b.label,
-    count: b.count,
-    easy: b.easy,
-    medium: b.medium,
-    hard: b.hard,
-    weekStart: b.start,
-    weekEnd: b.end,
-  }));
-}
-
-// --- Additional Helper Functions ---
+// --- Helper Functions ---
 
 function formatWeekLabel(start: Date, end: Date): string {
   const startMonth = start.toLocaleDateString("en-US", { month: "short" });

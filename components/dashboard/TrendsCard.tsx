@@ -21,8 +21,8 @@ export function TrendsCard({ trends }: TrendsCardProps) {
     const isUp = diff > 0;
     const isDown = diff < 0;
     let color = "text-muted-foreground";
-    if (isUp) color = "text-green-500";
-    else if (isDown) color = "text-red-500";
+    if (isUp) color = "text-success";
+    else if (isDown) color = "text-destructive";
 
     let Icon = Minus;
     if (isUp) Icon = TrendingUp;
