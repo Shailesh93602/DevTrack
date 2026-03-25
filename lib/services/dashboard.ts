@@ -2,6 +2,7 @@ import { prisma } from "@/lib/db/prisma";
 import { calculateStreakFromDates } from "@/lib/services/streak";
 import { generateInsights } from "@/lib/services/insights";
 import { computeScoreFromAggregates } from "@/lib/services/scoring";
+import { generateRecommendations } from "@/lib/services/recommendations";
 import { normalizeToUtcMidnight, toUtcDateString } from "@/lib/utils/date";
 import {
   CONSISTENCY_TARGET_LOGS_PER_WEEK,
@@ -14,6 +15,7 @@ import {
 import type { PatternAnalysis } from "@/types/dsa-problem";
 import type { Insight } from "@/types/insights";
 import type { DeveloperScore } from "@/types/scoring";
+import type { Recommendation } from "@/types/recommendations";
 
 export interface DashboardStats {
   totalProblems: number;
@@ -50,6 +52,7 @@ export interface DashboardStats {
   } | null;
   weeklyProgress: WeeklyDataPoint[];
   developerScore: DeveloperScore;
+  recommendations: Recommendation[];
 }
 
 export async function getDashboardStats(userId: string): Promise<DashboardStats> {
@@ -175,6 +178,31 @@ export async function getDashboardStats(userId: string): Promise<DashboardStats>
     completedProjects,
   });
 
+  // Recommendations — built from already-fetched data, zero extra DB calls
+  const activeDaysLast30 = windowLogs.filter(
+    (l) => new Date(l.date) >= thirtyDaysAgo
+  ).length;
+  const loggedToday = todaysLog !== undefined;
+  const daysSinceLastLog = calculateDaysSinceLastLog(lastLog);
+
+  // Sort patternStats ascending (weakest first) for the recommendation engine
+  const patternStatsAscending = [...patternStats].sort((a, b) => a.count - b.count);
+
+  const recommendations = generateRecommendations({
+    patternStats: patternStatsAscending,
+    totalProblems,
+    easyCount:            difficultyDistribution.easy,
+    mediumCount:          difficultyDistribution.medium,
+    hardCount:            difficultyDistribution.hard,
+    currentStreak,
+    activeDaysLast30,
+    daysSinceLastLog,
+    loggedToday,
+    completedMilestones:  completedMilestonesCount,
+    completedProjects,
+    totalProjects,
+  });
+
   return {
     totalProblems,
     todaysProblems: todaysLog?.problemsSolved ?? 0,
@@ -195,6 +223,7 @@ export async function getDashboardStats(userId: string): Promise<DashboardStats>
     peakTime: calculatePeakTime(windowLogs),
     weeklyProgress,
     developerScore,
+    recommendations,
   };
 }
 

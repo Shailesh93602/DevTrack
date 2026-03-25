@@ -18,6 +18,7 @@ import { DeveloperScoreCard } from "@/components/dashboard/DeveloperScoreCard";
 import { formatLogDate } from "@/lib/utils/formatters";
 import { BookOpen, History } from "lucide-react";
 import { CardErrorBoundary } from "@/components/shared/CardErrorBoundary";
+import { RecommendationsCard } from "@/components/dashboard/RecommendationsCard";
 
 export default async function DashboardPage() {
   const supabase = await createServerSupabaseClient();
@@ -64,6 +65,11 @@ export default async function DashboardPage() {
           description="Solved"
         />
       </div>
+
+      {/* Personalized Recommendations */}
+      <CardErrorBoundary fallbackTitle="Could not load recommendations">
+        <RecommendationsCard recommendations={stats.recommendations} />
+      </CardErrorBoundary>
 
       {/* Main Analysis Block: Score & Chart */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-12 lg:items-stretch">

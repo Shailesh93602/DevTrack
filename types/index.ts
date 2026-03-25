@@ -63,3 +63,9 @@ export type {
   ScoringInputs,
   SubScore,
 } from "./scoring";
+
+export type {
+  Recommendation,
+  RecommendationUrgency,
+  RecommendationContext,
+} from "./recommendations";
