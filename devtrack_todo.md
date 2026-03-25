@@ -163,6 +163,28 @@
 3. **Insights Engine** — 9 rule types with priority-based display
 4. **Project Tracker** — Milestones, progress tracking, activity logs
 5. **Dashboard UX** — Simplified stats, better spacing, icon-enhanced empty states
+6. **Dark Mode Integration** — Semantic CSS variable system with zero `dark:` prefix usage and anti-FOUC script.
+
+---
+
+## Phase 4: Production Polish & Audit
+
+### High Priority
+
+- [ ] **Dashboard Query Optimization** — Reduce overlapping DB calls (Prisma) in the dashboard route. Consolidate into a single service call or use `Promise.all` more effectively to avoid waterfall.
+- [ ] **SVG Color Compatibility Audit** — Ensure all chart/indicator components use HEX variables for SVG `fill` attributes to avoid resolution issues in older SVG engines (as found in `WeeklyProgressChart`).
+- [ ] **Global Error Boundary Strategy** — Implement granular `error.tsx` boundaries for each dashboard sub-module to prevent full-page crashes.
+
+### Medium Priority
+
+- [ ] **Accessibility (a11y) Pass** — Audit all Shadcn components for missing `aria-label`, `role`, and `tabIndex`. Ensure charts have high-contrast alternatives or clear legends.
+- [ ] **Mobile Touch-Target Pass** — Verify touch targets are at least 44x44px for navigation items in sidebar and header.
+- [ ] **Zod Validation Synchronization** — Finalize the move to a shared schema library for all forms and API routes to ensure "Write Once, Validate Everywhere".
+
+### Low Priority
+
+- [ ] **Skeleton Content Matching** — Ensure skeleton structures (loading states) precisely match the final rendered layout to reduce layout shift (CLS).
+- [ ] **Documentation Sync** — Update README to include the new Dark Mode rules and the anti-FOUC strategy.
 
 ---
 
