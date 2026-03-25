@@ -1,0 +1,107 @@
+"use client";
+
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import type { DeveloperScore, SubScore } from "@/types/scoring";
+
+// ─── Sub-score bar ────────────────────────────────────────────────────────────
+
+interface SubScoreBarProps {
+  sub: SubScore;
+  color: string;
+}
+
+function SubScoreBar({ sub, color }: SubScoreBarProps) {
+  return (
+    <div className="space-y-1.5">
+      <div className="flex items-center justify-between text-sm">
+        <span className="text-muted-foreground font-medium">{sub.label}</span>
+        <span className="font-semibold tabular-nums">{sub.score}<span className="text-muted-foreground font-normal">/100</span></span>
+      </div>
+
+      {/* Accessible progress bar */}
+      <progress
+        className={`w-full h-1.5 rounded-full overflow-hidden appearance-none [&::-webkit-progress-bar]:rounded-full [&::-webkit-progress-bar]:bg-muted [&::-webkit-progress-value]:rounded-full [&::-webkit-progress-value]:${color} [&::-moz-progress-bar]:rounded-full [&::-moz-progress-bar]:${color}`}
+        value={sub.score}
+        max={100}
+        aria-label={`${sub.label} score: ${sub.score} out of 100`}
+      />
+
+      {/* Breakdown pills */}
+      <div className="flex flex-wrap gap-1 pt-0.5">
+        {Object.entries(sub.breakdown).map(([k, v]) => {
+          const label = k.replaceAll(/([A-Z])/g, " $1").replace(/^./, (s) => s.toUpperCase());
+          return (
+            <span
+              key={k}
+              className="inline-flex items-center gap-1 rounded-md bg-muted px-1.5 py-0.5 text-[10px] text-muted-foreground"
+            >
+              <span className="font-medium">{label}:</span>
+              <span>{String(v)}</span>
+            </span>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// ─── Main component ───────────────────────────────────────────────────────────
+
+interface DeveloperScoreCardProps {
+  score: DeveloperScore;
+}
+
+export function DeveloperScoreCard({ score }: DeveloperScoreCardProps) {
+  const subScores: Array<{ sub: SubScore; color: string }> = [
+    { sub: score.consistency,  color: "bg-blue-500" },
+    { sub: score.dsa,          color: "bg-violet-500" },
+    { sub: score.productivity, color: "bg-emerald-500" },
+  ];
+
+  return (
+    <Card
+      className="rounded-xl border border-border/60 shadow-sm bg-card/50 backdrop-blur supports-[backdrop-filter]:bg-background/60"
+      id="developer-score-card"
+    >
+      <CardHeader className="pb-3 flex flex-row items-center justify-between space-y-0">
+        <CardTitle className="text-sm font-medium text-muted-foreground">
+          Developer Score
+        </CardTitle>
+        <span
+          className="text-xs font-semibold px-2 py-0.5 rounded-full bg-primary/10 text-primary"
+          aria-label={`Grade: ${score.grade}`}
+        >
+          {score.gradeIcon} {score.grade}
+        </span>
+      </CardHeader>
+
+      <CardContent className="space-y-5">
+        {/* Big total */}
+        <div className="flex items-end gap-2">
+          <span
+            className="text-5xl font-bold tracking-tight text-foreground tabular-nums"
+            aria-label={`Total developer score: ${score.total} out of 100`}
+          >
+            {score.total}
+          </span>
+          <span className="mb-1.5 text-lg text-muted-foreground font-medium">/100</span>
+        </div>
+
+        {/* Overall progress */}
+        <progress
+          className="w-full h-2 rounded-full overflow-hidden appearance-none [&::-webkit-progress-bar]:rounded-full [&::-webkit-progress-bar]:bg-muted [&::-webkit-progress-value]:rounded-full [&::-webkit-progress-value]:bg-primary [&::-moz-progress-bar]:rounded-full [&::-moz-progress-bar]:bg-primary"
+          value={score.total}
+          max={100}
+          aria-label={`Overall developer score: ${score.total} out of 100`}
+        />
+
+        {/* Sub-scores */}
+        <div className="space-y-4 pt-1">
+          {subScores.map(({ sub, color }) => (
+            <SubScoreBar key={sub.label} sub={sub} color={color} />
+          ))}
+        </div>
+      </CardContent>
+    </Card>
+  );
+}

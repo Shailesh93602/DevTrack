@@ -7,7 +7,6 @@ import { Badge } from "@/components/ui/badge";
 import { createServerSupabaseClient } from "@/lib/auth/supabase-server";
 import {
   getDashboardStats,
-  getWeeklyProblemStats,
 } from "@/lib/services/dashboard";
 import { WeeklyProgressChart } from "@/components/dashboard/WeeklyProgressChart";
 import { InsightsList } from "@/components/dashboard/InsightsList";
@@ -16,6 +15,7 @@ import { DifficultyDistribution } from "@/components/dashboard/DifficultyDistrib
 import { ActivityHeatmap } from "@/components/dashboard/ActivityHeatmap";
 import { TrendsCard } from "@/components/dashboard/TrendsCard";
 import { PeakTimeCard } from "@/components/dashboard/PeakTimeCard";
+import { DeveloperScoreCard } from "@/components/dashboard/DeveloperScoreCard";
 import { formatLogDate } from "@/lib/utils/formatters";
 import { BookOpen } from "lucide-react";
 import { CardErrorBoundary } from "@/components/shared/CardErrorBoundary";
@@ -64,6 +64,12 @@ export default async function DashboardPage() {
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-4">
+        <div className="lg:col-span-1">
+          <h3 className="text-foreground text-sm font-semibold mb-4">Score</h3>
+          <CardErrorBoundary fallbackTitle="Could not load developer score">
+            <DeveloperScoreCard score={stats.developerScore} />
+          </CardErrorBoundary>
+        </div>
         <div className="space-y-4 lg:col-span-2">
           <h3 className="text-foreground text-sm font-semibold">
             Weekly Progress
@@ -80,6 +86,9 @@ export default async function DashboardPage() {
             <DifficultyDistribution data={stats.difficultyDistribution} />
           </CardErrorBoundary>
         </div>
+      </div>
+
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-4">
         <div className="space-y-4 lg:col-span-1">
           <h3 className="text-foreground text-sm font-semibold">Insights</h3>
           <CardErrorBoundary fallbackTitle="Could not load insights">

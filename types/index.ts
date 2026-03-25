@@ -55,3 +55,11 @@ export {
 } from "./dsa-problem";
 
 // TODO: Add milestone types when created
+
+export type {
+  DeveloperScore,
+  ScoreGrade,
+  ScoreBreakdown,
+  ScoringInputs,
+  SubScore,
+} from "./scoring";

@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/db/prisma";
 import { calculateStreakFromDates } from "@/lib/services/streak";
 import { generateInsights } from "@/lib/services/insights";
+import { computeScoreFromAggregates } from "@/lib/services/scoring";
 import { normalizeToUtcMidnight, toUtcDateString } from "@/lib/utils/date";
 import {
   CONSISTENCY_TARGET_LOGS_PER_WEEK,
@@ -12,6 +13,7 @@ import {
 } from "@/lib/constants";
 import type { PatternAnalysis } from "@/types/dsa-problem";
 import type { Insight } from "@/types/insights";
+import type { DeveloperScore } from "@/types/scoring";
 
 export interface DashboardStats {
   totalProblems: number;
@@ -47,6 +49,7 @@ export interface DashboardStats {
     label: string;
   } | null;
   weeklyProgress: WeeklyDataPoint[];
+  developerScore: DeveloperScore;
 }
 
 export async function getDashboardStats(userId: string): Promise<DashboardStats> {
@@ -57,6 +60,10 @@ export async function getDashboardStats(userId: string): Promise<DashboardStats>
   const windowCutoff = new Date(today);
   windowCutoff.setUTCDate(today.getUTCDate() - (STREAK_ANALYSIS_DAYS));
 
+  // 30-day window for density component of Consistency Score
+  const thirtyDaysAgo = new Date(today);
+  thirtyDaysAgo.setUTCDate(today.getUTCDate() - 30);
+
   // Fetch data in parallel with targeted queries
   const [
     totalProblems,
@@ -65,7 +72,8 @@ export async function getDashboardStats(userId: string): Promise<DashboardStats>
     windowLogs,     // for streaks, heatmap, consistency (last 120 days)
     recentLogsResult, // top 5 most recent
     projectsRaw,
-    user
+    user,
+    completedMilestonesCount,
   ] = await Promise.all([
     prisma.dSAProblem.count({ where: { userId } }),
     prisma.dSAProblem.groupBy({
@@ -96,7 +104,10 @@ export async function getDashboardStats(userId: string): Promise<DashboardStats>
     prisma.user.findUnique({
       where: { id: userId },
       select: { longestStreak: true }
-    })
+    }),
+    prisma.milestone.count({
+      where: { userId, completedAt: { not: null } },
+    }),
   ]);
 
   // --- In-Memory Aggregations ---
@@ -129,6 +140,7 @@ export async function getDashboardStats(userId: string): Promise<DashboardStats>
   // 5. Projects
   const totalProjects = projectsRaw.length;
   const activeProjects = projectsRaw.filter(p => p.status === "IN_PROGRESS").length;
+  const completedProjects = projectsRaw.filter(p => p.status === "COMPLETED").length;
 
   // 6. Insights & Weekly Stats
   const patternAnalysis = calculatePatternAnalysisLocal(recentProblems);
@@ -151,6 +163,18 @@ export async function getDashboardStats(userId: string): Promise<DashboardStats>
   const weeklyProgress = calculateWeeklyStatsLocal(recentProblems, now, 8);
   const insights = await generateInsights(userId, undefined, preFetchedInsightContext);
 
+  // Developer Score — computed from pre-fetched aggregates; zero extra DB calls
+  const developerScore = computeScoreFromAggregates({
+    currentStreak,
+    windowLogs,
+    thirtyDaysAgo,
+    easyCount:           difficultyDistribution.easy,
+    mediumCount:         difficultyDistribution.medium,
+    hardCount:           difficultyDistribution.hard,
+    completedMilestones: completedMilestonesCount,
+    completedProjects,
+  });
+
   return {
     totalProblems,
     todaysProblems: todaysLog?.problemsSolved ?? 0,
@@ -170,6 +194,7 @@ export async function getDashboardStats(userId: string): Promise<DashboardStats>
     trends: calculateTrends(recentProblems, windowLogs, today),
     peakTime: calculatePeakTime(windowLogs),
     weeklyProgress,
+    developerScore,
   };
 }
 
