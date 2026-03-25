@@ -54,11 +54,7 @@ export function FormTextarea({
         aria-describedby={error ? `${id}-error` : undefined}
       />
       {error && (
-        <p
-          id={`${id}-error`}
-          role="alert"
-          className="text-destructive text-xs"
-        >
+        <p id={`${id}-error`} role="alert" className="text-destructive text-xs">
           {error}
         </p>
       )}

@@ -27,7 +27,11 @@ export async function startSession(userId: string, data: StartSessionInput) {
   });
 }
 
-export async function endSession(userId: string, sessionId: string, data: EndSessionInput) {
+export async function endSession(
+  userId: string,
+  sessionId: string,
+  data: EndSessionInput
+) {
   const session = await prisma.session.findFirst({
     where: { id: sessionId, userId },
   });
@@ -41,7 +45,9 @@ export async function endSession(userId: string, sessionId: string, data: EndSes
   }
 
   const endedAt = new Date();
-  const durationSec = Math.floor((endedAt.getTime() - session.startedAt.getTime()) / 1000);
+  const durationSec = Math.floor(
+    (endedAt.getTime() - session.startedAt.getTime()) / 1000
+  );
 
   return prisma.session.update({
     where: { id: sessionId },
@@ -92,7 +98,10 @@ export async function getActiveSession(userId: string) {
   });
 }
 
-export async function getSessionsByUser(userId: string, params: SessionQueryParams) {
+export async function getSessionsByUser(
+  userId: string,
+  params: SessionQueryParams
+) {
   const { startDate, endDate, limit, offset } = params;
 
   const where: Prisma.SessionWhereInput = { userId };

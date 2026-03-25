@@ -36,7 +36,7 @@ export class CardErrorBoundary extends Component<Props, State> {
     if (this.state.hasError) {
       return (
         <Card className="border-destructive/20 bg-destructive/5 h-full">
-          <CardContent className="flex h-full flex-col items-center justify-center p-6 text-center space-y-4">
+          <CardContent className="flex h-full flex-col items-center justify-center space-y-4 p-6 text-center">
             <div className="bg-destructive/10 text-destructive rounded-full p-3">
               <AlertCircle className="h-6 w-6" />
             </div>
@@ -48,11 +48,11 @@ export class CardErrorBoundary extends Component<Props, State> {
                 We couldn&apos;t load this section.
               </p>
             </div>
-            <Button 
-              variant="outline" 
-              size="sm" 
+            <Button
+              variant="outline"
+              size="sm"
               onClick={this.handleRetry}
-              className="h-8 gap-2 border-destructive/20 hover:bg-destructive/10 hover:text-destructive"
+              className="border-destructive/20 hover:bg-destructive/10 hover:text-destructive h-8 gap-2"
             >
               <RefreshCw className="h-3.5 w-3.5" />
               Try again

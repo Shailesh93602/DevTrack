@@ -1,6 +1,12 @@
 import { redirect } from "next/navigation";
 export const dynamic = "force-dynamic";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { createServerSupabaseClient } from "@/lib/auth/supabase-server";
@@ -17,23 +23,23 @@ export default async function SettingsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-lg font-semibold text-foreground">Settings</h2>
-        <p className="text-sm text-muted-foreground">
+        <h2 className="text-foreground text-lg font-semibold">Settings</h2>
+        <p className="text-muted-foreground text-sm">
           Manage your account and preferences.
         </p>
       </div>
 
       <Separator />
 
-      <Card className="rounded-lg border border-border shadow-none">
+      <Card className="border-border rounded-lg border shadow-none">
         <CardHeader>
           <CardTitle className="text-base">Account</CardTitle>
           <CardDescription>Your account information.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-1">
-            <p className="text-sm font-medium text-foreground">Email</p>
-            <p className="text-sm text-muted-foreground">{user.email}</p>
+            <p className="text-foreground text-sm font-medium">Email</p>
+            <p className="text-muted-foreground text-sm">{user.email}</p>
           </div>
 
           <Separator />

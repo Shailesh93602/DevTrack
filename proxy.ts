@@ -11,7 +11,9 @@ export default async function proxy(request: NextRequest) {
       cookies: {
         getAll() {
           const all = request.cookies.getAll();
-          console.log(`[Middleware] Cookies: ${all.map(c => c.name).join(", ")}`);
+          console.log(
+            `[Middleware] Cookies: ${all.map((c) => c.name).join(", ")}`
+          );
           return all;
         },
         setAll(cookiesToSet) {

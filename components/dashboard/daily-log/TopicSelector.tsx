@@ -11,8 +11,15 @@ interface TopicSelectorProps {
   topicError: string | null;
   setTopicInput: (val: string) => void;
   clearTopicError: () => void;
-  handleAddTopic: (current: string[], setValue: UseFormSetValue<DailyLogFormInput>) => void;
-  handleRemoveTopic: (index: number, current: string[], setValue: UseFormSetValue<DailyLogFormInput>) => void;
+  handleAddTopic: (
+    current: string[],
+    setValue: UseFormSetValue<DailyLogFormInput>
+  ) => void;
+  handleRemoveTopic: (
+    index: number,
+    current: string[],
+    setValue: UseFormSetValue<DailyLogFormInput>
+  ) => void;
   setValue: UseFormSetValue<DailyLogFormInput>;
 }
 
@@ -46,9 +53,9 @@ export function TopicSelector({
           placeholder="e.g. arrays, dynamic programming…"
           aria-describedby={topicError ? "log-topic-error" : undefined}
         />
-        <Button 
-          type="button" 
-          variant="outline" 
+        <Button
+          type="button"
+          variant="outline"
           onClick={() => handleAddTopic(topics, setValue)}
         >
           Add

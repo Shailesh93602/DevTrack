@@ -5,14 +5,8 @@ import {
   handleAuthError,
   handleApiError,
 } from "@/lib/api/errors";
-import {
-  getSessionById,
-  endSession,
-} from "@/lib/services/session";
-import {
-  sessionIdSchema,
-  endSessionSchema,
-} from "@/lib/validations";
+import { getSessionById, endSession } from "@/lib/services/session";
+import { sessionIdSchema, endSessionSchema } from "@/lib/validations";
 
 export async function GET(
   request: NextRequest,
@@ -20,7 +14,9 @@ export async function GET(
 ) {
   try {
     const supabase = await createServerSupabaseClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
     if (!user) {
       throw new Error("UNAUTHORIZED");
@@ -50,7 +46,9 @@ export async function PATCH(
 ) {
   try {
     const supabase = await createServerSupabaseClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
     if (!user) {
       throw new Error("UNAUTHORIZED");

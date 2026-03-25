@@ -6,7 +6,10 @@
 // Evaluates all rules in urgency order, caps output at 3.
 // ============================================================
 
-import type { Recommendation, RecommendationContext } from "@/types/recommendations";
+import type {
+  Recommendation,
+  RecommendationContext,
+} from "@/types/recommendations";
 
 const MAX_RECOMMENDATIONS = 3;
 
@@ -21,7 +24,8 @@ function ruleNeverLogged(ctx: RecommendationContext): Recommendation | null {
     urgency: "critical",
     icon: "🚀",
     title: "Start your developer journey",
-    reason: "You haven't logged any activity yet. Every expert was once a beginner.",
+    reason:
+      "You haven't logged any activity yet. Every expert was once a beginner.",
     cta: { label: "Log your first day", href: "/dashboard/logs" },
   };
 }
@@ -42,7 +46,9 @@ function ruleStreakAtRisk(ctx: RecommendationContext): Recommendation | null {
 }
 
 /** CRITICAL: User has been inactive for 3+ days */
-function ruleActivityDropped(ctx: RecommendationContext): Recommendation | null {
+function ruleActivityDropped(
+  ctx: RecommendationContext
+): Recommendation | null {
   if (ctx.daysSinceLastLog === null) return null;
   if (ctx.daysSinceLastLog < 3) return null;
   return {
@@ -74,7 +80,9 @@ function ruleWeakPattern(ctx: RecommendationContext): Recommendation | null {
 }
 
 /** HIGH: Time to level up from Easy-only to Medium */
-function ruleLevelUpToMedium(ctx: RecommendationContext): Recommendation | null {
+function ruleLevelUpToMedium(
+  ctx: RecommendationContext
+): Recommendation | null {
   if (ctx.easyCount === 0) return null;
   if (ctx.mediumCount > 0) return null;
   return {
@@ -104,7 +112,9 @@ function ruleTryHard(ctx: RecommendationContext): Recommendation | null {
 }
 
 /** MEDIUM: Low monthly activity — push for more consistency */
-function ruleLowMonthlyActivity(ctx: RecommendationContext): Recommendation | null {
+function ruleLowMonthlyActivity(
+  ctx: RecommendationContext
+): Recommendation | null {
   if (ctx.totalProblems === 0 && ctx.daysSinceLastLog === null) return null;
   if (ctx.activeDaysLast30 >= 10) return null;
   return {
@@ -127,7 +137,8 @@ function ruleAddMilestone(ctx: RecommendationContext): Recommendation | null {
     urgency: "medium",
     icon: "🏁",
     title: "Break your project into milestones",
-    reason: "Projects with milestones are 3× more likely to be completed. Add your first milestone now.",
+    reason:
+      "Projects with milestones are 3× more likely to be completed. Add your first milestone now.",
     cta: { label: "View projects", href: "/dashboard/projects" },
   };
 }
@@ -141,13 +152,16 @@ function ruleCreateProject(ctx: RecommendationContext): Recommendation | null {
     urgency: "medium",
     icon: "🗂️",
     title: "Start tracking a project",
-    reason: "Pair your DSA practice with real project work to grow as a complete developer.",
+    reason:
+      "Pair your DSA practice with real project work to grow as a complete developer.",
     cta: { label: "Create a project", href: "/dashboard/projects" },
   };
 }
 
 /** LOW: Diversify patterns if only one pattern practiced */
-function ruleDiversifyPattern(ctx: RecommendationContext): Recommendation | null {
+function ruleDiversifyPattern(
+  ctx: RecommendationContext
+): Recommendation | null {
   if (ctx.patternStats.length !== 1) return null;
   if (ctx.totalProblems < 5) return null;
   return {
@@ -161,7 +175,9 @@ function ruleDiversifyPattern(ctx: RecommendationContext): Recommendation | null
 }
 
 /** LOW: Streak encouragement / positive reinforcement */
-function ruleStreakCelebration(ctx: RecommendationContext): Recommendation | null {
+function ruleStreakCelebration(
+  ctx: RecommendationContext
+): Recommendation | null {
   if (ctx.currentStreak < 7) return null;
   if (!ctx.loggedToday) return null; // already shown streak-at-risk otherwise
   return {
@@ -169,7 +185,8 @@ function ruleStreakCelebration(ctx: RecommendationContext): Recommendation | nul
     urgency: "low",
     icon: "🏆",
     title: `${ctx.currentStreak}-day streak — keep going!`,
-    reason: "You're building an impressive habit. Stay consistent and aim for the next milestone.",
+    reason:
+      "You're building an impressive habit. Stay consistent and aim for the next milestone.",
     cta: { label: "View your progress", href: "/dashboard" },
     metric: { label: "Current streak", value: `${ctx.currentStreak} days` },
   };

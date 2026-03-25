@@ -10,7 +10,9 @@ test.describe("Pattern Intelligence on DSA Problems", () => {
 
   test("should display pattern insights panel", async ({ page }) => {
     // Wait for the panel to be visible to avoid checking skeleton content
-    await expect(page.locator("text=Pattern Insights")).toBeVisible({ timeout: 10000 });
+    await expect(page.locator("text=Pattern Insights")).toBeVisible({
+      timeout: 10000,
+    });
 
     // Look for Pattern Insights section
     const content = await page.content();
@@ -24,7 +26,9 @@ test.describe("Pattern Intelligence on DSA Problems", () => {
 
   test("should display most practiced patterns", async ({ page }) => {
     // Wait for skeletons to vanish
-    await expect(page.locator('.animate-pulse')).toHaveCount(0, { timeout: 15000 });
+    await expect(page.locator(".animate-pulse")).toHaveCount(0, {
+      timeout: 15000,
+    });
 
     // Create a problem to generate pattern data
     await page.click('button:has-text("Add Problem")');
@@ -35,7 +39,9 @@ test.describe("Pattern Intelligence on DSA Problems", () => {
     await page.getByLabel(/platform/i).fill("LeetCode");
     await page.click('button[type="submit"]');
 
-    await expect(page.locator("text=Problem added successfully")).toBeVisible({ timeout: 10000 });
+    await expect(page.locator("text=Problem added successfully")).toBeVisible({
+      timeout: 10000,
+    });
 
     // Check for pattern display in insights
     const content = await page.content();
@@ -70,7 +76,9 @@ test.describe("Pattern Intelligence on DSA Problems", () => {
       content.includes("Learn");
 
     // Recommendation may not show if user has practiced all common patterns
-    expect(hasRecommendation || content.includes("Pattern Insights")).toBeTruthy();
+    expect(
+      hasRecommendation || content.includes("Pattern Insights")
+    ).toBeTruthy();
   });
 
   test("should display weak patterns to strengthen", async ({ page }) => {
@@ -82,6 +90,8 @@ test.describe("Pattern Intelligence on DSA Problems", () => {
       content.includes("Patterns to Strengthen");
 
     // May not show if no weak patterns identified
-    expect(hasWeakPatterns || content.includes("Pattern Insights")).toBeTruthy();
+    expect(
+      hasWeakPatterns || content.includes("Pattern Insights")
+    ).toBeTruthy();
   });
 });

@@ -6,7 +6,11 @@ import {
 
 export const createMilestoneSchema = z.object({
   title: z.string().trim().min(1).max(MILESTONE_TITLE_MAX_LENGTH),
-  description: z.string().trim().max(MILESTONE_DESCRIPTION_MAX_LENGTH).optional(),
+  description: z
+    .string()
+    .trim()
+    .max(MILESTONE_DESCRIPTION_MAX_LENGTH)
+    .optional(),
   dueDate: z.coerce.date().optional(),
   order: z.number().int().min(0),
 });

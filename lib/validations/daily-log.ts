@@ -8,12 +8,21 @@ import {
 } from "@/lib/constants";
 
 export const dailyLogSchema = z.object({
-  date: z.string().regex(/^\d{4}-\d{2}-\d{2}(T.*)?$/, "Select a valid date").transform(d => d.slice(0, 10)),
+  date: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}(T.*)?$/, "Select a valid date")
+    .transform((d) => d.slice(0, 10)),
   problemsSolved: z.number().int().min(0, "Cannot be negative"),
-  topics: z.array(z.string().trim().min(1).max(TOPIC_MAX_LENGTH)).max(TOPICS_MAX_COUNT),
-  notes: z.string()
+  topics: z
+    .array(z.string().trim().min(1).max(TOPIC_MAX_LENGTH))
+    .max(TOPICS_MAX_COUNT),
+  notes: z
+    .string()
     .trim()
-    .max(NOTES_MAX_LENGTH, `Notes must be ${NOTES_MAX_LENGTH} characters or less`)
+    .max(
+      NOTES_MAX_LENGTH,
+      `Notes must be ${NOTES_MAX_LENGTH} characters or less`
+    )
     .optional()
     .nullable(),
 });
@@ -29,7 +38,12 @@ export const dailyLogIdSchema = z.object({
 export const dailyLogQuerySchema = z.object({
   startDate: z.coerce.date().optional(),
   endDate: z.coerce.date().optional(),
-  limit: z.coerce.number().int().min(1).max(MAX_PAGE_LIMIT).default(DEFAULT_PAGE_LIMIT),
+  limit: z.coerce
+    .number()
+    .int()
+    .min(1)
+    .max(MAX_PAGE_LIMIT)
+    .default(DEFAULT_PAGE_LIMIT),
   offset: z.coerce.number().int().min(0).default(0),
 });
 

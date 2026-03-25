@@ -35,7 +35,9 @@ const INTERVIEW_PATTERNS = [
   { pattern: "Bit Manipulation", weight: 5 },
 ];
 
-export async function analyzePatterns(userId: string): Promise<PatternAnalysis> {
+export async function analyzePatterns(
+  userId: string
+): Promise<PatternAnalysis> {
   const problems = await prisma.dSAProblem.findMany({
     where: { userId },
     select: {
@@ -71,7 +73,7 @@ export async function analyzePatterns(userId: string): Promise<PatternAnalysis> 
   }
 
   const allPatterns = Array.from(patternMap.values());
-  
+
   // Sort by count descending for most practiced
   const mostPracticed = [...allPatterns]
     .sort((a, b) => b.count - a.count)
@@ -90,13 +92,19 @@ export async function analyzePatterns(userId: string): Promise<PatternAnalysis> 
   // Calculate mastery progress (0-100%)
   const masteryProgress: Record<string, number> = {};
   for (const p of allPatterns) {
-    const difficultyScore = p.easyCount * 1 + p.mediumCount * 2 + p.hardCount * 3;
+    const difficultyScore =
+      p.easyCount * 1 + p.mediumCount * 2 + p.hardCount * 3;
     const maxScore = p.count * 3;
-    masteryProgress[p.pattern] = Math.min(100, Math.round((difficultyScore / maxScore) * 100));
+    masteryProgress[p.pattern] = Math.min(
+      100,
+      Math.round((difficultyScore / maxScore) * 100)
+    );
   }
 
   // Recommend next pattern to learn
-  const practicedPatternNames = new Set(allPatterns.map((p) => p.pattern.toLowerCase()));
+  const practicedPatternNames = new Set(
+    allPatterns.map((p) => p.pattern.toLowerCase())
+  );
   const unpracticedInterviewPatterns = INTERVIEW_PATTERNS.filter(
     (p) => !practicedPatternNames.has(p.pattern.toLowerCase())
   );
@@ -104,7 +112,9 @@ export async function analyzePatterns(userId: string): Promise<PatternAnalysis> 
   let recommendedPattern: string | null = null;
   if (unpracticedInterviewPatterns.length > 0) {
     // Recommend highest-weight unpracticed pattern
-    recommendedPattern = unpracticedInterviewPatterns.sort((a, b) => b.weight - a.weight)[0].pattern;
+    recommendedPattern = unpracticedInterviewPatterns.sort(
+      (a, b) => b.weight - a.weight
+    )[0].pattern;
   } else if (weakPatterns.length > 0) {
     // Recommend weakest practiced pattern
     recommendedPattern = weakPatterns[0].pattern;

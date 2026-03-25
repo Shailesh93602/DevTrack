@@ -11,10 +11,7 @@ import {
   getDsaProblemById,
   updateDsaProblem,
 } from "@/lib/services/dsa-problem";
-import {
-  dsaProblemIdSchema,
-  updateDsaProblemSchema,
-} from "@/lib/validations";
+import { dsaProblemIdSchema, updateDsaProblemSchema } from "@/lib/validations";
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -23,7 +20,9 @@ interface RouteParams {
 export async function DELETE(request: NextRequest, { params }: RouteParams) {
   try {
     const supabase = await createServerSupabaseClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
     if (!user) {
       throw new Error("UNAUTHORIZED");
@@ -40,7 +39,11 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
     const result = await deleteDsaProblem(user.id, validatedId.id);
 
     if (result.count === 0) {
-      return errorResponse("Failed to delete DSA problem", 500, "DELETE_FAILED");
+      return errorResponse(
+        "Failed to delete DSA problem",
+        500,
+        "DELETE_FAILED"
+      );
     }
 
     const { revalidatePath } = await import("next/cache");
@@ -58,7 +61,9 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
 export async function PATCH(request: NextRequest, { params }: RouteParams) {
   try {
     const supabase = await createServerSupabaseClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
     if (!user) {
       throw new Error("UNAUTHORIZED");
@@ -75,10 +80,18 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
     const body = await request.json();
     const validatedData = updateDsaProblemSchema.parse(body);
 
-    const result = await updateDsaProblem(user.id, validatedId.id, validatedData);
+    const result = await updateDsaProblem(
+      user.id,
+      validatedId.id,
+      validatedData
+    );
 
     if (!result) {
-      return errorResponse("Failed to update DSA problem", 500, "UPDATE_FAILED");
+      return errorResponse(
+        "Failed to update DSA problem",
+        500,
+        "UPDATE_FAILED"
+      );
     }
 
     const { revalidatePath } = await import("next/cache");

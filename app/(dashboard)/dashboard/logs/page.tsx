@@ -10,9 +10,7 @@ import {
 } from "@/components/ui/card";
 import { createServerSupabaseClient } from "@/lib/auth/supabase-server";
 import { getDailyLogs } from "@/lib/services/daily-log";
-import {
-  DailyLogForm,
-} from "@/components/dashboard/DailyLogForm";
+import { DailyLogForm } from "@/components/dashboard/DailyLogForm";
 import { DailyLogList } from "@/components/dashboard/DailyLogList";
 import { serializeLog } from "@/lib/utils/serialization";
 import { getTodayUtcString, toUtcDateString } from "@/lib/utils/date";
@@ -30,7 +28,8 @@ export default async function DailyLogsPage() {
   const { logs } = await getDailyLogs(user.id, { limit: 50, offset: 0 });
 
   const todayUTC = getTodayUtcString();
-  const rawTodaysLog = logs.find((log) => toUtcDateString(log.date) === todayUTC) ?? null;
+  const rawTodaysLog =
+    logs.find((log) => toUtcDateString(log.date) === todayUTC) ?? null;
 
   const todaysLog = rawTodaysLog ? serializeLog(rawTodaysLog) : null;
   const allLogs = logs.map(serializeLog);
@@ -41,15 +40,15 @@ export default async function DailyLogsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-lg font-semibold text-foreground">Daily Logs</h2>
-        <p className="text-sm text-muted-foreground">
+        <h2 className="text-foreground text-lg font-semibold">Daily Logs</h2>
+        <p className="text-muted-foreground text-sm">
           Track your coding activity day by day.
         </p>
       </div>
 
       <Separator />
 
-      <Card className="rounded-lg border border-border shadow-none">
+      <Card className="border-border rounded-lg border shadow-none">
         <CardHeader>
           <CardTitle className="text-base">
             {todaysLog ? "Today's Log" : "Log Today"}
@@ -66,8 +65,8 @@ export default async function DailyLogsPage() {
       </Card>
 
       <div>
-        <h3 className="mb-4 text-sm font-semibold text-foreground">History</h3>
-        <Card className="rounded-lg border border-border shadow-none">
+        <h3 className="text-foreground mb-4 text-sm font-semibold">History</h3>
+        <Card className="border-border rounded-lg border shadow-none">
           <CardContent className="px-6 py-0">
             <DailyLogList logs={historyLogs} />
           </CardContent>

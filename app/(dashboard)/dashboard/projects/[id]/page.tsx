@@ -107,7 +107,9 @@ export default async function ProjectDetailPage({
                 <div>
                   <p className="text-muted-foreground text-xs">Due Date</p>
                   <p className="text-foreground text-sm">
-                    {project.dueDate.toLocaleDateString("en-US", { timeZone: "UTC" })}
+                    {project.dueDate.toLocaleDateString("en-US", {
+                      timeZone: "UTC",
+                    })}
                   </p>
                 </div>
               )}

@@ -42,11 +42,7 @@ export function TopicInput({
         </Button>
       </div>
       {error && (
-        <p
-          id="topic-error"
-          role="alert"
-          className="text-destructive text-xs"
-        >
+        <p id="topic-error" role="alert" className="text-destructive text-xs">
           {error}
         </p>
       )}
@@ -60,7 +56,11 @@ interface TopicListProps {
   ariaLabel?: string;
 }
 
-export function TopicList({ topics, onRemove, ariaLabel = "Added topics" }: TopicListProps) {
+export function TopicList({
+  topics,
+  onRemove,
+  ariaLabel = "Added topics",
+}: TopicListProps) {
   if (topics.length === 0) return null;
 
   return (

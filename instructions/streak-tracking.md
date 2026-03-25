@@ -6,6 +6,7 @@ DevTrack is a Next.js (App Router) + TypeScript + Prisma + Supabase project.
 You are implementing a streak tracking feature based on existing `DailyLog` records.
 
 Read the following files before writing any code:
+
 - `CLAUDE.md` — project rules (naming, design, coding, API rules — all mandatory)
 - `prisma/schema.prisma` — current DB schema
 - `lib/services/daily-log.ts` — how existing services are structured
@@ -39,7 +40,7 @@ export interface StreakStats {
   longestStreak: number;
 }
 
-export async function calculateStreaks(userId: string): Promise<StreakStats>
+export async function calculateStreaks(userId: string): Promise<StreakStats>;
 ```
 
 ### Implementation rules
@@ -194,13 +195,14 @@ Add two more `StatsCard` entries **inside the same grid div**, after the existin
 Update the grid class to accommodate 5 cards. Change:
 
 ```tsx
-className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
+className = "grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3";
 ```
 
 to:
 
 ```tsx
-className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5"
+className =
+  "grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5";
 ```
 
 No other changes to this file.
@@ -231,11 +233,11 @@ Go through each item and confirm:
 
 ## Expected file changes summary
 
-| File | Action |
-|---|---|
-| `lib/services/streak.ts` | **Create** |
-| `lib/services/dashboard.ts` | **Modify** — add import, extend interface, add to Promise.all, return new fields |
-| `app/(dashboard)/dashboard/page.tsx` | **Modify** — add two StatsCards, update grid class |
-| `CLAUDE.md` | **Modify** — append to Session Notes |
+| File                                 | Action                                                                           |
+| ------------------------------------ | -------------------------------------------------------------------------------- |
+| `lib/services/streak.ts`             | **Create**                                                                       |
+| `lib/services/dashboard.ts`          | **Modify** — add import, extend interface, add to Promise.all, return new fields |
+| `app/(dashboard)/dashboard/page.tsx` | **Modify** — add two StatsCards, update grid class                               |
+| `CLAUDE.md`                          | **Modify** — append to Session Notes                                             |
 
 No other files should be touched.

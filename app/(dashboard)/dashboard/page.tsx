@@ -34,7 +34,9 @@ export default async function DashboardPage() {
     <div className="space-y-8 pb-10">
       {/* Header Section */}
       <div className="flex flex-col gap-1">
-        <h1 className="text-3xl font-bold tracking-tight text-foreground">Welcome back</h1>
+        <h1 className="text-foreground text-3xl font-bold tracking-tight">
+          Welcome back
+        </h1>
         <p className="text-muted-foreground">
           Here&apos;s a comprehensive look at your development journey.
         </p>
@@ -97,11 +99,11 @@ export default async function DashboardPage() {
 
       {/* Secondary Analysis Block: Trends, Patterns, Insights */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
-        <div className="lg:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:col-span-8">
           <CardErrorBoundary fallbackTitle="Could not load trends">
             <TrendsCard trends={stats.trends} />
           </CardErrorBoundary>
-          
+
           <CardErrorBoundary fallbackTitle="Could not load peak time stats">
             <PeakTimeCard peakTime={stats.peakTime} />
           </CardErrorBoundary>
@@ -115,11 +117,11 @@ export default async function DashboardPage() {
           </CardErrorBoundary>
         </div>
 
-        <div className="lg:col-span-4 space-y-6">
+        <div className="space-y-6 lg:col-span-4">
           <CardErrorBoundary fallbackTitle="Could not load insights">
             <InsightsList insights={stats.insights} maxInsights={4} />
           </CardErrorBoundary>
-          
+
           <CardErrorBoundary fallbackTitle="Could not load distribution">
             <DifficultyDistribution data={stats.difficultyDistribution} />
           </CardErrorBoundary>
@@ -133,34 +135,44 @@ export default async function DashboardPage() {
 
       {/* Recent History */}
       <div className="space-y-4">
-        <div className="flex items-center gap-2 mb-2">
-           <div className="p-1.5 rounded-lg bg-primary/10 text-primary">
-               <History className="h-4 w-4" />
-            </div>
-           <h2 className="text-lg font-semibold text-foreground tracking-tight">Recent Activity</h2>
+        <div className="mb-2 flex items-center gap-2">
+          <div className="bg-primary/10 text-primary rounded-lg p-1.5">
+            <History className="h-4 w-4" />
+          </div>
+          <h2 className="text-foreground text-lg font-semibold tracking-tight">
+            Recent Activity
+          </h2>
         </div>
         <CardErrorBoundary fallbackTitle="Could not load recent logs">
-          <Card className="border-border rounded-xl border bg-card/20 shadow-none backdrop-blur-sm overflow-hidden">
+          <Card className="border-border bg-card/20 overflow-hidden rounded-xl border shadow-none backdrop-blur-sm">
             <CardContent className="p-0">
               {stats.recentLogs.length === 0 ? (
                 <div className="py-12 text-center">
                   <BookOpen className="text-muted-foreground/40 mx-auto h-12 w-12" />
-                  <p className="text-muted-foreground mt-4 text-base font-medium">No logs found.</p>
-                  <p className="text-muted-foreground/60 mt-1 text-sm">Start tracking your progress to see it here.</p>
+                  <p className="text-muted-foreground mt-4 text-base font-medium">
+                    No logs found.
+                  </p>
+                  <p className="text-muted-foreground/60 mt-1 text-sm">
+                    Start tracking your progress to see it here.
+                  </p>
                 </div>
               ) : (
-                <div className="divide-border divide-y divide-border/40">
+                <div className="divide-border divide-border/40 divide-y">
                   {stats.recentLogs.map((log) => (
                     <div
                       key={log.id}
-                      className="flex flex-col gap-3 py-5 px-6 sm:flex-row sm:items-center sm:justify-between transition-colors hover:bg-muted/30"
+                      className="hover:bg-muted/30 flex flex-col gap-3 px-6 py-5 transition-colors sm:flex-row sm:items-center sm:justify-between"
                     >
                       <div className="flex flex-col gap-1">
                         <span className="text-foreground font-semibold">
                           {formatLogDate(log.date)}
                         </span>
-                        <div className="flex items-center gap-2 text-muted-foreground text-xs font-medium">
-                          <span>{log.problemsSolved} {log.problemsSolved === 1 ? "problem" : "problems"} solved</span>
+                        <div className="text-muted-foreground flex items-center gap-2 text-xs font-medium">
+                          <span>
+                            {log.problemsSolved}{" "}
+                            {log.problemsSolved === 1 ? "problem" : "problems"}{" "}
+                            solved
+                          </span>
                         </div>
                       </div>
                       {log.topics.length > 0 && (
@@ -169,13 +181,16 @@ export default async function DashboardPage() {
                             <Badge
                               key={topic}
                               variant="secondary"
-                              className="bg-primary/5 text-primary border-primary/10 text-[10px] uppercase font-bold px-2.5"
+                              className="bg-primary/5 text-primary border-primary/10 px-2.5 text-[10px] font-bold uppercase"
                             >
                               {topic}
                             </Badge>
                           ))}
                           {log.topics.length > 4 && (
-                            <Badge variant="outline" className="text-[10px] text-muted-foreground px-2">
+                            <Badge
+                              variant="outline"
+                              className="text-muted-foreground px-2 text-[10px]"
+                            >
                               +{log.topics.length - 4} more
                             </Badge>
                           )}

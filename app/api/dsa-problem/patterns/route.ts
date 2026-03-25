@@ -12,7 +12,9 @@ import { parseQueryParams } from "@/lib/utils/api";
 export async function GET(request: NextRequest) {
   try {
     const supabase = await createServerSupabaseClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
     if (!user) {
       throw new Error("UNAUTHORIZED");
@@ -37,7 +39,9 @@ export async function GET(request: NextRequest) {
       return handleAuthError(error);
     }
     if (error instanceof Error && error.message === "INVALID_LIMIT") {
-      return handleApiError(new Error("Invalid limit parameter. Must be a positive integer."));
+      return handleApiError(
+        new Error("Invalid limit parameter. Must be a positive integer.")
+      );
     }
     return handleApiError(error);
   }

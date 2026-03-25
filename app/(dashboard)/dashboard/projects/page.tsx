@@ -29,15 +29,15 @@ export default async function ProjectsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-lg font-semibold text-foreground">Projects</h2>
-        <p className="text-sm text-muted-foreground">
+        <h2 className="text-foreground text-lg font-semibold">Projects</h2>
+        <p className="text-muted-foreground text-sm">
           Manage your side projects and track milestones.
         </p>
       </div>
 
       <Separator />
 
-      <Card className="rounded-lg border border-border shadow-none">
+      <Card className="border-border rounded-lg border shadow-none">
         <CardHeader>
           <CardTitle className="text-base">Create Project</CardTitle>
           <CardDescription>Start tracking a new project.</CardDescription>
@@ -48,10 +48,10 @@ export default async function ProjectsPage() {
       </Card>
 
       <div>
-        <h3 className="mb-4 text-sm font-semibold text-foreground">
+        <h3 className="text-foreground mb-4 text-sm font-semibold">
           Your Projects
         </h3>
-        <Card className="rounded-lg border border-border shadow-none">
+        <Card className="border-border rounded-lg border shadow-none">
           <CardContent className="px-6 py-0">
             <ProjectList projects={serializedProjects} />
           </CardContent>

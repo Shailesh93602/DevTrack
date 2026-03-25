@@ -12,13 +12,14 @@ export function PatternCard({ analysis, type }: PatternCardProps) {
 
   const title = type === "strongest" ? "Strongest Pattern" : "Needs Practice";
   const Icon = type === "strongest" ? BrainCircuit : Target;
-  
+
   const content = () => {
     if (type === "strongest") {
       if (!mostPracticed) {
         return (
-          <p className="text-muted-foreground text-sm py-4">
-            No problems solved yet. Start practicing to see your strongest pattern!
+          <p className="text-muted-foreground py-4 text-sm">
+            No problems solved yet. Start practicing to see your strongest
+            pattern!
           </p>
         );
       }
@@ -28,8 +29,8 @@ export function PatternCard({ analysis, type }: PatternCardProps) {
           <p className="text-foreground text-2xl font-bold tracking-tight">
             {mostPracticed.pattern}
           </p>
-          <p className="text-sm text-muted-foreground font-medium flex items-center gap-1.5">
-            <span className="inline-block w-2 h-2 rounded-full bg-primary" />
+          <p className="text-muted-foreground flex items-center gap-1.5 text-sm font-medium">
+            <span className="bg-primary inline-block h-2 w-2 rounded-full" />
             {mostPracticed.count} problems solved ({mostPracticed.percentage}%)
           </p>
         </div>
@@ -42,34 +43,33 @@ export function PatternCard({ analysis, type }: PatternCardProps) {
           <p className="text-foreground text-2xl font-bold tracking-tight">
             {leastPracticed.pattern}
           </p>
-          <p className="text-sm text-muted-foreground font-medium flex items-center gap-1.5">
-            <span className="inline-block w-2 h-2 rounded-full bg-destructive" />
-            {leastPracticed.count} problems solved ({leastPracticed.percentage}%)
+          <p className="text-muted-foreground flex items-center gap-1.5 text-sm font-medium">
+            <span className="bg-destructive inline-block h-2 w-2 rounded-full" />
+            {leastPracticed.count} problems solved ({leastPracticed.percentage}
+            %)
           </p>
         </div>
       );
     }
 
     return (
-      <p className="text-muted-foreground text-sm py-4 italic">
-        {mostPracticed 
-          ? "All patterns have equal practice. Diversify your logic!" 
+      <p className="text-muted-foreground py-4 text-sm italic">
+        {mostPracticed
+          ? "All patterns have equal practice. Diversify your logic!"
           : "No problems recorded yet."}
       </p>
     );
   };
 
   return (
-    <Card className="rounded-xl border border-border/60 bg-card/50 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-background/60 h-full transition-all hover:bg-card/60">
-      <CardHeader className="border-b border-border/40 pb-4">
-        <CardTitle className="flex items-center gap-2 text-sm font-semibold text-foreground tracking-tight">
-          <Icon className="h-4 w-4 text-primary" />
+    <Card className="border-border/60 bg-card/50 supports-[backdrop-filter]:bg-background/60 hover:bg-card/60 h-full rounded-xl border shadow-sm backdrop-blur transition-all">
+      <CardHeader className="border-border/40 border-b pb-4">
+        <CardTitle className="text-foreground flex items-center gap-2 text-sm font-semibold tracking-tight">
+          <Icon className="text-primary h-4 w-4" />
           {title}
         </CardTitle>
       </CardHeader>
-      <CardContent className="pt-2">
-        {content()}
-      </CardContent>
+      <CardContent className="pt-2">{content()}</CardContent>
     </Card>
   );
 }

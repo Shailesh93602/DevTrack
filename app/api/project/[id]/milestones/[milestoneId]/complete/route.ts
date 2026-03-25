@@ -13,7 +13,9 @@ export async function POST(
 ) {
   try {
     const supabase = await createServerSupabaseClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
     if (!user) {
       throw new Error("UNAUTHORIZED");
@@ -23,7 +25,9 @@ export async function POST(
     const milestone = await completeMilestone(user.id, milestoneId);
 
     if (!milestone) {
-      return handleApiError(new Error("Milestone not found or already completed"));
+      return handleApiError(
+        new Error("Milestone not found or already completed")
+      );
     }
 
     const { revalidatePath } = await import("next/cache");

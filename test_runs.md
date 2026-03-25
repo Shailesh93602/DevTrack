@@ -2,15 +2,16 @@
 
 ## Run History
 
-| Run ID | Timestamp | Total Tests | Passed | Failed | Flaky | Duration | Status |
-|--------|-----------|-------------|--------|--------|-------|----------|--------|
-| #1 | 2026-03-24 14:55 | 0 | 0 | 0 | 0 | 0s | INITIALIZING |
-| #2 | 2026-03-24 14:58 | 69 | 80%? | 20%? | - | - | FAILED |
-| #3 | 2026-03-24 15:10 | 69 | 0 | 0 | 0 | - | RUNNING |
+| Run ID | Timestamp        | Total Tests | Passed | Failed | Flaky | Duration | Status       |
+| ------ | ---------------- | ----------- | ------ | ------ | ----- | -------- | ------------ |
+| #1     | 2026-03-24 14:55 | 0           | 0      | 0      | 0     | 0s       | INITIALIZING |
+| #2     | 2026-03-24 14:58 | 69          | 80%?   | 20%?   | -     | -        | FAILED       |
+| #3     | 2026-03-24 15:10 | 69          | 0      | 0      | 0     | -        | RUNNING      |
 
 ## Test Suite Status
 
 ### Auth & Navigation (`auth.spec.ts`)
+
 - [ ] Sign in with valid credentials
 - [ ] Sign up with valid credentials
 - [ ] Validation errors (empty fields, invalid email)
@@ -21,6 +22,7 @@
 - [ ] Dashboard redirect after login
 
 ### Dashboard & Analytics (`dashboard.spec.ts`)
+
 - [ ] Display total problems solved
 - [ ] Display today's problem count
 - [ ] Display recent logs list
@@ -32,6 +34,7 @@
 - [ ] Insights panel display
 
 ### Daily Logs (`daily-log.spec.ts`)
+
 - [ ] Create a new daily log
 - [ ] Edit an existing log
 - [ ] Delete a log
@@ -43,6 +46,7 @@
 - [ ] Load more pagination
 
 ### DSA Problems (`dsa-problem.spec.ts`)
+
 - [ ] Create a new DSA problem
 - [ ] Edit a problem
 - [ ] Delete a problem
@@ -53,6 +57,7 @@
 - [ ] Pattern intelligence display
 
 ### Projects & Milestones (`project.spec.ts` & `milestone.spec.ts`)
+
 - [ ] Create a new project
 - [ ] Edit a project
 - [ ] Delete a project
@@ -64,6 +69,7 @@
 - [ ] Milestone completion sync
 
 ### Settings & UX (`settings.spec.ts`)
+
 - [ ] Settings page layout
 - [ ] Sidebar active state highlight
 - [ ] Mobile responsive drawer
@@ -74,11 +80,13 @@
 ## Detailed Run Notes
 
 ### Run #2
+
 - Status: FAILED
 - Issues: WebServer crash due to missing `ensurePrismaUser` export in `user.ts`.
 - Findings: Multiple tests failing with timeouts while waiting for elements (e.g., "5 problems"). Skeletons visible in screenshots suggest data-fetching issues or race conditions in `router.refresh()`.
 
 ### Run 3: Sequential & Explicit Sync
+
 - **Status**: ✅ Improved Stability
 - **Results**: 69/74 Passed (Chromium)
 - **Fixes**:

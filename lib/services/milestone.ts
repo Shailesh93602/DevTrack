@@ -1,6 +1,9 @@
 import { prisma } from "@/lib/db/prisma";
 import { Prisma, ProjectActivityType } from "@prisma/client";
-import type { CreateMilestoneInput, ReorderMilestonesInput } from "@/lib/validations";
+import type {
+  CreateMilestoneInput,
+  ReorderMilestonesInput,
+} from "@/lib/validations";
 
 const defaultSelect = {
   id: true,

@@ -9,8 +9,15 @@ interface TechSelectorProps {
   techStack: string[];
   techInput: string;
   setTechInput: (val: string) => void;
-  addTech: (current: string[], setValue: UseFormSetValue<CreateProjectInput>) => void;
-  removeTech: (index: number, current: string[], setValue: UseFormSetValue<CreateProjectInput>) => void;
+  addTech: (
+    current: string[],
+    setValue: UseFormSetValue<CreateProjectInput>
+  ) => void;
+  removeTech: (
+    index: number,
+    current: string[],
+    setValue: UseFormSetValue<CreateProjectInput>
+  ) => void;
   setValue: UseFormSetValue<CreateProjectInput>;
   maxTech: number;
 }

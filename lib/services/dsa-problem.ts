@@ -1,7 +1,11 @@
 import { prisma } from "@/lib/db/prisma";
 import { Prisma, Difficulty } from "@prisma/client";
 import { INSIGHTS_QUERY_LIMIT } from "@/lib/constants";
-import type { CreateDsaProblemInput, DsaProblemQueryParams, UpdateDsaProblemInput } from "@/lib/validations";
+import type {
+  CreateDsaProblemInput,
+  DsaProblemQueryParams,
+  UpdateDsaProblemInput,
+} from "@/lib/validations";
 import type { PatternAnalysis } from "@/types/dsa-problem";
 
 const defaultSelect = {
@@ -35,7 +39,10 @@ export async function createDsaProblem(
   });
 }
 
-export async function getDsaProblems(userId: string, params: DsaProblemQueryParams) {
+export async function getDsaProblems(
+  userId: string,
+  params: DsaProblemQueryParams
+) {
   const { difficulty, pattern, platform, limit, offset } = params;
 
   const where: Prisma.DSAProblemWhereInput = { userId };
@@ -173,7 +180,8 @@ export async function analyzePatterns(
       totalProblems,
       uniquePatterns,
       mostPracticed,
-      leastPracticed: leastPracticed?.count === mostPracticed?.count ? null : leastPracticed,
+      leastPracticed:
+        leastPracticed?.count === mostPracticed?.count ? null : leastPracticed,
     },
   };
 }

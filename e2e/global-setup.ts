@@ -27,19 +27,24 @@ export default async function globalSetup() {
   });
 
   // Delete all existing test users to start clean
-  const { data: users, error: listError } = await adminClient.auth.admin.listUsers();
+  const { data: users, error: listError } =
+    await adminClient.auth.admin.listUsers();
   if (listError) {
     console.warn("[global-setup] Could not list users:", listError.message);
     return;
   }
 
   const staleUsers = users.users.filter(
-    (u) => u.email?.startsWith("devtrack.e2e.") && u.email.endsWith("@gmail.com")
+    (u) =>
+      u.email?.startsWith("devtrack.e2e.") && u.email.endsWith("@gmail.com")
   );
   for (const user of staleUsers) {
     const { error } = await adminClient.auth.admin.deleteUser(user.id);
     if (error) {
-      console.warn(`[global-setup] Could not delete ${user.email}:`, error.message);
+      console.warn(
+        `[global-setup] Could not delete ${user.email}:`,
+        error.message
+      );
     } else {
       console.log("[global-setup] Deleted test user:", user.email);
     }
@@ -54,9 +59,15 @@ export default async function globalSetup() {
 
   if (createError) {
     if (createError.message !== "User already exists") {
-      console.warn("[global-setup] Could not pre-create test user in Supabase:", createError.message);
+      console.warn(
+        "[global-setup] Could not pre-create test user in Supabase:",
+        createError.message
+      );
     }
   } else {
-    console.log("[global-setup] Pre-created confirmed test user in Supabase:", TEST_USER.email);
+    console.log(
+      "[global-setup] Pre-created confirmed test user in Supabase:",
+      TEST_USER.email
+    );
   }
 }

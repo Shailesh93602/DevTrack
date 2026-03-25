@@ -19,16 +19,24 @@ export const navItems = [
   { label: "Settings", href: "/dashboard/settings", icon: Settings },
 ];
 
-export function SidebarContent({ className, onItemClick }: { className?: string, onItemClick?: () => void }) {
+export function SidebarContent({
+  className,
+  onItemClick,
+}: {
+  className?: string;
+  onItemClick?: () => void;
+}) {
   const pathname = usePathname();
 
   return (
     <div className={cn("flex h-full flex-col", className)}>
-      <div className="flex h-14 items-center gap-2 border-b border-border bg-background/95 px-6 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="flex h-6 w-6 items-center justify-center rounded-md bg-primary text-primary-foreground text-xs font-bold">
+      <div className="border-border bg-background/95 supports-[backdrop-filter]:bg-background/60 flex h-14 items-center gap-2 border-b px-6 backdrop-blur">
+        <div className="bg-primary text-primary-foreground flex h-6 w-6 items-center justify-center rounded-md text-xs font-bold">
           D
         </div>
-        <span className="text-sm font-semibold tracking-tight text-foreground">DevTrack</span>
+        <span className="text-foreground text-sm font-semibold tracking-tight">
+          DevTrack
+        </span>
       </div>
 
       <nav className="flex-1 overflow-y-auto px-3 py-4">
@@ -41,13 +49,20 @@ export function SidebarContent({ className, onItemClick }: { className?: string,
                   href={href}
                   onClick={onItemClick}
                   className={cn(
-                    "flex items-center gap-3 rounded-md px-3 py-3 text-sm transition-all duration-200 group",
+                    "group flex items-center gap-3 rounded-md px-3 py-3 text-sm transition-all duration-200",
                     isActive
                       ? "bg-primary/10 text-primary font-semibold"
-                      : "text-muted-foreground font-medium hover:bg-accent hover:text-accent-foreground"
+                      : "text-muted-foreground hover:bg-accent hover:text-accent-foreground font-medium"
                   )}
                 >
-                  <Icon className={cn("h-4 w-4 shrink-0 transition-colors", isActive ? "text-primary" : "text-muted-foreground/70 group-hover:text-accent-foreground")} />
+                  <Icon
+                    className={cn(
+                      "h-4 w-4 shrink-0 transition-colors",
+                      isActive
+                        ? "text-primary"
+                        : "text-muted-foreground/70 group-hover:text-accent-foreground"
+                    )}
+                  />
                   {label}
                 </Link>
               </li>
@@ -61,7 +76,7 @@ export function SidebarContent({ className, onItemClick }: { className?: string,
 
 export function Sidebar() {
   return (
-    <aside className="hidden h-full w-56 shrink-0 border-r border-border bg-background lg:block">
+    <aside className="border-border bg-background hidden h-full w-56 shrink-0 border-r lg:block">
       <SidebarContent />
     </aside>
   );

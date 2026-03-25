@@ -11,14 +11,14 @@ interface ActivityHeatmapProps {
 
 export function ActivityHeatmap({ data }: ActivityHeatmapProps) {
   const daysToShow = 91; // 13 weeks
-  
+
   const heatmapData = useMemo(() => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    
+
     const dates = [];
-    const dataMap = new Map(data.map(d => [d.date, d.count]));
-    
+    const dataMap = new Map(data.map((d) => [d.date, d.count]));
+
     for (let i = daysToShow - 1; i >= 0; i--) {
       const d = new Date(today);
       d.setDate(today.getDate() - i);
@@ -36,13 +36,13 @@ export function ActivityHeatmap({ data }: ActivityHeatmapProps) {
   const weeks = useMemo(() => {
     const w = [];
     let currentWeek = [];
-    
+
     // Pad first week if needed
     const firstDay = heatmapData[0].dayOfWeek;
     for (let i = 0; i < firstDay; i++) {
       currentWeek.push(null);
     }
-    
+
     for (const day of heatmapData) {
       currentWeek.push(day);
       if (currentWeek.length === 7) {
@@ -68,42 +68,48 @@ export function ActivityHeatmap({ data }: ActivityHeatmapProps) {
   };
 
   return (
-    <Card className="rounded-xl border border-border/60 bg-card/50 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-all hover:bg-card/60">
-      <CardHeader className="border-b border-border/40 pb-4">
-        <CardTitle className="text-sm font-semibold text-foreground tracking-tight">
+    <Card className="border-border/60 bg-card/50 supports-[backdrop-filter]:bg-background/60 hover:bg-card/60 rounded-xl border shadow-sm backdrop-blur transition-all">
+      <CardHeader className="border-border/40 border-b pb-4">
+        <CardTitle className="text-foreground text-sm font-semibold tracking-tight">
           Consistency Heatmap (90 Days)
         </CardTitle>
       </CardHeader>
       <CardContent className="pt-8">
         <div className="flex gap-1 overflow-x-auto pb-1">
           {weeks.map((week, wi) => {
-            const weekKey = week.find(d => d !== null)?.date ?? `week-${wi}`;
+            const weekKey = week.find((d) => d !== null)?.date ?? `week-${wi}`;
             return (
-              <div key={weekKey} className="grid grid-rows-7 gap-1 shrink-0">
+              <div key={weekKey} className="grid shrink-0 grid-rows-7 gap-1">
                 {week.map((day, di) => (
                   <div
                     key={day ? day.date : `empty-${wi}-${di}`}
                     role="gridcell"
-                    aria-label={day ? `${day.count} activity on ${day.date}` : "No activity"}
+                    aria-label={
+                      day
+                        ? `${day.count} activity on ${day.date}`
+                        : "No activity"
+                    }
                     className={cn(
                       "h-3 w-3 rounded-[2px]",
                       day ? getColor(day.count) : "bg-transparent opacity-0"
                     )}
-                    title={day ? `${day.count} activity on ${day.date}` : undefined}
+                    title={
+                      day ? `${day.count} activity on ${day.date}` : undefined
+                    }
                   />
                 ))}
               </div>
             );
           })}
         </div>
-        <div className="mt-2 flex items-center gap-2 text-[10px] text-muted-foreground">
+        <div className="text-muted-foreground mt-2 flex items-center gap-2 text-[10px]">
           <span>Less</span>
           <div className="flex gap-1">
-            <div className="h-2 w-2 rounded-[1px] bg-muted/30" />
-            <div className="h-2 w-2 rounded-[1px] bg-primary/20" />
-            <div className="h-2 w-2 rounded-[1px] bg-primary/40" />
-            <div className="h-2 w-2 rounded-[1px] bg-primary/60" />
-            <div className="h-2 w-2 rounded-[1px] bg-primary" />
+            <div className="bg-muted/30 h-2 w-2 rounded-[1px]" />
+            <div className="bg-primary/20 h-2 w-2 rounded-[1px]" />
+            <div className="bg-primary/40 h-2 w-2 rounded-[1px]" />
+            <div className="bg-primary/60 h-2 w-2 rounded-[1px]" />
+            <div className="bg-primary h-2 w-2 rounded-[1px]" />
           </div>
           <span>More</span>
         </div>

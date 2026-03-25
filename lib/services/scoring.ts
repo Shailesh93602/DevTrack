@@ -47,12 +47,16 @@ const AVG_PROBLEMS_CAP = 3;
 
 // ─── Grade thresholds ─────────────────────────────────────────────────────────
 
-const GRADE_THRESHOLDS: Array<{ min: number; grade: ScoreGrade; icon: string }> = [
-  { min: 85, grade: "Elite",        icon: "🏆" },
-  { min: 70, grade: "Advanced",     icon: "🔥" },
+const GRADE_THRESHOLDS: Array<{
+  min: number;
+  grade: ScoreGrade;
+  icon: string;
+}> = [
+  { min: 85, grade: "Elite", icon: "🏆" },
+  { min: 70, grade: "Advanced", icon: "🔥" },
   { min: 50, grade: "Intermediate", icon: "⚡" },
-  { min: 25, grade: "Developing",   icon: "📈" },
-  { min: 0,  grade: "Beginner",     icon: "🌱" },
+  { min: 25, grade: "Developing", icon: "📈" },
+  { min: 0, grade: "Beginner", icon: "🌱" },
 ];
 
 // ─── Sub-score calculators ────────────────────────────────────────────────────
@@ -64,17 +68,19 @@ const GRADE_THRESHOLDS: Array<{ min: number; grade: ScoreGrade; icon: string }> 
  * densityComponent = min(activeDaysLast30 / 22, 1) × 50
  */
 function calcConsistencyScore(inputs: ScoringInputs): SubScore {
-  const streakComponent  = Math.min(inputs.currentStreak / STREAK_CAP_DAYS, 1) * 50;
-  const densityComponent = Math.min(inputs.activeDaysLast30 / DENSITY_CAP_DAYS, 1) * 50;
+  const streakComponent =
+    Math.min(inputs.currentStreak / STREAK_CAP_DAYS, 1) * 50;
+  const densityComponent =
+    Math.min(inputs.activeDaysLast30 / DENSITY_CAP_DAYS, 1) * 50;
   const score = Math.round(streakComponent + densityComponent);
 
   return {
     score,
     label: "Consistency",
     breakdown: {
-      currentStreak:    inputs.currentStreak,
+      currentStreak: inputs.currentStreak,
       activeDaysLast30: inputs.activeDaysLast30,
-      streakComponent:  Math.round(streakComponent),
+      streakComponent: Math.round(streakComponent),
       densityComponent: Math.round(densityComponent),
     },
   };
@@ -88,19 +94,21 @@ function calcConsistencyScore(inputs: ScoringInputs): SubScore {
  */
 function calcDsaScore(inputs: ScoringInputs): SubScore {
   const weightedPoints =
-    inputs.easyCount   * DIFFICULTY_WEIGHTS.easy   +
-    inputs.mediumCount * DIFFICULTY_WEIGHTS.medium  +
-    inputs.hardCount   * DIFFICULTY_WEIGHTS.hard;
+    inputs.easyCount * DIFFICULTY_WEIGHTS.easy +
+    inputs.mediumCount * DIFFICULTY_WEIGHTS.medium +
+    inputs.hardCount * DIFFICULTY_WEIGHTS.hard;
 
-  const score = Math.round(Math.min(weightedPoints / DSA_WEIGHTED_CAP, 1) * 100);
+  const score = Math.round(
+    Math.min(weightedPoints / DSA_WEIGHTED_CAP, 1) * 100
+  );
 
   return {
     score,
     label: "DSA",
     breakdown: {
-      easyCount:      inputs.easyCount,
-      mediumCount:    inputs.mediumCount,
-      hardCount:      inputs.hardCount,
+      easyCount: inputs.easyCount,
+      mediumCount: inputs.mediumCount,
+      hardCount: inputs.hardCount,
       weightedPoints: Math.round(weightedPoints),
     },
   };
@@ -114,21 +122,25 @@ function calcDsaScore(inputs: ScoringInputs): SubScore {
  * dailyDSAPoints  = min(avgProblemsSolvedPerLog / 3, 1) × 20
  */
 function calcProductivityScore(inputs: ScoringInputs): SubScore {
-  const milestonePoints = Math.min(inputs.completedMilestones / MILESTONE_CAP, 1) * 40;
-  const projectPoints   = Math.min(inputs.completedProjects   / PROJECT_CAP,   1) * 40;
-  const dailyDSAPoints  = Math.min(inputs.avgProblemsSolvedPerLog / AVG_PROBLEMS_CAP, 1) * 20;
+  const milestonePoints =
+    Math.min(inputs.completedMilestones / MILESTONE_CAP, 1) * 40;
+  const projectPoints =
+    Math.min(inputs.completedProjects / PROJECT_CAP, 1) * 40;
+  const dailyDSAPoints =
+    Math.min(inputs.avgProblemsSolvedPerLog / AVG_PROBLEMS_CAP, 1) * 20;
   const score = Math.round(milestonePoints + projectPoints + dailyDSAPoints);
 
   return {
     score,
     label: "Productivity",
     breakdown: {
-      completedMilestones:      inputs.completedMilestones,
-      completedProjects:        inputs.completedProjects,
-      avgProblemsSolvedPerLog:  Math.round(inputs.avgProblemsSolvedPerLog * 10) / 10,
-      milestonePoints:          Math.round(milestonePoints),
-      projectPoints:            Math.round(projectPoints),
-      dailyDSAPoints:           Math.round(dailyDSAPoints),
+      completedMilestones: inputs.completedMilestones,
+      completedProjects: inputs.completedProjects,
+      avgProblemsSolvedPerLog:
+        Math.round(inputs.avgProblemsSolvedPerLog * 10) / 10,
+      milestonePoints: Math.round(milestonePoints),
+      projectPoints: Math.round(projectPoints),
+      dailyDSAPoints: Math.round(dailyDSAPoints),
     },
   };
 }
@@ -152,14 +164,14 @@ function resolveGrade(total: number): { grade: ScoreGrade; icon: string } {
  * This function is pure — it is synchronous and makes no DB calls.
  */
 export function computeDeveloperScore(inputs: ScoringInputs): DeveloperScore {
-  const consistency  = calcConsistencyScore(inputs);
-  const dsa          = calcDsaScore(inputs);
+  const consistency = calcConsistencyScore(inputs);
+  const dsa = calcDsaScore(inputs);
   const productivity = calcProductivityScore(inputs);
 
   const total = Math.round(
-    SCORE_WEIGHTS.consistency  * consistency.score  +
-    SCORE_WEIGHTS.dsa          * dsa.score          +
-    SCORE_WEIGHTS.productivity * productivity.score
+    SCORE_WEIGHTS.consistency * consistency.score +
+      SCORE_WEIGHTS.dsa * dsa.score +
+      SCORE_WEIGHTS.productivity * productivity.score
   );
 
   const { grade, icon: gradeIcon } = resolveGrade(total);
@@ -196,10 +208,13 @@ export function computeScoreFromAggregates(data: {
   ).length;
 
   const totalLogProblemsSolved = data.windowLogs.reduce(
-    (sum, l) => sum + l.problemsSolved, 0
+    (sum, l) => sum + l.problemsSolved,
+    0
   );
   const avgProblemsSolvedPerLog =
-    data.windowLogs.length > 0 ? totalLogProblemsSolved / data.windowLogs.length : 0;
+    data.windowLogs.length > 0
+      ? totalLogProblemsSolved / data.windowLogs.length
+      : 0;
 
   return computeDeveloperScore({
     currentStreak: data.currentStreak,

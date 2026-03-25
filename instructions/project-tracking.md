@@ -8,6 +8,7 @@ auto-calculated progress. This task covers schema, validations, and services onl
 No UI components or pages.
 
 Read these files before writing any code:
+
 - `CLAUDE.md` — all rules are mandatory, no exceptions
 - `prisma/schema.prisma` — current schema you will extend
 - `lib/services/dsa-problem.ts` — pattern for a complete service file
@@ -58,6 +59,7 @@ model Project {
 ```
 
 Changes from original:
+
 - Added `description String?`
 - Added `dueDate DateTime?`
 - Added `techStack String[]`
@@ -151,6 +153,7 @@ model User {
 ### After schema changes
 
 Run:
+
 ```
 npx prisma generate
 ```
@@ -230,7 +233,11 @@ export type ReorderMilestonesInput = z.infer<typeof reorderMilestonesSchema>;
 ```ts
 import { prisma } from "@/lib/db/prisma";
 import { Prisma, ProjectActivityType, ProjectStatus } from "@prisma/client";
-import type { CreateProjectInput, UpdateProjectInput, ProjectQueryParams } from "@/lib/validations/project";
+import type {
+  CreateProjectInput,
+  UpdateProjectInput,
+  ProjectQueryParams,
+} from "@/lib/validations/project";
 ```
 
 ### `defaultSelect` constant
@@ -432,7 +439,11 @@ async function recalculateProgress(
 ```ts
 import { prisma } from "@/lib/db/prisma";
 import { Prisma, ProjectActivityType } from "@prisma/client";
-import type { CreateMilestoneInput, UpdateMilestoneInput, ReorderMilestonesInput } from "@/lib/validations/milestone";
+import type {
+  CreateMilestoneInput,
+  UpdateMilestoneInput,
+  ReorderMilestonesInput,
+} from "@/lib/validations/milestone";
 ```
 
 ### `defaultSelect` constant
@@ -646,24 +657,24 @@ Updated atomically inside every milestone mutation transaction.
 
 ### Activity log `metadata` shapes
 
-| `action` | `metadata` shape |
-|---|---|
-| `PROJECT_CREATED` | `{ name: string }` |
-| `PROJECT_UPDATED` | `{ fields: string[] }` |
-| `STATUS_CHANGED` | `{ from: ProjectStatus, to: ProjectStatus }` |
-| `MILESTONE_ADDED` | `{ milestoneTitle: string }` |
-| `MILESTONE_COMPLETED` | `{ milestoneTitle: string }` |
-| `MILESTONE_DELETED` | `{ milestoneTitle: string }` |
+| `action`              | `metadata` shape                             |
+| --------------------- | -------------------------------------------- |
+| `PROJECT_CREATED`     | `{ name: string }`                           |
+| `PROJECT_UPDATED`     | `{ fields: string[] }`                       |
+| `STATUS_CHANGED`      | `{ from: ProjectStatus, to: ProjectStatus }` |
+| `MILESTONE_ADDED`     | `{ milestoneTitle: string }`                 |
+| `MILESTONE_COMPLETED` | `{ milestoneTitle: string }`                 |
+| `MILESTONE_DELETED`   | `{ milestoneTitle: string }`                 |
 
 ### Edge cases handled
 
-| Case | Behaviour |
-|---|---|
-| Project not found on milestone create | Return `null`, no activity logged |
-| Milestone already completed | `completeMilestone` returns existing record unchanged, no duplicate log |
-| `reorderMilestones` with foreign IDs | Returns `null` after validation, no updates applied |
-| No milestones on project | `progress` stays `0`, never NaN |
-| Project deleted | Cascades delete all milestones and activity logs (defined in schema) |
+| Case                                  | Behaviour                                                               |
+| ------------------------------------- | ----------------------------------------------------------------------- |
+| Project not found on milestone create | Return `null`, no activity logged                                       |
+| Milestone already completed           | `completeMilestone` returns existing record unchanged, no duplicate log |
+| `reorderMilestones` with foreign IDs  | Returns `null` after validation, no updates applied                     |
+| No milestones on project              | `progress` stays `0`, never NaN                                         |
+| Project deleted                       | Cascades delete all milestones and activity logs (defined in schema)    |
 
 ---
 
@@ -687,13 +698,13 @@ Updated atomically inside every milestone mutation transaction.
 
 ## Expected file changes summary
 
-| File | Action |
-|---|---|
-| `prisma/schema.prisma` | **Modify** — extend Project, add Milestone, ProjectActivityLog, ProjectActivityType, extend User |
-| `lib/validations/project.ts` | **Create** |
-| `lib/validations/milestone.ts` | **Create** |
-| `lib/services/project.ts` | **Create** |
-| `lib/services/milestone.ts` | **Create** |
-| `CLAUDE.md` | **Modify** — append to Session Notes |
+| File                           | Action                                                                                           |
+| ------------------------------ | ------------------------------------------------------------------------------------------------ |
+| `prisma/schema.prisma`         | **Modify** — extend Project, add Milestone, ProjectActivityLog, ProjectActivityType, extend User |
+| `lib/validations/project.ts`   | **Create**                                                                                       |
+| `lib/validations/milestone.ts` | **Create**                                                                                       |
+| `lib/services/project.ts`      | **Create**                                                                                       |
+| `lib/services/milestone.ts`    | **Create**                                                                                       |
+| `CLAUDE.md`                    | **Modify** — append to Session Notes                                                             |
 
 No other files should be touched.

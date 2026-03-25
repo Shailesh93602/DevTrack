@@ -6,20 +6,16 @@ import {
   handleAuthError,
   handleApiError,
 } from "@/lib/api/errors";
-import {
-  createDailyLog,
-  getDailyLogs,
-} from "@/lib/services/daily-log";
-import {
-  createDailyLogSchema,
-  dailyLogQuerySchema,
-} from "@/lib/validations";
+import { createDailyLog, getDailyLogs } from "@/lib/services/daily-log";
+import { createDailyLogSchema, dailyLogQuerySchema } from "@/lib/validations";
 import { parseQueryParams } from "@/lib/utils/api";
 
 export async function POST(request: NextRequest) {
   try {
     const supabase = await createServerSupabaseClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
     if (!user) {
       throw new Error("UNAUTHORIZED");
@@ -29,7 +25,7 @@ export async function POST(request: NextRequest) {
     const validatedData = createDailyLogSchema.parse(body);
 
     const log = await createDailyLog(user.id, validatedData, user.email);
-    
+
     // Revalidate dashboard to reflect new log/stats
     const { revalidatePath } = await import("next/cache");
     revalidatePath("/dashboard");
@@ -46,7 +42,9 @@ export async function POST(request: NextRequest) {
 export async function GET(request: NextRequest) {
   try {
     const supabase = await createServerSupabaseClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
     if (!user) {
       throw new Error("UNAUTHORIZED");

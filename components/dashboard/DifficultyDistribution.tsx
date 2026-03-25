@@ -1,6 +1,13 @@
 "use client";
 
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
+import {
+  PieChart,
+  Pie,
+  Cell,
+  ResponsiveContainer,
+  Legend,
+  Tooltip,
+} from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PieChart as PieChartIcon } from "lucide-react";
 
@@ -21,25 +28,25 @@ export function DifficultyDistribution({ data }: DifficultyDistributionProps) {
 
   if (chartData.length === 0) {
     return (
-      <Card className="rounded-xl border border-border/60 bg-card/50 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-background/60 h-full transition-all hover:bg-card/60">
-        <CardHeader className="border-b border-border/40 pb-4">
-          <CardTitle className="flex items-center gap-2 text-sm font-semibold text-foreground tracking-tight">
-            <PieChartIcon className="h-4 w-4 text-primary" />
+      <Card className="border-border/60 bg-card/50 supports-[backdrop-filter]:bg-background/60 hover:bg-card/60 h-full rounded-xl border shadow-sm backdrop-blur transition-all">
+        <CardHeader className="border-border/40 border-b pb-4">
+          <CardTitle className="text-foreground flex items-center gap-2 text-sm font-semibold tracking-tight">
+            <PieChartIcon className="text-primary h-4 w-4" />
             Difficulty Distribution
           </CardTitle>
         </CardHeader>
         <CardContent className="flex h-64 items-center justify-center">
-          <p className="text-xs text-muted-foreground">No data available</p>
+          <p className="text-muted-foreground text-xs">No data available</p>
         </CardContent>
       </Card>
     );
   }
 
   return (
-    <Card className="rounded-xl border border-border/60 bg-card/50 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-background/60 h-full transition-all hover:bg-card/60">
-      <CardHeader className="border-b border-border/40 pb-4">
-        <CardTitle className="flex items-center gap-2 text-sm font-semibold text-foreground tracking-tight">
-          <PieChartIcon className="h-4 w-4 text-primary" />
+    <Card className="border-border/60 bg-card/50 supports-[backdrop-filter]:bg-background/60 hover:bg-card/60 h-full rounded-xl border shadow-sm backdrop-blur transition-all">
+      <CardHeader className="border-border/40 border-b pb-4">
+        <CardTitle className="text-foreground flex items-center gap-2 text-sm font-semibold tracking-tight">
+          <PieChartIcon className="text-primary h-4 w-4" />
           Difficulty Distribution
         </CardTitle>
       </CardHeader>
@@ -66,8 +73,8 @@ export function DifficultyDistribution({ data }: DifficultyDistributionProps) {
                   fontSize: "12px",
                 }}
               />
-              <Legend 
-                verticalAlign="bottom" 
+              <Legend
+                verticalAlign="bottom"
                 align="center"
                 iconType="circle"
                 wrapperStyle={{ fontSize: "12px", paddingTop: "20px" }}

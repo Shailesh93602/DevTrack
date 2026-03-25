@@ -66,9 +66,10 @@ export function ProjectForm({ project, onSuccess }: ProjectFormProps) {
   async function onSubmit(data: ProjectFormInput) {
     setSubmitError(null);
     try {
-      const result = isEditing && project
-        ? await updateProject(project.id, data)
-        : await createProject(data);
+      const result =
+        isEditing && project
+          ? await updateProject(project.id, data)
+          : await createProject(data);
 
       if (!result.success) {
         throw new Error(result.error.message);
@@ -99,7 +100,11 @@ export function ProjectForm({ project, onSuccess }: ProjectFormProps) {
           aria-describedby={errors.name ? "project-name-error" : undefined}
         />
         {errors.name && (
-          <p id="project-name-error" className="text-destructive text-sm" role="alert">
+          <p
+            id="project-name-error"
+            className="text-destructive text-sm"
+            role="alert"
+          >
             {errors.name.message}
           </p>
         )}
@@ -112,10 +117,16 @@ export function ProjectForm({ project, onSuccess }: ProjectFormProps) {
           {...register("description")}
           placeholder="Brief description of the project"
           aria-invalid={!!errors.description}
-          aria-describedby={errors.description ? "project-desc-error" : undefined}
+          aria-describedby={
+            errors.description ? "project-desc-error" : undefined
+          }
         />
         {errors.description && (
-          <p id="project-desc-error" className="text-destructive text-sm" role="alert">
+          <p
+            id="project-desc-error"
+            className="text-destructive text-sm"
+            role="alert"
+          >
             {errors.description.message}
           </p>
         )}

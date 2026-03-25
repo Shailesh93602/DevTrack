@@ -1,7 +1,11 @@
 import { prisma } from "@/lib/db/prisma";
 import { Prisma } from "@prisma/client";
 import { parseUtcDate, normalizeToUtcMidnight } from "@/lib/utils/date";
-import type { CreateDailyLogInput, UpdateDailyLogInput, DailyLogQueryParams } from "@/lib/validations";
+import type {
+  CreateDailyLogInput,
+  UpdateDailyLogInput,
+  DailyLogQueryParams,
+} from "@/lib/validations";
 import { ensureUserInDb } from "./user";
 import { syncUserStreak } from "./streak";
 
@@ -38,12 +42,17 @@ export async function createDailyLog(
   });
 
   // Background update the streak (best effort)
-  syncUserStreak(userId).catch(e => console.error("Failed to sync streak:", e));
+  syncUserStreak(userId).catch((e) =>
+    console.error("Failed to sync streak:", e)
+  );
 
   return log;
 }
 
-export async function getDailyLogs(userId: string, params: DailyLogQueryParams) {
+export async function getDailyLogs(
+  userId: string,
+  params: DailyLogQueryParams
+) {
   const { startDate, endDate, limit, offset } = params;
 
   const where: Prisma.DailyLogWhereInput = { userId };
@@ -101,7 +110,9 @@ export async function updateDailyLog(
   });
 
   // Background update the streak (best effort)
-  syncUserStreak(userId).catch(e => console.error("Failed to sync streak:", e));
+  syncUserStreak(userId).catch((e) =>
+    console.error("Failed to sync streak:", e)
+  );
 
   return log;
 }

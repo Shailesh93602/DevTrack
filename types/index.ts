@@ -49,10 +49,7 @@ export type {
   ProjectStats,
 } from "./project";
 
-export {
-  DIFFICULTY_OPTIONS,
-  FILTER_OPTIONS,
-} from "./dsa-problem";
+export { DIFFICULTY_OPTIONS, FILTER_OPTIONS } from "./dsa-problem";
 
 // TODO: Add milestone types when created
 

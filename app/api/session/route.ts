@@ -5,20 +5,16 @@ import {
   handleAuthError,
   handleApiError,
 } from "@/lib/api/errors";
-import {
-  startSession,
-  getSessionsByUser,
-} from "@/lib/services/session";
-import {
-  startSessionSchema,
-  sessionQuerySchema,
-} from "@/lib/validations";
+import { startSession, getSessionsByUser } from "@/lib/services/session";
+import { startSessionSchema, sessionQuerySchema } from "@/lib/validations";
 import { parseQueryParams } from "@/lib/utils/api";
 
 export async function POST(request: NextRequest) {
   try {
     const supabase = await createServerSupabaseClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
     if (!user) {
       throw new Error("UNAUTHORIZED");
@@ -44,7 +40,9 @@ export async function POST(request: NextRequest) {
 export async function GET(request: NextRequest) {
   try {
     const supabase = await createServerSupabaseClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
     if (!user) {
       throw new Error("UNAUTHORIZED");

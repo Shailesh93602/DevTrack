@@ -16,8 +16,10 @@ async function syncUser() {
   try {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-    const testUserEmail = process.env.PLAYWRIGHT_TEST_USER_EMAIL || "devtrack.e2e.test@gmail.com";
-    const testUserPassword = process.env.PLAYWRIGHT_TEST_USER_PASSWORD || "TestPassword123!";
+    const testUserEmail =
+      process.env.PLAYWRIGHT_TEST_USER_EMAIL || "devtrack.e2e.test@gmail.com";
+    const testUserPassword =
+      process.env.PLAYWRIGHT_TEST_USER_PASSWORD || "TestPassword123!";
 
     if (!supabaseUrl || !supabaseAnonKey) {
       throw new Error("Missing Supabase environment variables");
@@ -43,7 +45,7 @@ async function syncUser() {
           origin: new URL(supabaseUrl).origin,
           localStorage: [
             {
-              name: `sb-${new URL(supabaseUrl).hostname.split('.')[0]}-auth-token`,
+              name: `sb-${new URL(supabaseUrl).hostname.split(".")[0]}-auth-token`,
               value: JSON.stringify(data.session),
             },
           ],
@@ -60,7 +62,6 @@ async function syncUser() {
     // 4. Write the file
     fs.writeFileSync(authFile, JSON.stringify(storageState, null, 2));
     console.log(`Successfully synced user session to ${authFile}`);
-
   } catch (error) {
     console.error("Failed to sync user:", error);
     process.exit(1);

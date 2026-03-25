@@ -5,10 +5,7 @@ import {
   handleAuthError,
   handleApiError,
 } from "@/lib/api/errors";
-import {
-  createDsaProblem,
-  getDsaProblems,
-} from "@/lib/services/dsa-problem";
+import { createDsaProblem, getDsaProblems } from "@/lib/services/dsa-problem";
 import {
   createDsaProblemSchema,
   dsaProblemQuerySchema,
@@ -18,7 +15,9 @@ import { parseQueryParams } from "@/lib/utils/api";
 export async function POST(request: NextRequest) {
   try {
     const supabase = await createServerSupabaseClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
     if (!user) {
       throw new Error("UNAUTHORIZED");
@@ -44,7 +43,9 @@ export async function POST(request: NextRequest) {
 export async function GET(request: NextRequest) {
   try {
     const supabase = await createServerSupabaseClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
     if (!user) {
       throw new Error("UNAUTHORIZED");

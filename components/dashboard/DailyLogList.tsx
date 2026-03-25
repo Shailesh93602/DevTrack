@@ -181,7 +181,9 @@ export function DailyLogList({ logs }: DailyLogListProps) {
       router.refresh();
     } catch (err) {
       setDeleteError(
-        err instanceof Error ? err.message : "Failed to delete log. Please try again."
+        err instanceof Error
+          ? err.message
+          : "Failed to delete log. Please try again."
       );
     } finally {
       setDeletingId(null);

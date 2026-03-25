@@ -8,14 +8,20 @@ import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/shared/PasswordInput";
 import { useAuthForm } from "@/hooks/useAuthForm";
 
-import { loginSchema, signupSchema, type LoginFormData, type SignupFormData } from "@/lib/validations";
+import {
+  loginSchema,
+  signupSchema,
+  type LoginFormData,
+  type SignupFormData,
+} from "@/lib/validations";
 
 interface AuthFormProps {
   mode: "login" | "signup";
 }
 
 export function AuthForm({ mode }: AuthFormProps) {
-  const { serverError, successMessage, isPending, onSubmit } = useAuthForm(mode);
+  const { serverError, successMessage, isPending, onSubmit } =
+    useAuthForm(mode);
 
   const schema = mode === "login" ? loginSchema : signupSchema;
 
@@ -76,7 +82,7 @@ export function AuthForm({ mode }: AuthFormProps) {
           className="h-11"
           {...register("password")}
         />
-        
+
         {mode === "login" && (
           <div className="flex justify-end">
             <Link
@@ -91,7 +97,7 @@ export function AuthForm({ mode }: AuthFormProps) {
         {errors.password && (
           <p className="text-destructive text-sm">{errors.password.message}</p>
         )}
-        
+
         {mode === "signup" && !errors.password && (
           <ul className="text-muted-foreground ml-1 space-y-1 text-xs">
             <li>• At least 8 characters</li>
@@ -103,13 +109,13 @@ export function AuthForm({ mode }: AuthFormProps) {
       </div>
 
       {serverError && (
-        <div className="bg-destructive/10 text-destructive border border-destructive/20 rounded-md p-3 text-sm">
+        <div className="bg-destructive/10 text-destructive border-destructive/20 rounded-md border p-3 text-sm">
           {serverError}
         </div>
       )}
 
       {successMessage && (
-        <div className="bg-success-message text-success-message-foreground border border-success-message-border rounded-md p-3 text-sm">
+        <div className="bg-success-message text-success-message-foreground border-success-message-border rounded-md border p-3 text-sm">
           {successMessage}
         </div>
       )}

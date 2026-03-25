@@ -16,7 +16,12 @@ export interface SubScore {
   breakdown: ScoreBreakdown;
 }
 
-export type ScoreGrade = "Elite" | "Advanced" | "Intermediate" | "Developing" | "Beginner";
+export type ScoreGrade =
+  | "Elite"
+  | "Advanced"
+  | "Intermediate"
+  | "Developing"
+  | "Beginner";
 
 export interface DeveloperScore {
   /** Composite 0–100 score */

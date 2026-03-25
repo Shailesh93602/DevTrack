@@ -213,7 +213,10 @@ export function ProjectList({ projects }: ProjectListProps) {
 
                 {project.dueDate && (
                   <p className="text-muted-foreground text-xs">
-                    Due: {new Date(project.dueDate).toLocaleDateString("en-US", { timeZone: "UTC" })}
+                    Due:{" "}
+                    {new Date(project.dueDate).toLocaleDateString("en-US", {
+                      timeZone: "UTC",
+                    })}
                   </p>
                 )}
               </>

@@ -30,7 +30,9 @@ export function errorResponse(
   );
 }
 
-export function handleApiError(error: unknown): NextResponse<ApiResponse<never>> {
+export function handleApiError(
+  error: unknown
+): NextResponse<ApiResponse<never>> {
   if (error instanceof ZodError) {
     return errorResponse(
       "Validation failed",
@@ -93,7 +95,9 @@ export function requireAuth(userId: string | null): asserts userId is string {
   }
 }
 
-export function handleAuthError(error: unknown): NextResponse<ApiResponse<never>> {
+export function handleAuthError(
+  error: unknown
+): NextResponse<ApiResponse<never>> {
   if (error instanceof Error && error.message === "UNAUTHORIZED") {
     return errorResponse("Authentication required", 401, "UNAUTHORIZED");
   }

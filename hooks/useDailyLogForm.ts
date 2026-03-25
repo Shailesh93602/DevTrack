@@ -19,22 +19,22 @@ export function useDailyLogForm() {
   ) => {
     const value = topicInput.trim();
     if (!value) return;
-    
+
     if (value.length > TOPIC_LENGTH_MAX) {
       setTopicError(`Topic must be ${TOPIC_LENGTH_MAX} characters or less`);
       return;
     }
-    
+
     if (currentTopics.includes(value)) {
       setTopicError("Topic already added");
       return;
     }
-    
+
     if (currentTopics.length >= TOPICS_MAX) {
       setTopicError(`Maximum ${TOPICS_MAX} topics`);
       return;
     }
-    
+
     setTopicError(null);
     setValue("topics", [...currentTopics, value], { shouldValidate: true });
     setTopicInput("");
@@ -45,9 +45,13 @@ export function useDailyLogForm() {
     currentTopics: string[],
     setValue: UseFormSetValue<DailyLogFormInput>
   ) => {
-    setValue("topics", currentTopics.filter((_, i) => i !== index), {
-      shouldValidate: true,
-    });
+    setValue(
+      "topics",
+      currentTopics.filter((_, i) => i !== index),
+      {
+        shouldValidate: true,
+      }
+    );
   };
 
   const clearTopicError = () => setTopicError(null);
@@ -64,5 +68,3 @@ export function useDailyLogForm() {
     router,
   };
 }
-
-

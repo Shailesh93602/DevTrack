@@ -2,7 +2,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Sparkles, ArrowRight, CheckCircle2 } from "lucide-react";
-import type { Recommendation, RecommendationUrgency } from "@/types/recommendations";
+import type {
+  Recommendation,
+  RecommendationUrgency,
+} from "@/types/recommendations";
 import { cn } from "@/lib/utils";
 
 interface RecommendationsCardProps {
@@ -41,7 +44,7 @@ function RecommendationItem({ rec }: { rec: Recommendation }) {
   return (
     <div
       className={cn(
-        "rounded-xl bg-card/30 p-4 transition-colors hover:bg-card/50",
+        "bg-card/30 hover:bg-card/50 rounded-xl p-4 transition-colors",
         config.border
       )}
     >
@@ -55,14 +58,14 @@ function RecommendationItem({ rec }: { rec: Recommendation }) {
         </span>
 
         {/* Content */}
-        <div className="flex-1 min-w-0 space-y-1">
-          <div className="flex items-center gap-2 flex-wrap">
-            <p className="text-sm font-semibold text-foreground leading-tight">
+        <div className="min-w-0 flex-1 space-y-1">
+          <div className="flex flex-wrap items-center gap-2">
+            <p className="text-foreground text-sm leading-tight font-semibold">
               {rec.title}
             </p>
             <span
               className={cn(
-                "inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide",
+                "inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-bold tracking-wide uppercase",
                 config.badge
               )}
             >
@@ -70,14 +73,16 @@ function RecommendationItem({ rec }: { rec: Recommendation }) {
             </span>
           </div>
 
-          <p className="text-xs text-muted-foreground leading-snug">
+          <p className="text-muted-foreground text-xs leading-snug">
             {rec.reason}
           </p>
 
           {rec.metric && (
-            <p className="text-[11px] text-muted-foreground/80 font-medium">
+            <p className="text-muted-foreground/80 text-[11px] font-medium">
               {rec.metric.label}:{" "}
-              <span className="text-foreground font-bold">{rec.metric.value}</span>
+              <span className="text-foreground font-bold">
+                {rec.metric.value}
+              </span>
             </p>
           )}
         </div>
@@ -89,7 +94,7 @@ function RecommendationItem({ rec }: { rec: Recommendation }) {
           asChild
           size="sm"
           variant="outline"
-          className="h-7 gap-1.5 px-3 text-xs font-semibold bg-background hover:bg-accent transition-colors"
+          className="bg-background hover:bg-accent h-7 gap-1.5 px-3 text-xs font-semibold transition-colors"
         >
           <Link href={rec.cta.href}>
             {rec.cta.label}
@@ -101,27 +106,29 @@ function RecommendationItem({ rec }: { rec: Recommendation }) {
   );
 }
 
-export function RecommendationsCard({ recommendations }: RecommendationsCardProps) {
+export function RecommendationsCard({
+  recommendations,
+}: RecommendationsCardProps) {
   return (
     <Card
-      className="rounded-xl border border-border/60 bg-card/50 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-all hover:bg-card/60"
+      className="border-border/60 bg-card/50 supports-[backdrop-filter]:bg-background/60 hover:bg-card/60 rounded-xl border shadow-sm backdrop-blur transition-all"
       id="recommendations-card"
     >
-      <CardHeader className="border-b border-border/40 pb-4">
-        <CardTitle className="flex items-center gap-2 text-sm font-semibold text-foreground tracking-tight">
-          <Sparkles className="h-4 w-4 text-primary" />
+      <CardHeader className="border-border/40 border-b pb-4">
+        <CardTitle className="text-foreground flex items-center gap-2 text-sm font-semibold tracking-tight">
+          <Sparkles className="text-primary h-4 w-4" />
           Next Steps
         </CardTitle>
       </CardHeader>
 
-      <CardContent className="pt-5 space-y-3">
+      <CardContent className="space-y-3 pt-5">
         {recommendations.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-8 text-center gap-2">
-            <CheckCircle2 className="h-10 w-10 text-primary/60" />
-            <p className="text-sm font-semibold text-foreground">
+          <div className="flex flex-col items-center justify-center gap-2 py-8 text-center">
+            <CheckCircle2 className="text-primary/60 h-10 w-10" />
+            <p className="text-foreground text-sm font-semibold">
               You&apos;re all caught up!
             </p>
-            <p className="text-xs text-muted-foreground max-w-[180px]">
+            <p className="text-muted-foreground max-w-[180px] text-xs">
               Keep up the great work. Check back tomorrow for new suggestions.
             </p>
           </div>

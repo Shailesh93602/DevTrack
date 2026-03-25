@@ -7,7 +7,9 @@ export function useDsaProblemList() {
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [deleteError, setDeleteError] = useState<string | null>(null);
-  const [filter, setFilter] = useState<"ALL" | "EASY" | "MEDIUM" | "HARD">("ALL");
+  const [filter, setFilter] = useState<"ALL" | "EASY" | "MEDIUM" | "HARD">(
+    "ALL"
+  );
 
   const handleDelete = async (id: string) => {
     setDeletingId(id);

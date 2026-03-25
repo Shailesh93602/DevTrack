@@ -10,11 +10,30 @@ import {
 const DIFFICULTY_LITERALS = ["EASY", "MEDIUM", "HARD"] as const;
 
 export const dsaProblemSchema = z.object({
-  title: z.string().trim().min(2, "Title must be at least 2 characters").max(200),
+  title: z
+    .string()
+    .trim()
+    .min(2, "Title must be at least 2 characters")
+    .max(200),
   difficulty: z.enum(DIFFICULTY_LITERALS),
-  pattern: z.string().trim().min(1, "Pattern is required").max(PATTERN_MAX_LENGTH),
-  platform: z.string().trim().min(1, "Platform is required").max(PLATFORM_MAX_LENGTH),
-  notes: z.string().trim().max(NOTES_MAX_LENGTH, `Notes must be ${NOTES_MAX_LENGTH} characters or less`).optional(),
+  pattern: z
+    .string()
+    .trim()
+    .min(1, "Pattern is required")
+    .max(PATTERN_MAX_LENGTH),
+  platform: z
+    .string()
+    .trim()
+    .min(1, "Platform is required")
+    .max(PLATFORM_MAX_LENGTH),
+  notes: z
+    .string()
+    .trim()
+    .max(
+      NOTES_MAX_LENGTH,
+      `Notes must be ${NOTES_MAX_LENGTH} characters or less`
+    )
+    .optional(),
 });
 
 export const createDsaProblemSchema = dsaProblemSchema;
@@ -29,7 +48,12 @@ export const dsaProblemQuerySchema = z.object({
   difficulty: z.enum(DIFFICULTY_LITERALS).optional(),
   pattern: z.string().optional(),
   platform: z.string().optional(),
-  limit: z.coerce.number().int().min(1).max(MAX_PAGE_LIMIT).default(DEFAULT_PAGE_LIMIT),
+  limit: z.coerce
+    .number()
+    .int()
+    .min(1)
+    .max(MAX_PAGE_LIMIT)
+    .default(DEFAULT_PAGE_LIMIT),
   offset: z.coerce.number().int().min(0).default(0),
 });
 

@@ -1,6 +1,6 @@
 /**
  * DSA Problem Types
- * 
+ *
  * All DSA Problem related types, interfaces, and type definitions
  * should be defined here to maintain separation of concerns.
  */
@@ -55,7 +55,7 @@ export interface ProblemItemProps {
 }
 
 export interface FilterOption {
-  value: typeof FILTER_OPTIONS[number];
+  value: (typeof FILTER_OPTIONS)[number];
   label: string;
 }
 
@@ -63,13 +63,13 @@ export interface DsaProblemState {
   deletingId: string | null;
   editingId: string | null;
   deleteError: string | null;
-  filter: typeof FILTER_OPTIONS[number];
+  filter: (typeof FILTER_OPTIONS)[number];
 }
 
 export interface DsaProblemActions {
   handleDelete: (id: string) => Promise<void>;
   handleEdit: (problem: DsaProblem) => void;
-  setFilter: (filter: typeof FILTER_OPTIONS[number]) => void;
+  setFilter: (filter: (typeof FILTER_OPTIONS)[number]) => void;
 }
 
 // ─── Pattern Analysis Types ─────────────────────────────────────────────────

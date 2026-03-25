@@ -13,11 +13,7 @@ import { ProblemDetails } from "./dsa-problem/ProblemDetails";
 import { createDsaProblem, updateDsaProblem } from "@/lib/api/dsa-problem";
 
 export function DsaProblemForm({ problem, onSuccess }: DsaProblemFormProps) {
-  const {
-    submitError,
-    setSubmitError,
-    router,
-  } = useDsaProblemForm();
+  const { submitError, setSubmitError, router } = useDsaProblemForm();
 
   const isEditing = !!problem;
 
@@ -54,9 +50,10 @@ export function DsaProblemForm({ problem, onSuccess }: DsaProblemFormProps) {
   async function onSubmit(data: DsaProblemInput) {
     setSubmitError(null);
     try {
-      const result = isEditing && problem
-        ? await updateDsaProblem(problem.id, data)
-        : await createDsaProblem(data);
+      const result =
+        isEditing && problem
+          ? await updateDsaProblem(problem.id, data)
+          : await createDsaProblem(data);
 
       if (!result.success) {
         throw new Error(result.error.message);
@@ -77,7 +74,7 @@ export function DsaProblemForm({ problem, onSuccess }: DsaProblemFormProps) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
-      <ProblemDetails 
+      <ProblemDetails
         register={register}
         errors={errors}
         difficulty={difficultyValue}
@@ -111,7 +108,7 @@ export function DsaProblemForm({ problem, onSuccess }: DsaProblemFormProps) {
       </div>
 
       {submitError && (
-        <p role="alert" className="text-destructive text-sm text-center">
+        <p role="alert" className="text-destructive text-center text-sm">
           {submitError}
         </p>
       )}

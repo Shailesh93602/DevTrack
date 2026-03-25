@@ -6,11 +6,7 @@ import {
   INSIGHTS_QUERY_LIMIT,
   MS_PER_DAY,
 } from "@/lib/constants";
-import type {
-  Insight,
-  InsightContext,
-  InsightConfig,
-} from "@/types/insights";
+import type { Insight, InsightContext, InsightConfig } from "@/types/insights";
 import { DEFAULT_INSIGHT_CONFIG } from "@/types/insights";
 
 /**
@@ -43,7 +39,10 @@ function applyStrengthRules(
       stat.percentage >= config.thresholds.strengthMinPercentage
     ) {
       insights.push({
-        id: generateInsightId("strength", stat.pattern.toLowerCase().replaceAll(/\s+/g, "-")),
+        id: generateInsightId(
+          "strength",
+          stat.pattern.toLowerCase().replaceAll(/\s+/g, "-")
+        ),
         type: "strength",
         priority: "medium",
         title: `Strong in ${stat.pattern}`,
@@ -77,7 +76,10 @@ function applyWeaknessRules(
   for (const stat of context.patternStats) {
     if (stat.count <= config.thresholds.weaknessMaxCount) {
       insights.push({
-        id: generateInsightId("weakness", stat.pattern.toLowerCase().replaceAll(/\s+/g, "-")),
+        id: generateInsightId(
+          "weakness",
+          stat.pattern.toLowerCase().replaceAll(/\s+/g, "-")
+        ),
         type: "weakness",
         priority: "high",
         title: `Practice ${stat.pattern} more`,
@@ -113,7 +115,8 @@ function applyActivityRules(
       type: "activity",
       priority: "high",
       title: "Start your journey",
-      message: "You haven't logged any activity yet. Start by logging your first day of coding!",
+      message:
+        "You haven't logged any activity yet. Start by logging your first day of coding!",
       action: {
         label: "Log activity",
         href: "/dashboard/logs",
@@ -149,7 +152,8 @@ function applyActivityRules(
       type: "activity",
       priority: "medium",
       title: "Keep the momentum",
-      message: "You've only logged a few days recently. Try to maintain a more consistent schedule.",
+      message:
+        "You've only logged a few days recently. Try to maintain a more consistent schedule.",
       metric: {
         label: "Recent logs",
         value: context.recentLogsCount,
@@ -170,7 +174,10 @@ function applyStreakRules(
   const insights: Insight[] = [];
 
   // Streak milestone
-  if (context.currentStreak > 0 && context.currentStreak % config.thresholds.streakMilestoneInterval === 0) {
+  if (
+    context.currentStreak > 0 &&
+    context.currentStreak % config.thresholds.streakMilestoneInterval === 0
+  ) {
     insights.push({
       id: generateInsightId("milestone", `streak-${context.currentStreak}`),
       type: "milestone",
@@ -219,7 +226,8 @@ function applySuggestionRules(context: InsightContext): Insight[] {
       type: "suggestion",
       priority: "medium",
       title: "Get started with DSA",
-      message: "Start by solving your first problem. Begin with easy problems to build confidence.",
+      message:
+        "Start by solving your first problem. Begin with easy problems to build confidence.",
       action: {
         label: "Add problem",
         href: "/dashboard/problems",
@@ -264,16 +272,21 @@ export async function generateInsights(
 ): Promise<Insight[]> {
   let context: InsightContext;
 
-  if (preFetchedContext &&
+  if (
+    preFetchedContext &&
     preFetchedContext.patternStats !== undefined &&
     preFetchedContext.totalProblems !== undefined &&
     preFetchedContext.currentStreak !== undefined &&
-    preFetchedContext.longestStreak !== undefined) {
+    preFetchedContext.longestStreak !== undefined
+  ) {
     // Use fully pre-fetched context
     context = preFetchedContext as InsightContext;
   } else if (preFetchedContext) {
     // Build context from partial pre-fetched data + DB queries for missing pieces
-    context = await buildInsightContextWithPartialData(userId, preFetchedContext);
+    context = await buildInsightContextWithPartialData(
+      userId,
+      preFetchedContext
+    );
   } else {
     // Fetch all data from DB
     context = await buildInsightContext(userId);
@@ -307,30 +320,38 @@ async function buildInsightContextWithPartialData(
   }
 ): Promise<InsightContext> {
   // Fetch missing data
-  const problems = preFetched.problems ?? await prisma.dSAProblem.findMany({
-    where: { userId },
-    select: { pattern: true },
-  });
+  const problems =
+    preFetched.problems ??
+    (await prisma.dSAProblem.findMany({
+      where: { userId },
+      select: { pattern: true },
+    }));
 
-  const recentLogs = preFetched.recentLogs ?? await prisma.dailyLog.findMany({
-    where: { userId },
-    orderBy: { date: "desc" },
-    take: DAYS_IN_WEEK,
-    select: { id: true },
-  });
+  const recentLogs =
+    preFetched.recentLogs ??
+    (await prisma.dailyLog.findMany({
+      where: { userId },
+      orderBy: { date: "desc" },
+      take: DAYS_IN_WEEK,
+      select: { id: true },
+    }));
 
-  const lastLog = preFetched.lastLog ?? await prisma.dailyLog.findFirst({
-    where: { userId },
-    orderBy: { date: "desc" },
-    select: { date: true },
-  });
+  const lastLog =
+    preFetched.lastLog ??
+    (await prisma.dailyLog.findFirst({
+      where: { userId },
+      orderBy: { date: "desc" },
+      select: { date: true },
+    }));
 
-  const logs = preFetched.logs ?? await prisma.dailyLog.findMany({
-    where: { userId },
-    select: { date: true },
-    orderBy: { date: "asc" },
-    take: INSIGHTS_QUERY_LIMIT,
-  });
+  const logs =
+    preFetched.logs ??
+    (await prisma.dailyLog.findMany({
+      where: { userId },
+      select: { date: true },
+      orderBy: { date: "asc" },
+      take: INSIGHTS_QUERY_LIMIT,
+    }));
 
   // Calculate pattern stats
   const patternCounts = new Map<string, number>();
@@ -344,7 +365,8 @@ async function buildInsightContextWithPartialData(
     .map(([pattern, count]) => ({
       pattern,
       count,
-      percentage: totalProblems > 0 ? Math.round((count / totalProblems) * 100) : 0,
+      percentage:
+        totalProblems > 0 ? Math.round((count / totalProblems) * 100) : 0,
     }))
     .sort((a, b) => b.count - a.count);
 

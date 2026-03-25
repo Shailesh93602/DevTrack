@@ -30,23 +30,26 @@ export function TrendsCard({ trends }: TrendsCardProps) {
 
     return (
       <div className="flex flex-col gap-1">
-        <span className="text-xs text-muted-foreground uppercase tracking-wider font-medium">{label}</span>
+        <span className="text-muted-foreground text-xs font-medium tracking-wider uppercase">
+          {label}
+        </span>
         <div className="flex items-center gap-2">
           <Icon className={cn("h-4 w-4", color)} />
           <span className={cn("text-lg font-bold", color)}>
-            {isUp ? "+" : ""}{diff}
+            {isUp ? "+" : ""}
+            {diff}
           </span>
-          <span className="text-xs text-muted-foreground">vs last week</span>
+          <span className="text-muted-foreground text-xs">vs last week</span>
         </div>
       </div>
     );
   };
 
   return (
-    <Card className="rounded-xl border border-border/60 bg-card/50 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-background/60 h-full transition-all hover:bg-card/60">
-      <CardHeader className="border-b border-border/40 pb-4">
-        <CardTitle className="flex items-center gap-2 text-sm font-semibold text-foreground">
-          <TrendingUp className="h-4 w-4 text-primary" />
+    <Card className="border-border/60 bg-card/50 supports-[backdrop-filter]:bg-background/60 hover:bg-card/60 h-full rounded-xl border shadow-sm backdrop-blur transition-all">
+      <CardHeader className="border-border/40 border-b pb-4">
+        <CardTitle className="text-foreground flex items-center gap-2 text-sm font-semibold">
+          <TrendingUp className="text-primary h-4 w-4" />
           Productivity Trends
         </CardTitle>
       </CardHeader>

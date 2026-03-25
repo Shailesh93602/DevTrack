@@ -1,11 +1,11 @@
 import { prisma } from "@/lib/db/prisma";
-import { 
-  toUtcDateString, 
-  isNextDay, 
-  getTodayUtcString, 
+import {
+  toUtcDateString,
+  isNextDay,
+  getTodayUtcString,
   getYesterdayUtcString,
   parseUtcDate,
-  DATE_CONSTANTS
+  DATE_CONSTANTS,
 } from "@/lib/utils/date";
 
 const { STREAK_CUTOFF_DAYS } = DATE_CONSTANTS;
@@ -71,7 +71,9 @@ export function calculateStreakFromDates(dates: string[]): StreakResult {
     return { currentStreak: 0, longestStreak: 0 };
   }
 
-  const uniqueDates = Array.from(new Set(dates)).sort((a, b) => a.localeCompare(b));
+  const uniqueDates = Array.from(new Set(dates)).sort((a, b) =>
+    a.localeCompare(b)
+  );
 
   // Calculate longest streak with forward pass
   let runningStreak = 1;
@@ -134,7 +136,7 @@ export async function syncUserStreak(userId: string): Promise<void> {
   // We fetch user first to avoid unnecessary updates if current longest is already higher
   const user = await prisma.user.findUnique({
     where: { id: userId },
-    select: { longestStreak: true }
+    select: { longestStreak: true },
   });
 
   if (user && longestStreak > user.longestStreak) {
@@ -144,4 +146,3 @@ export async function syncUserStreak(userId: string): Promise<void> {
     });
   }
 }
-

@@ -5,15 +5,19 @@ test.use({ storageState: "playwright/.auth/user.json" });
 test.describe("DSA Problem Feature", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/dashboard/problems");
-    await expect(page.locator("text=DSA Problems")).toBeVisible({ timeout: 15000 });
+    await expect(page.locator("text=DSA Problems")).toBeVisible({
+      timeout: 15000,
+    });
   });
 
   test("should create a new DSA problem", async ({ page }) => {
     // Wait for initial load to finish (skeletons vanish)
-    await expect(page.locator('.animate-pulse')).toHaveCount(0, { timeout: 15000 });
+    await expect(page.locator(".animate-pulse")).toHaveCount(0, {
+      timeout: 15000,
+    });
 
     // Fill in the problem form using ID for title
-    await page.fill('input#problem-title', "Two Sum");
+    await page.fill("input#problem-title", "Two Sum");
 
     // Select difficulty
     await page.getByLabel(/difficulty/i).click();
@@ -26,7 +30,9 @@ test.describe("DSA Problem Feature", () => {
     await page.click('button[type="submit"]');
 
     // Wait for the new problem to appear in the list
-    await expect(page.locator("text=Two Sum").first()).toBeVisible({ timeout: 15000 });
+    await expect(page.locator("text=Two Sum").first()).toBeVisible({
+      timeout: 15000,
+    });
     await expect(page.locator("text=Hash Map")).toBeVisible();
     await expect(page.locator("text=LeetCode")).toBeVisible();
   });
@@ -37,11 +43,13 @@ test.describe("DSA Problem Feature", () => {
     await page.getByLabel(/difficulty/i).click();
     await page.getByRole("option", { name: "Medium" }).click();
     await page.getByLabel(/pattern/i).fill("Arrays");
-    
+
     await page.click('button[type="submit"]');
- 
+
     // Should show validation error
-    await expect(page.locator("text=Title must be at least 2 characters")).toBeVisible();
+    await expect(
+      page.locator("text=Title must be at least 2 characters")
+    ).toBeVisible();
   });
 
   test("should filter problems by difficulty", async ({ page }) => {
@@ -54,7 +62,7 @@ test.describe("DSA Problem Feature", () => {
     await page.getByLabel(/platform/i).fill("LeetCode");
     await page.click('button[type="submit"]');
     await expect(page.locator("text=Problem added successfully")).toBeVisible();
- 
+
     // Create a hard problem
     await page.click('button:has-text("Add Problem")');
     await page.getByLabel(/problem title/i).fill("Trapping Rain Water");
@@ -67,7 +75,9 @@ test.describe("DSA Problem Feature", () => {
 
     // Create a medium problem
     await page.click('button:has-text("Add Problem")');
-    await page.getByLabel(/problem title/i).fill("Longest Substring Without Repeating Characters");
+    await page
+      .getByLabel(/problem title/i)
+      .fill("Longest Substring Without Repeating Characters");
     await page.getByLabel(/difficulty/i).click();
     await page.getByRole("option", { name: "Medium" }).click();
     await page.getByLabel(/pattern/i).fill("Sliding Window");
@@ -79,17 +89,23 @@ test.describe("DSA Problem Feature", () => {
     await page.click('button:has-text("Easy")');
     await expect(page.locator("text=Valid Palindrome")).toBeVisible();
     await expect(page.locator("text=Trapping Rain Water")).not.toBeVisible();
-    await expect(page.locator("text=Longest Substring Without Repeating Characters")).not.toBeVisible();
+    await expect(
+      page.locator("text=Longest Substring Without Repeating Characters")
+    ).not.toBeVisible();
 
     // Filter by HARD
     await page.click('button:has-text("Hard")');
     await expect(page.locator("text=Trapping Rain Water")).toBeVisible();
     await expect(page.locator("text=Valid Palindrome")).not.toBeVisible();
-    await expect(page.locator("text=Longest Substring Without Repeating Characters")).not.toBeVisible();
+    await expect(
+      page.locator("text=Longest Substring Without Repeating Characters")
+    ).not.toBeVisible();
 
     // Filter by MEDIUM
     await page.click('button:has-text("Medium")');
-    await expect(page.locator("text=Longest Substring Without Repeating Characters")).toBeVisible();
+    await expect(
+      page.locator("text=Longest Substring Without Repeating Characters")
+    ).toBeVisible();
     await expect(page.locator("text=Valid Palindrome")).not.toBeVisible();
     await expect(page.locator("text=Trapping Rain Water")).not.toBeVisible();
 
@@ -97,7 +113,9 @@ test.describe("DSA Problem Feature", () => {
     await page.click('button:has-text("All")');
     await expect(page.locator("text=Valid Palindrome")).toBeVisible();
     await expect(page.locator("text=Trapping Rain Water")).toBeVisible();
-    await expect(page.locator("text=Longest Substring Without Repeating Characters")).toBeVisible();
+    await expect(
+      page.locator("text=Longest Substring Without Repeating Characters")
+    ).toBeVisible();
   });
 
   test("should edit an existing problem", async ({ page }) => {
@@ -111,7 +129,9 @@ test.describe("DSA Problem Feature", () => {
     await page.click('button[type="submit"]');
 
     // Wait for success
-    await expect(page.locator("text=Problem added successfully")).toBeVisible({ timeout: 10000 });
+    await expect(page.locator("text=Problem added successfully")).toBeVisible({
+      timeout: 10000,
+    });
 
     // Click edit button (pencil icon)
     await page.locator('button[aria-label^="Edit"]').first().click();
@@ -137,7 +157,9 @@ test.describe("DSA Problem Feature", () => {
     await page.click('button[type="submit"]');
 
     // Wait for success
-    await expect(page.locator("text=Problem added successfully")).toBeVisible({ timeout: 10000 });
+    await expect(page.locator("text=Problem added successfully")).toBeVisible({
+      timeout: 10000,
+    });
 
     // Click delete button (trash icon)
     await page.locator('button[aria-label^="Delete"]').first().click();
@@ -155,9 +177,14 @@ test.describe("DSA Problem Feature", () => {
 
     // Check if empty state or filter message appears
     const content = await page.content();
-    if (content.includes("No problems match this filter") || content.includes("No problems tracked yet")) {
+    if (
+      content.includes("No problems match this filter") ||
+      content.includes("No problems tracked yet")
+    ) {
       await expect(
-        page.locator("text=No problems match this filter, text=No problems tracked yet")
+        page.locator(
+          "text=No problems match this filter, text=No problems tracked yet"
+        )
       ).toBeVisible();
     }
   });
@@ -172,20 +199,26 @@ test.describe("DSA Problem Feature", () => {
     await page.getByLabel(/platform/i).fill("LeetCode");
 
     // Add notes
-    await page.getByLabel(/notes/i).fill(
-      "Remember to sort the array first. Use two pointers after fixing one element."
-    );
+    await page
+      .getByLabel(/notes/i)
+      .fill(
+        "Remember to sort the array first. Use two pointers after fixing one element."
+      );
 
     // Submit the form
     await page.click('button[type="submit"]');
 
     // Wait for success
-    await expect(page.locator("text=Problem added successfully")).toBeVisible({ timeout: 10000 });
+    await expect(page.locator("text=Problem added successfully")).toBeVisible({
+      timeout: 10000,
+    });
 
     // Verify the problem appears with notes
     await expect(page.locator("text=Three Sum")).toBeVisible();
     await expect(page.locator("text=Notes:")).toBeVisible();
-    await expect(page.locator("text=Remember to sort the array first")).toBeVisible();
+    await expect(
+      page.locator("text=Remember to sort the array first")
+    ).toBeVisible();
   });
 
   test("should edit problem notes", async ({ page }) => {
@@ -196,53 +229,61 @@ test.describe("DSA Problem Feature", () => {
     await page.getByRole("option", { name: "Easy" }).click();
     await page.getByLabel(/pattern/i).fill("Arrays");
     await page.getByLabel(/platform/i).fill("LeetCode");
-    await page.getByLabel(/notes/i).fill(
-      "Initial notes for the problem"
-    );
+    await page.getByLabel(/notes/i).fill("Initial notes for the problem");
     await page.click('button[type="submit"]');
-    await expect(page.locator("text=Problem added successfully")).toBeVisible({ timeout: 10000 });
+    await expect(page.locator("text=Problem added successfully")).toBeVisible({
+      timeout: 10000,
+    });
 
     // Click edit button
     await page.locator('button[aria-label^="Edit"]').first().click();
 
     // Update the notes
-    await page.getByLabel(/notes/i).fill(
-      "Updated notes: key insight about edge cases"
-    );
+    await page
+      .getByLabel(/notes/i)
+      .fill("Updated notes: key insight about edge cases");
 
     // Save changes
     await page.click('button:has-text("Save Changes")');
 
     // Verify the updated notes appear
-    await expect(page.locator("text=Updated notes: key insight about edge cases")).toBeVisible();
+    await expect(
+      page.locator("text=Updated notes: key insight about edge cases")
+    ).toBeVisible();
   });
 
   test("should validate notes character limit", async ({ page }) => {
     // Try to add notes that are too long (>1000 chars)
     const longNotes = "a".repeat(1001);
- 
+
     await page.click('button:has-text("Add Problem")');
     await page.getByLabel(/problem title/i).fill("Long Notes Test");
     await page.getByLabel(/notes/i).fill(longNotes);
- 
+
     await page.click('button[type="submit"]');
- 
+
     // Should show validation error
-    await expect(page.locator("text=Notes must be 1000 characters or less")).toBeVisible();
+    await expect(
+      page.locator("text=Notes must be 1000 characters or less")
+    ).toBeVisible();
   });
- 
+
   test("should search problems by title", async ({ page }) => {
     await page.click('button:has-text("Add Problem")');
     await page.getByLabel(/problem title/i).fill("Search Target Problem");
     await page.click('button[type="submit"]');
     await expect(page.locator("text=Problem added successfully")).toBeVisible();
- 
-    await page.getByPlaceholder(/Search title or pattern/i).fill("Search Target");
+
+    await page
+      .getByPlaceholder(/Search title or pattern/i)
+      .fill("Search Target");
     await expect(page.locator("text=Search Target Problem")).toBeVisible();
-    
+
     await page.getByPlaceholder(/Search title or pattern/i).fill("NonExistent");
     await expect(page.locator("text=Search Target Problem")).not.toBeVisible();
-    await expect(page.locator("text=No problems match this search")).toBeVisible();
+    await expect(
+      page.locator("text=No problems match this search")
+    ).toBeVisible();
   });
 
   test("should paginate through problems", async ({ page }) => {
@@ -251,7 +292,9 @@ test.describe("DSA Problem Feature", () => {
     // If not, we'll verify the count indicator.
     const content = await page.content();
     if (content.includes("Showing")) {
-      await expect(page.locator(String.raw`text=/Showing \d+ of \d+/`)).toBeVisible();
+      await expect(
+        page.locator(String.raw`text=/Showing \d+ of \d+/`)
+      ).toBeVisible();
     }
   });
 });

@@ -8,6 +8,7 @@ tags: [architecture, organization, typescript, react]
 ## File Structure Standards
 
 ### Types and Interfaces
+
 - **ALWAYS** define interfaces and types in dedicated files under `/types/` directory
 - **NEVER** define interfaces inline in component files (except small local component props)
 - Export types from `/types/index.ts` for centralized access
@@ -22,13 +23,15 @@ export interface DsaProblem {
 }
 
 // ❌ WRONG: Defining in component file
-interface DsaProblem {  // inline definition
+interface DsaProblem {
+  // inline definition
   id: string;
   title: string;
 }
 ```
 
 ### Validation Schemas
+
 - **ALWAYS** place Zod validation schemas in `/lib/validations/` directory
 - **NEVER** define validation schemas in component files
 - Export both schema and inferred types from validation files
@@ -42,18 +45,21 @@ export const dsaProblemSchema = z.object({
 export type DsaProblemInput = z.infer<typeof dsaProblemSchema>;
 
 // ❌ WRONG: Defining in component
-const formSchema = z.object({  // inline
+const formSchema = z.object({
+  // inline
   title: z.string().min(1),
 });
 ```
 
 ### Component Structure
+
 - **MAX 200 lines per file** - Break down larger components
 - **NO business logic in UI components** - Use custom hooks in `/hooks/` directory
 - **NO API calls in components** - Use service functions or hook-based API calls
 - Keep components focused on presentation only
 
 ### Custom Hooks
+
 - Place all custom hooks in `/hooks/` directory
 - Name hooks with `use` prefix: `useDsaProblemForm`, `useProjectList`
 - Hooks should encapsulate:
@@ -63,6 +69,7 @@ const formSchema = z.object({  // inline
   - Form handling
 
 ### Constants and Configuration
+
 - **NEVER** hardcode magic numbers/strings in components
 - Define constants in dedicated files or at top of hook files
 - Use UPPER_SNAKE_CASE for constants
@@ -77,6 +84,7 @@ const DIFFICULTY_OPTIONS = ["EASY", "MEDIUM", "HARD"] as const;
 ```
 
 ### Utility Functions
+
 - Place reusable utilities in `/lib/utils/` directory
 - Keep functions pure and well-tested
 - Use descriptive names and proper JSDoc comments
@@ -84,6 +92,7 @@ const DIFFICULTY_OPTIONS = ["EASY", "MEDIUM", "HARD"] as const;
 ## Import Organization
 
 Order imports as follows:
+
 1. React/Next.js imports
 2. Third-party libraries
 3. Absolute imports (@/components, @/hooks, @/types)
@@ -92,21 +101,25 @@ Order imports as follows:
 ## Component Guidelines
 
 ### Props Interface
+
 - Define props interface with `ComponentNameProps` naming
 - Keep props minimal and focused
 - Use composition over configuration
 
 ### State Management
+
 - Local state only for UI state (isOpen, isLoading)
 - Business state belongs in hooks or context
 - Never mix business logic with UI state
 
 ### Event Handlers
+
 - Define handlers in hooks or as separate functions
 - Keep JSX clean and readable
 - Use consistent naming: `handleClick`, `handleSubmit`
 
 ## Testing Considerations
+
 - Components should be easy to test (props in, render out)
 - Hooks should be independently testable
 - Mock services at hook level, not component level
@@ -114,6 +127,7 @@ Order imports as follows:
 ## Enforcement
 
 The following are **STRICT RULES**:
+
 1. No interfaces in component files (move to /types/)
 2. No validation schemas in component files (move to /lib/validations/)
 3. No business logic in component files (move to /hooks/)
@@ -121,6 +135,7 @@ The following are **STRICT RULES**:
 5. No magic numbers (use named constants)
 
 Breaking these rules will result in:
+
 - Harder maintenance
 - More bugs
 - Poor code review feedback

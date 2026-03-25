@@ -6,16 +6,15 @@ import {
   handleApiError,
 } from "@/lib/api/errors";
 import { createProject, getProjects } from "@/lib/services/project";
-import {
-  createProjectSchema,
-  projectQuerySchema,
-} from "@/lib/validations";
+import { createProjectSchema, projectQuerySchema } from "@/lib/validations";
 import { parseQueryParams } from "@/lib/utils/api";
 
 export async function POST(request: NextRequest) {
   try {
     const supabase = await createServerSupabaseClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
     if (!user) {
       throw new Error("UNAUTHORIZED");
@@ -25,7 +24,7 @@ export async function POST(request: NextRequest) {
     const validatedData = createProjectSchema.parse(body);
 
     const project = await createProject(user.id, validatedData);
-    
+
     const { revalidatePath } = await import("next/cache");
     revalidatePath("/dashboard");
 
@@ -41,7 +40,9 @@ export async function POST(request: NextRequest) {
 export async function GET(request: NextRequest) {
   try {
     const supabase = await createServerSupabaseClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
     if (!user) {
       throw new Error("UNAUTHORIZED");

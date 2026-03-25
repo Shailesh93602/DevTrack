@@ -37,8 +37,16 @@ export function getYesterdayUtcString(): string {
  * Returns the difference in whole days between two UTC midnight dates
  */
 export function getDaysDifference(a: Date, b: Date): number {
-  const timestampA = Date.UTC(a.getUTCFullYear(), a.getUTCMonth(), a.getUTCDate());
-  const timestampB = Date.UTC(b.getUTCFullYear(), b.getUTCMonth(), b.getUTCDate());
+  const timestampA = Date.UTC(
+    a.getUTCFullYear(),
+    a.getUTCMonth(),
+    a.getUTCDate()
+  );
+  const timestampB = Date.UTC(
+    b.getUTCFullYear(),
+    b.getUTCMonth(),
+    b.getUTCDate()
+  );
   return Math.floor(Math.abs(timestampB - timestampA) / MS_PER_DAY);
 }
 
@@ -48,7 +56,7 @@ export function getDaysDifference(a: Date, b: Date): number {
 export function isNextDay(a: string, b: string): boolean {
   const dateA = parseUtcDate(a);
   const dateB = parseUtcDate(b);
-  return (dateB.getTime() - dateA.getTime()) === MS_PER_DAY;
+  return dateB.getTime() - dateA.getTime() === MS_PER_DAY;
 }
 
 /**

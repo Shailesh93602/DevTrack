@@ -10,20 +10,32 @@ test.describe("Dashboard Feature", () => {
 
   test("should display dashboard stats cards", async ({ page }) => {
     // Wait for the overview heading
-    await expect(page.getByRole("heading", { name: "Overview" })).toBeVisible({ timeout: 15000 });
+    await expect(page.getByRole("heading", { name: "Overview" })).toBeVisible({
+      timeout: 15000,
+    });
 
     // Verify all stats cards titles are present using data-slot to avoid strict mode violations
-    await expect(page.locator('[data-slot="card-title"]:has-text("Problems")')).toBeVisible();
-    await expect(page.locator('[data-slot="card-title"]:has-text("Streak")')).toBeVisible();
-    await expect(page.locator('[data-slot="card-title"]:has-text("Projects")')).toBeVisible();
-    await expect(page.locator('[data-slot="card-title"]:has-text("Today")')).toBeVisible();
+    await expect(
+      page.locator('[data-slot="card-title"]:has-text("Problems")')
+    ).toBeVisible();
+    await expect(
+      page.locator('[data-slot="card-title"]:has-text("Streak")')
+    ).toBeVisible();
+    await expect(
+      page.locator('[data-slot="card-title"]:has-text("Projects")')
+    ).toBeVisible();
+    await expect(
+      page.locator('[data-slot="card-title"]:has-text("Today")')
+    ).toBeVisible();
 
     // Verify some values
     const content = await page.content();
     expect(content).toMatch(/Total solved|solved|Active|day/i);
   });
 
-  test("should display weekly progress chart with date range labels", async ({ page }) => {
+  test("should display weekly progress chart with date range labels", async ({
+    page,
+  }) => {
     // Check for chart section with Problems Solved Per Week title
     await expect(page.locator("text=Problems Solved Per Week")).toBeVisible();
 
@@ -46,7 +58,11 @@ test.describe("Dashboard Feature", () => {
 
     // Verify distribution legend items exist
     const content = await page.content();
-    if (content.includes("Easy") || content.includes("Medium") || content.includes("Hard")) {
+    if (
+      content.includes("Easy") ||
+      content.includes("Medium") ||
+      content.includes("Hard")
+    ) {
       // Difficulty data is present
       expect(true).toBe(true);
     }
@@ -60,14 +76,18 @@ test.describe("Dashboard Feature", () => {
   test("should navigate to daily log page from dashboard", async ({ page }) => {
     // Click on Logs link in sidebar
     await page.getByRole("link", { name: "Daily Logs" }).click();
-    await expect(page.getByRole("heading", { name: "Daily Logs" })).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "Daily Logs" })
+    ).toBeVisible();
   });
 
   test("should show empty state when no recent logs", async ({ page }) => {
     // Check if empty state message exists
     const content = await page.content();
     if (content.includes("Showing")) {
-      await expect(page.locator(String.raw`text=/Showing \d+ of \d+/`)).toBeVisible();
+      await expect(
+        page.locator(String.raw`text=/Showing \d+ of \d+/`)
+      ).toBeVisible();
     }
   });
 
@@ -100,7 +120,9 @@ test.describe("Dashboard Feature", () => {
     await page.reload();
 
     // Should still show overview after reload
-    await expect(page.getByRole("heading", { name: "Overview" })).toBeVisible({ timeout: 10000 });
+    await expect(page.getByRole("heading", { name: "Overview" })).toBeVisible({
+      timeout: 10000,
+    });
   });
 
   test("should show mobile menu toggle on small screens", async ({ page }) => {
@@ -123,39 +145,46 @@ test.describe("Dashboard Feature", () => {
     await expect(page.getByRole("navigation")).not.toBeVisible();
     await expect(page).toHaveURL(/.*problems/);
   });
- 
+
   test("should display consistency score", async ({ page }) => {
     // Look for consistency-related text
     const content = await page.content();
     expect(content).toMatch(/Consistency|Score/i);
-    
+
     // Should show a number, percentage, or 0%
     expect(content).toMatch(/\d+\s*%|0%/);
   });
- 
+
   test("should display trend indicators for stats", async ({ page }) => {
     // Look for percentage changes (e.g. "+10%", "-5%", "0%")
     const content = await page.content();
-    const hasTrend = /[-+]\d+\s*%/.test(content) || content.includes("vs last week") || content.includes("0%");
-    
+    const hasTrend =
+      /[-+]\d+\s*%/.test(content) ||
+      content.includes("vs last week") ||
+      content.includes("0%");
+
     expect(hasTrend || content.includes("vs last week")).toBeTruthy();
   });
- 
+
   test("should display activity heatmap", async ({ page }) => {
     // Check for activity section
     await expect(page.getByRole("heading", { name: "Activity" })).toBeVisible();
-    
+
     // Heatmap should be present even if empty
     const content = await page.content();
     expect(content).toContain("Activity");
   });
- 
+
   test("should display peak productivity times", async ({ page }) => {
     // Check for Peak Time card
-    await expect(page.locator('[data-slot="card-title"]:has-text("Peak Time")')).toBeVisible();
-    
+    await expect(
+      page.locator('[data-slot="card-title"]:has-text("Peak Time")')
+    ).toBeVisible();
+
     // Should show a value like "Morning", "Afternoon", "Evening", "Night", or "N/A" for brand new users
     const content = await page.content();
-    expect(content).toMatch(/Peak productivity|Morning|Afternoon|Evening|Night|N\/A/i);
+    expect(content).toMatch(
+      /Peak productivity|Morning|Afternoon|Evening|Night|N\/A/i
+    );
   });
 });

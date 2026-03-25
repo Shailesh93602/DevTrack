@@ -20,7 +20,9 @@ test.describe("Streak System", () => {
 
   test("should display longest streak count", async ({ page }) => {
     // Look for longest streak card
-    const longestStreakCard = page.locator('div:has-text("Longest Streak")').first();
+    const longestStreakCard = page
+      .locator('div:has-text("Longest Streak")')
+      .first();
     await expect(longestStreakCard).toBeVisible();
 
     // Should contain a number
@@ -76,7 +78,9 @@ test.describe("Streak System", () => {
     await page.click('button[type="submit"]');
 
     // Wait for success
-    await expect(page.locator("text=Log created successfully")).toBeVisible({ timeout: 10000 });
+    await expect(page.locator("text=Log created successfully")).toBeVisible({
+      timeout: 10000,
+    });
 
     // Navigate back to dashboard
     await page.goto("/dashboard");

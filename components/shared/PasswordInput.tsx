@@ -17,7 +17,10 @@ export const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
     return (
       <div className="space-y-1.5">
         {label && (
-          <label htmlFor={props.id} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+          <label
+            htmlFor={props.id}
+            className="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          >
             {label}
           </label>
         )}
@@ -32,7 +35,7 @@ export const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
             type="button"
             variant="ghost"
             size="icon-sm"
-            className="absolute right-0 top-0 h-full px-3 text-muted-foreground hover:text-foreground"
+            className="text-muted-foreground hover:text-foreground absolute top-0 right-0 h-full px-3"
             onClick={() => setShowPassword(!showPassword)}
             tabIndex={-1}
           >

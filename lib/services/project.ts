@@ -1,6 +1,10 @@
 import { prisma } from "@/lib/db/prisma";
 import { Prisma, ProjectActivityType } from "@prisma/client";
-import type { CreateProjectInput, UpdateProjectInput, ProjectQueryParams } from "@/lib/validations";
+import type {
+  CreateProjectInput,
+  UpdateProjectInput,
+  ProjectQueryParams,
+} from "@/lib/validations";
 
 const defaultSelect = {
   id: true,

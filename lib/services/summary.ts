@@ -13,17 +13,22 @@ export interface WeeklySummary {
 
 export async function getWeeklySummary(userId: string): Promise<WeeklySummary> {
   const stats = await getDashboardStats(userId);
-  
+
   const end = new Date();
   const start = new Date();
   start.setUTCDate(end.getUTCDate() - 7);
 
-  const topInsight = stats.insights.length > 0 
-    ? stats.insights[0] 
-    : { title: "Doing Great!", message: "Keep up your consistent logging activity." };
+  const topInsight =
+    stats.insights.length > 0
+      ? stats.insights[0]
+      : {
+          title: "Doing Great!",
+          message: "Keep up your consistent logging activity.",
+        };
 
-  const recommendation = stats.insights.find(i => i.type === "weakness" || i.type === "suggestion")?.message 
-    ?? "Consider exploring a new problem pattern this week.";
+  const recommendation =
+    stats.insights.find((i) => i.type === "weakness" || i.type === "suggestion")
+      ?.message ?? "Consider exploring a new problem pattern this week.";
 
   return {
     period: `${formatLogDate(start)} - ${formatLogDate(end)}`,
@@ -32,14 +37,15 @@ export async function getWeeklySummary(userId: string): Promise<WeeklySummary> {
     consistencyScore: stats.consistencyScore,
     topPattern: stats.patternAnalysis.summary.mostPracticed?.pattern ?? "None",
     mainInsight: topInsight.message,
-    recommendation
+    recommendation,
   };
 }
 
 export function formatSummaryToMarkdown(summary: WeeklySummary): string {
-  const deltaText = summary.solvedDelta >= 0 
-    ? `📈 Up by ${summary.solvedDelta} from last week`
-    : `📉 Down by ${Math.abs(summary.solvedDelta)} from last week`;
+  const deltaText =
+    summary.solvedDelta >= 0
+      ? `📈 Up by ${summary.solvedDelta} from last week`
+      : `📉 Down by ${Math.abs(summary.solvedDelta)} from last week`;
 
   return `
 # Your Weekly DevTrack Summary

@@ -5,14 +5,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  useDailyLogForm,
-} from "@/hooks/useDailyLogForm";
+import { useDailyLogForm } from "@/hooks/useDailyLogForm";
 import { createDailyLog, updateDailyLog } from "@/lib/api/daily-log";
 import { toDateInputValue, getTodayUtcString } from "@/lib/utils/date";
 import { NOTES_MAX_LENGTH as NOTES_MAX } from "@/lib/constants";
 import type { DailyLogFormProps } from "@/types";
-import { createDailyLogSchema, type DailyLogFormInput } from "@/lib/validations";
+import {
+  createDailyLogSchema,
+  type DailyLogFormInput,
+} from "@/lib/validations";
 
 import { TopicSelector } from "./daily-log/TopicSelector";
 import { NotesSection } from "./daily-log/NotesSection";
@@ -55,7 +56,7 @@ export function DailyLogForm({ log, onSuccess }: DailyLogFormProps) {
   async function onSubmit(values: DailyLogFormInput) {
     setSubmitError(null);
     try {
-      const result = isEditing 
+      const result = isEditing
         ? await updateDailyLog(log.id, values)
         : await createDailyLog(values);
 

@@ -4,7 +4,9 @@ import { type DailyLogFormInput } from "@/lib/validations";
 /**
  * API Wrapper for Daily Log operations
  */
-export async function createDailyLog(data: DailyLogFormInput): Promise<ApiResponse<unknown>> {
+export async function createDailyLog(
+  data: DailyLogFormInput
+): Promise<ApiResponse<unknown>> {
   const response = await fetch("/api/daily-log", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -14,7 +16,10 @@ export async function createDailyLog(data: DailyLogFormInput): Promise<ApiRespon
   return response.json();
 }
 
-export async function updateDailyLog(id: string, data: DailyLogFormInput): Promise<ApiResponse<unknown>> {
+export async function updateDailyLog(
+  id: string,
+  data: DailyLogFormInput
+): Promise<ApiResponse<unknown>> {
   const response = await fetch(`/api/daily-log/${id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
@@ -24,7 +29,9 @@ export async function updateDailyLog(id: string, data: DailyLogFormInput): Promi
   return response.json();
 }
 
-export async function deleteDailyLog(id: string): Promise<ApiResponse<unknown>> {
+export async function deleteDailyLog(
+  id: string
+): Promise<ApiResponse<unknown>> {
   const response = await fetch(`/api/daily-log/${id}`, {
     method: "DELETE",
   });

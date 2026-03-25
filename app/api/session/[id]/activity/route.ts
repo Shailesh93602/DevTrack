@@ -6,10 +6,7 @@ import {
   handleApiError,
 } from "@/lib/api/errors";
 import { addSessionActivity } from "@/lib/services/session";
-import {
-  sessionIdSchema,
-  createSessionEventSchema,
-} from "@/lib/validations";
+import { sessionIdSchema, createSessionEventSchema } from "@/lib/validations";
 
 export async function POST(
   request: NextRequest,
@@ -17,7 +14,9 @@ export async function POST(
 ) {
   try {
     const supabase = await createServerSupabaseClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
     if (!user) {
       throw new Error("UNAUTHORIZED");

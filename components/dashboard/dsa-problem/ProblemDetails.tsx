@@ -1,9 +1,19 @@
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Difficulty } from "@prisma/client";
 import { DIFFICULTY_OPTIONS } from "@/types/dsa-problem";
-import { type UseFormRegister, type FieldErrors, type UseFormSetValue } from "react-hook-form";
+import {
+  type UseFormRegister,
+  type FieldErrors,
+  type UseFormSetValue,
+} from "react-hook-form";
 import { type DsaProblemInput } from "@/lib/validations";
 
 interface ProblemDetailsProps {
@@ -31,7 +41,11 @@ export function ProblemDetails({
           aria-describedby={errors.title ? "problem-title-error" : undefined}
         />
         {errors.title && (
-          <p id="problem-title-error" className="text-destructive text-xs" role="alert">
+          <p
+            id="problem-title-error"
+            className="text-destructive text-xs"
+            role="alert"
+          >
             {errors.title.message}
           </p>
         )}
@@ -44,10 +58,16 @@ export function ProblemDetails({
           placeholder="e.g. LeetCode, HackerRank..."
           {...register("platform")}
           aria-invalid={!!errors.platform}
-          aria-describedby={errors.platform ? "problem-platform-error" : undefined}
+          aria-describedby={
+            errors.platform ? "problem-platform-error" : undefined
+          }
         />
         {errors.platform && (
-          <p id="problem-platform-error" className="text-destructive text-xs" role="alert">
+          <p
+            id="problem-platform-error"
+            className="text-destructive text-xs"
+            role="alert"
+          >
             {errors.platform.message}
           </p>
         )}
@@ -58,9 +78,14 @@ export function ProblemDetails({
           <Label htmlFor="problem-difficulty">Difficulty</Label>
           <Select
             value={difficulty}
-            onValueChange={(val: Difficulty) => setValue("difficulty", val, { shouldValidate: true })}
+            onValueChange={(val: Difficulty) =>
+              setValue("difficulty", val, { shouldValidate: true })
+            }
           >
-            <SelectTrigger id="problem-difficulty" aria-label="Select difficulty">
+            <SelectTrigger
+              id="problem-difficulty"
+              aria-label="Select difficulty"
+            >
               <SelectValue />
             </SelectTrigger>
             <SelectContent>

@@ -28,24 +28,24 @@ component automatically picks up the correct token for the active theme.
 
 ### 1. Use CSS variables, NEVER hardcoded colors
 
-| ❌ Not allowed | ✅ Use instead |
-|---|---|
-| `bg-green-500` | `bg-[var(--status-completed)]` |
-| `text-yellow-800` | `text-[var(--difficulty-medium-text)]` |
-| `bg-red-100` | `bg-[var(--difficulty-hard-bg)]` |
-| `text-green-600` | `text-[var(--success-message-text)]` |
-| `oklch(0.70 0.1 142)` (inline) | `var(--chart-easy)` |
-| `hsl(var(--background))` | `var(--background)` — already oklch, no wrapper needed |
+| ❌ Not allowed                 | ✅ Use instead                                         |
+| ------------------------------ | ------------------------------------------------------ |
+| `bg-green-500`                 | `bg-[var(--status-completed)]`                         |
+| `text-yellow-800`              | `text-[var(--difficulty-medium-text)]`                 |
+| `bg-red-100`                   | `bg-[var(--difficulty-hard-bg)]`                       |
+| `text-green-600`               | `text-[var(--success-message-text)]`                   |
+| `oklch(0.70 0.1 142)` (inline) | `var(--chart-easy)`                                    |
+| `hsl(var(--background))`       | `var(--background)` — already oklch, no wrapper needed |
 
 ### 2. Never use `dark:` prefix
 
 ```tsx
 // ❌ Forbidden
-className="bg-white dark:bg-gray-900"
-className="text-black dark:text-white"
+className = "bg-white dark:bg-gray-900";
+className = "text-black dark:text-white";
 
 // ✅ Required
-className="bg-background text-foreground"  // these auto-switch
+className = "bg-background text-foreground"; // these auto-switch
 ```
 
 ### 3. If a color is used in even one place, it must be a CSS variable
@@ -56,12 +56,12 @@ Extract it to `globals.css` under `:root` with a light value and under `.dark` w
 
 ```tsx
 // ❌ Forbidden
-fill="oklch(0.70 0.1 142)"
-backgroundColor: "hsl(var(--background))"
+fill = "oklch(0.70 0.1 142)";
+backgroundColor: "hsl(var(--background))";
 
 // ✅ Required
-fill="var(--chart-easy)"
-backgroundColor: "var(--background)"
+fill = "var(--chart-easy)";
+backgroundColor: "var(--background)";
 ```
 
 ---
@@ -69,6 +69,7 @@ backgroundColor: "var(--background)"
 ## Available CSS Variables
 
 ### Core
+
 - `--background`, `--foreground`
 - `--card`, `--card-foreground`
 - `--popover`, `--popover-foreground`
@@ -80,37 +81,44 @@ backgroundColor: "var(--background)"
 - `--destructive`
 
 ### Form Controls
+
 - `--input-bg` — transparent in light, slight white in dark
 - `--input-bg-hover` — muted in light, slightly more in dark
 - `--input-bg-disabled` — disabled state
 
 ### Semantic States
+
 - `--success`, `--success-foreground`
 - `--warning`, `--warning-foreground`
 - `--error`, `--error-foreground`
 
 ### Success Message (auth forms)
+
 - `--success-message-bg`
 - `--success-message-text`
 - `--success-message-border`
 
 ### Difficulty Badges
+
 - `--difficulty-easy-bg`, `--difficulty-easy-text`
 - `--difficulty-medium-bg`, `--difficulty-medium-text`
 - `--difficulty-hard-bg`, `--difficulty-hard-text`
 
 ### Project Status Dots
+
 - `--status-in-progress`
 - `--status-completed`
 - `--status-hold`
 
 ### Chart Fills
+
 - `--chart-easy` (green)
 - `--chart-medium` (amber)
 - `--chart-hard` (red)
 - `--chart-1` through `--chart-5` (grayscale steps)
 
 ### Sidebar
+
 - `--sidebar`, `--sidebar-foreground`
 - `--sidebar-primary`, `--sidebar-primary-foreground`
 - `--sidebar-accent`, `--sidebar-accent-foreground`
@@ -156,5 +164,5 @@ The theme is managed by `hooks/useTheme.ts` and toggled via `components/shared/T
 ```tsx
 import { ThemeToggle } from "@/components/shared/ThemeToggle";
 // Place anywhere — already handles mounting guard
-<ThemeToggle />
+<ThemeToggle />;
 ```

@@ -34,13 +34,14 @@ export function useTheme() {
 
   // Initialise from storage after hydration — runs once on mount
   useEffect(() => {
-    const stored = (localStorage.getItem(STORAGE_KEY) as Theme | null) ?? "system";
+    const stored =
+      (localStorage.getItem(STORAGE_KEY) as Theme | null) ?? "system";
     const resolved = resolveTheme(stored);
     applyThemeToDOM(resolved);
     setThemeState(stored);
     setResolvedTheme(resolved);
     setMounted(true);
-  // eslint-disable-next-line react-hooks/exhaustive-deps -- intentionally runs once on mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- intentionally runs once on mount
   }, []);
 
   // Apply theme whenever it changes after mount
