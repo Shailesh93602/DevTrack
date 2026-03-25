@@ -244,7 +244,7 @@ export function SessionTracker({ initialActiveSession }: SessionTrackerProps) {
                     Recent Events ({activeSession.activities.length})
                   </p>
                   <div className="custom-scrollbar max-h-[120px] space-y-2 overflow-y-auto pr-2">
-                    {activeSession.activities.slice(0, 3).map((event: any) => (
+                    {activeSession.activities.slice(0, 3).map((event) => (
                       <div
                         key={event.id}
                         className="bg-muted/20 border-border/20 flex items-start gap-2 rounded-lg border p-2 text-xs"

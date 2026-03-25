@@ -1,4 +1,3 @@
-import { NextRequest } from "next/server";
 import { createServerSupabaseClient } from "@/lib/auth/supabase-server";
 import {
   successResponse,
@@ -7,7 +6,7 @@ import {
 } from "@/lib/api/errors";
 import { getActiveSession } from "@/lib/services/session";
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const supabase = await createServerSupabaseClient();
     const {
