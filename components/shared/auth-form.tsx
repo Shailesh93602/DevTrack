@@ -109,7 +109,7 @@ export function AuthForm({ mode }: AuthFormProps) {
       )}
 
       {successMessage && (
-        <div className="bg-green-500/10 text-green-600 border border-green-500/20 rounded-md p-3 text-sm">
+        <div className="bg-[var(--success-message-bg)] text-[var(--success-message-text)] border border-[var(--success-message-border)] rounded-md p-3 text-sm">
           {successMessage}
         </div>
       )}

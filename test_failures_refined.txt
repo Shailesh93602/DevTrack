@@ -1,0 +1,3256 @@
+[global-setup] Deleted test user: devtrack.e2e.test@gmail.com
+[global-setup] Pre-created confirmed test user in Supabase: devtrack.e2e.test@gmail.com
+
+Running 77 tests using 1 worker
+
+[Auth Setup] Navigating to /login...
+[BROWSER] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[BROWSER] [HMR] connected
+[Auth Setup] Filling credentials...
+[Auth Setup] Clicking Sign In...
+[Auth Setup] Waiting for dashboard redirect...
+[BROWSER] The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width.
+[BROWSER] The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width.
+[Auth Setup] Saving storage state...
+[Auth Setup] Completed.
+  ✓   1 [setup] › e2e/auth.setup.ts:6:6 › authenticate (5.7s)
+  ✓   2 [chromium] › e2e/auth.spec.ts:15:7 › Authentication Flows › [SCREENSHOT-01] should show login page with all elements (295ms)
+  ✓   3 [chromium] › e2e/auth.spec.ts:30:7 › Authentication Flows › [SCREENSHOT-02] should show validation errors for empty fields (311ms)
+  ✓   4 [chromium] › e2e/auth.spec.ts:45:7 › Authentication Flows › [SCREENSHOT-03] should show validation error for invalid email format (294ms)
+  ✓   5 [chromium] › e2e/auth.spec.ts:61:7 › Authentication Flows › should preserve form values on validation error (280ms)
+  ✓   6 [chromium] › e2e/auth.spec.ts:72:7 › Authentication Flows › [SCREENSHOT-04] should show password requirements on signup page (245ms)
+  ✓   7 [chromium] › e2e/auth.spec.ts:87:7 › Authentication Flows › [SCREENSHOT-05] should show validation error for weak password on signup (297ms)
+  ✓   8 [chromium] › e2e/auth.spec.ts:107:7 › Registration and Login Integration › [SCREENSHOT-06] should sign in with pre-created user and reach dashboard (3.0s)
+✅ Login successful - Screenshot saved to test-results/07-dashboard-after-login.png
+  ✓   9 [chromium] › e2e/auth.spec.ts:124:7 › Registration and Login Integration › [SCREENSHOT-07] should login with same credentials and redirect to dashboard (2.7s)
+  ✓  10 [chromium] › e2e/auth.spec.ts:149:7 › Registration and Login Integration › [SCREENSHOT-08] should show error for non-existent user login (937ms)
+  ✓  11 [chromium] › e2e/auth.spec.ts:165:7 › Registration and Login Integration › should toggle password visibility (303ms)
+  ✓  12 [chromium] › e2e/auth.spec.ts:183:7 › Registration and Login Integration › should navigate between login and signup pages (453ms)
+  ✘  13 [chromium] › e2e/daily-log.spec.ts:15:7 › Daily Log Feature › should create a new daily log and appear in history (16.5s)
+  ✘  14 [chromium] › e2e/daily-log.spec.ts:15:7 › Daily Log Feature › should create a new daily log and appear in history (retry #1) (17.6s)
+  ✘  15 [chromium] › e2e/daily-log.spec.ts:49:7 › Daily Log Feature › should validate required fields and appear in history (17.0s)
+  ✘  16 [chromium] › e2e/daily-log.spec.ts:49:7 › Daily Log Feature › should validate required fields and appear in history (retry #1) (18.0s)
+  ✘  17 [chromium] › e2e/daily-log.spec.ts:64:7 › Daily Log Feature › should prevent duplicate entries for same date (17.3s)
+  ✘  18 [chromium] › e2e/daily-log.spec.ts:64:7 › Daily Log Feature › should prevent duplicate entries for same date (retry #1) (16.7s)
+  ✓  19 [chromium] › e2e/daily-log.spec.ts:86:7 › Daily Log Feature › should handle topic input with Enter key (2.4s)
+  ✓  20 [chromium] › e2e/daily-log.spec.ts:96:7 › Daily Log Feature › should allow removing topics (953ms)
+  ✘  21 [chromium] › e2e/daily-log.spec.ts:112:7 › Daily Log Feature › should handle notes character limit (11.1s)
+  ✘  22 [chromium] › e2e/daily-log.spec.ts:112:7 › Daily Log Feature › should handle notes character limit (retry #1) (12.2s)
+  ✘  23 [chromium] › e2e/daily-log.spec.ts:125:7 › Daily Log Feature › should filter logs by date range (16.6s)
+  ✘  24 [chromium] › e2e/daily-log.spec.ts:125:7 › Daily Log Feature › should filter logs by date range (retry #1) (17.1s)
+  ✘  25 [chromium] › e2e/daily-log.spec.ts:164:7 › Daily Log Feature › should show all logs when filter is set to all time (17.5s)
+  ✘  26 [chromium] › e2e/daily-log.spec.ts:164:7 › Daily Log Feature › should show all logs when filter is set to all time (retry #1) (18.6s)
+  ✘  27 [chromium] › e2e/daily-log.spec.ts:186:7 › Daily Log Feature › should load more logs when Load more button is clicked (17.0s)
+  ✘  28 [chromium] › e2e/daily-log.spec.ts:186:7 › Daily Log Feature › should load more logs when Load more button is clicked (retry #1) (18.0s)
+  ✘  29 [chromium] › e2e/daily-log.spec.ts:216:7 › Daily Log Feature › should delete a daily log (21.6s)
+  ✘  30 [chromium] › e2e/daily-log.spec.ts:216:7 › Daily Log Feature › should delete a daily log (retry #1) (17.7s)
+  ✘  31 [chromium] › e2e/dashboard.spec.ts:11:7 › Dashboard Feature › should display dashboard stats cards (2.6s)
+  ✘  32 [chromium] › e2e/dashboard.spec.ts:11:7 › Dashboard Feature › should display dashboard stats cards (retry #1) (1.3s)
+  ✓  33 [chromium] › e2e/dashboard.spec.ts:26:7 › Dashboard Feature › should display weekly progress chart with date range labels (1.5s)
+  ✓  34 [chromium] › e2e/dashboard.spec.ts:42:7 › Dashboard Feature › should display difficulty distribution (1.3s)
+  ✓  35 [chromium] › e2e/dashboard.spec.ts:55:7 › Dashboard Feature › should display recent logs section (1.2s)
+  ✓  36 [chromium] › e2e/dashboard.spec.ts:60:7 › Dashboard Feature › should navigate to daily log page from dashboard (1.8s)
+  ✓  37 [chromium] › e2e/dashboard.spec.ts:66:7 › Dashboard Feature › should show empty state when no recent logs (1.2s)
+  ✓  38 [chromium] › e2e/dashboard.spec.ts:74:7 › Dashboard Feature › should display streak information (1.5s)
+  ✓  39 [chromium] › e2e/dashboard.spec.ts:85:7 › Dashboard Feature › should display project counts (1.2s)
+  ✓  40 [chromium] › e2e/dashboard.spec.ts:98:7 › Dashboard Feature › should handle page refresh with loading state (2.4s)
+  ✓  41 [chromium] › e2e/dashboard.spec.ts:106:7 › Dashboard Feature › should show mobile menu toggle on small screens (2.8s)
+  ✓  42 [chromium] › e2e/dashboard.spec.ts:127:7 › Dashboard Feature › should display consistency score (1.2s)
+  ✓  43 [chromium] › e2e/dashboard.spec.ts:136:7 › Dashboard Feature › should display trend indicators for stats (1.1s)
+  ✓  44 [chromium] › e2e/dashboard.spec.ts:144:7 › Dashboard Feature › should display activity heatmap (1.4s)
+  ✘  45 [chromium] › e2e/dashboard.spec.ts:153:7 › Dashboard Feature › should display peak productivity times (11.1s)
+  ✘  46 [chromium] › e2e/dashboard.spec.ts:153:7 › Dashboard Feature › should display peak productivity times (retry #1) (13.2s)
+  ✘  47 [chromium] › e2e/dsa-problem.spec.ts:11:7 › DSA Problem Feature › should create a new DSA problem (2.7s)
+  ✘  48 [chromium] › e2e/dsa-problem.spec.ts:11:7 › DSA Problem Feature › should create a new DSA problem (retry #1) (992ms)
+  ✘  49 [chromium] › e2e/dsa-problem.spec.ts:37:7 › DSA Problem Feature › should validate required fields (1.1s)
+  ✘  50 [chromium] › e2e/dsa-problem.spec.ts:37:7 › DSA Problem Feature › should validate required fields (retry #1) (1.1s)
+  ✘  51 [chromium] › e2e/dsa-problem.spec.ts:50:7 › DSA Problem Feature › should filter problems by difficulty (971ms)
+  ✘  52 [chromium] › e2e/dsa-problem.spec.ts:50:7 › DSA Problem Feature › should filter problems by difficulty (retry #1) (1.3s)
+  ✘  53 [chromium] › e2e/dsa-problem.spec.ts:106:7 › DSA Problem Feature › should edit an existing problem (1.9s)
+  ✘  54 [chromium] › e2e/dsa-problem.spec.ts:106:7 › DSA Problem Feature › should edit an existing problem (retry #1) (1.1s)
+  ✘  55 [chromium] › e2e/dsa-problem.spec.ts:132:7 › DSA Problem Feature › should delete a problem (1.2s)
+  ✘  56 [chromium] › e2e/dsa-problem.spec.ts:132:7 › DSA Problem Feature › should delete a problem (retry #1) (1.0s)
+  ✘  57 [chromium] › e2e/dsa-problem.spec.ts:155:7 › DSA Problem Feature › should display empty state when no problems (1.0s)
+  ✘  58 [chromium] › e2e/dsa-problem.spec.ts:155:7 › DSA Problem Feature › should display empty state when no problems (retry #1) (966ms)
+  ✘  59 [chromium] › e2e/dsa-problem.spec.ts:168:7 › DSA Problem Feature › should create a problem with notes (1.0s)
+  ✘  60 [chromium] › e2e/dsa-problem.spec.ts:168:7 › DSA Problem Feature › should create a problem with notes (retry #1) (998ms)
+  ✘  61 [chromium] › e2e/dsa-problem.spec.ts:194:7 › DSA Problem Feature › should edit problem notes (936ms)
+  ✘  62 [chromium] › e2e/dsa-problem.spec.ts:194:7 › DSA Problem Feature › should edit problem notes (retry #1) (1.1s)
+  ✘  63 [chromium] › e2e/dsa-problem.spec.ts:223:7 › DSA Problem Feature › should validate notes character limit (965ms)
+  ✘  64 [chromium] › e2e/dsa-problem.spec.ts:223:7 › DSA Problem Feature › should validate notes character limit (retry #1) (1.4s)
+  ✘  65 [chromium] › e2e/dsa-problem.spec.ts:237:7 › DSA Problem Feature › should search problems by title (958ms)
+  ✘  66 [chromium] › e2e/dsa-problem.spec.ts:237:7 › DSA Problem Feature › should search problems by title (retry #1) (1.1s)
+  ✘  67 [chromium] › e2e/dsa-problem.spec.ts:251:7 › DSA Problem Feature › should paginate through problems (943ms)
+  ✘  68 [chromium] › e2e/dsa-problem.spec.ts:251:7 › DSA Problem Feature › should paginate through problems (retry #1) (1.0s)
+  ✘  69 [chromium] › e2e/error.spec.ts:4:7 › Error Pages › should display 404 page for non-existent routes (10.7s)
+  ✘  70 [chromium] › e2e/error.spec.ts:4:7 › Error Pages › should display 404 page for non-existent routes (retry #1) (10.8s)
+  ✘  71 [chromium] › e2e/milestone.spec.ts:11:7 › Project Milestones › should display milestones for a project (17.7s)
+  ✘  72 [chromium] › e2e/milestone.spec.ts:11:7 › Project Milestones › should display milestones for a project (retry #1) (18.2s)
+  ✘  73 [chromium] › e2e/milestone.spec.ts:29:7 › Project Milestones › should add a milestone to a project (16.9s)
+  ✘  74 [chromium] › e2e/milestone.spec.ts:29:7 › Project Milestones › should add a milestone to a project (retry #1) (17.6s)
+  ✘  75 [chromium] › e2e/milestone.spec.ts:51:7 › Project Milestones › should complete a milestone (16.9s)
+  ✘  76 [chromium] › e2e/milestone.spec.ts:51:7 › Project Milestones › should complete a milestone (retry #1) (17.6s)
+  ✘  77 [chromium] › e2e/milestone.spec.ts:72:7 › Project Milestones › should delete a milestone (45.1s)
+  ✘  78 [chromium] › e2e/milestone.spec.ts:72:7 › Project Milestones › should delete a milestone (retry #1) (45.1s)
+  ✘  79 [chromium] › e2e/milestone.spec.ts:93:7 › Project Milestones › should update project progress when milestone is completed (45.1s)
+  ✘  80 [chromium] › e2e/milestone.spec.ts:93:7 › Project Milestones › should update project progress when milestone is completed (retry #1) (45.1s)
+  ✘  81 [chromium] › e2e/pattern-intelligence.spec.ts:11:7 › Pattern Intelligence on DSA Problems › should display pattern insights panel (2.6s)
+  ✘  82 [chromium] › e2e/pattern-intelligence.spec.ts:11:7 › Pattern Intelligence on DSA Problems › should display pattern insights panel (retry #1) (994ms)
+  ✘  83 [chromium] › e2e/pattern-intelligence.spec.ts:25:7 › Pattern Intelligence on DSA Problems › should display most practiced patterns (948ms)
+  ✘  84 [chromium] › e2e/pattern-intelligence.spec.ts:25:7 › Pattern Intelligence on DSA Problems › should display most practiced patterns (retry #1) (968ms)
+  ✘  85 [chromium] › e2e/pattern-intelligence.spec.ts:50:7 › Pattern Intelligence on DSA Problems › should show pattern mastery progress (991ms)
+  ✘  86 [chromium] › e2e/pattern-intelligence.spec.ts:50:7 › Pattern Intelligence on DSA Problems › should show pattern mastery progress (retry #1) (962ms)
+  ✘  87 [chromium] › e2e/pattern-intelligence.spec.ts:64:7 › Pattern Intelligence on DSA Problems › should recommend patterns to learn (1.4s)
+  ✘  88 [chromium] › e2e/pattern-intelligence.spec.ts:64:7 › Pattern Intelligence on DSA Problems › should recommend patterns to learn (retry #1) (1.4s)
+  ✘  89 [chromium] › e2e/pattern-intelligence.spec.ts:76:7 › Pattern Intelligence on DSA Problems › should display weak patterns to strengthen (990ms)
+  ✘  90 [chromium] › e2e/pattern-intelligence.spec.ts:76:7 › Pattern Intelligence on DSA Problems › should display weak patterns to strengthen (retry #1) (1.1s)
+  ✘  91 [chromium] › e2e/project.spec.ts:11:7 › Project Feature › should create a new project (16.2s)
+  ✘  92 [chromium] › e2e/project.spec.ts:11:7 › Project Feature › should create a new project (retry #1) (17.1s)
+  ✓  93 [chromium] › e2e/project.spec.ts:40:7 › Project Feature › should validate required fields (1.7s)
+  ✘  94 [chromium] › e2e/project.spec.ts:48:7 › Project Feature › should edit an existing project (16.2s)
+  ✘  95 [chromium] › e2e/project.spec.ts:48:7 › Project Feature › should edit an existing project (retry #1) (16.9s)
+  ✘  96 [chromium] › e2e/project.spec.ts:76:7 › Project Feature › should delete a project (16.9s)
+  ✘  97 [chromium] › e2e/project.spec.ts:76:7 › Project Feature › should delete a project (retry #1) (17.0s)
+  ✘  98 [chromium] › e2e/project.spec.ts:97:7 › Project Feature › should change project status (16.9s)
+  ✘  99 [chromium] › e2e/project.spec.ts:97:7 › Project Feature › should change project status (retry #1) (17.0s)
+  ✓  100 [chromium] › e2e/project.spec.ts:119:7 › Project Feature › should handle tech stack management (1.9s)
+  ✘  101 [chromium] › e2e/project.spec.ts:140:7 › Project Feature › should display project progress (16.0s)
+  ✘  102 [chromium] › e2e/project.spec.ts:140:7 › Project Feature › should display project progress (retry #1) (17.8s)
+  ✓  103 [chromium] › e2e/project.spec.ts:153:7 › Project Feature › should handle character limits (1.7s)
+  ✘  104 [chromium] › e2e/project.spec.ts:169:7 › Project Feature › should update project progress when milestones are completed (16.0s)
+  ✘  105 [chromium] › e2e/project.spec.ts:169:7 › Project Feature › should update project progress when milestones are completed (retry #1) (16.7s)
+  ✓  106 [chromium] › e2e/settings.spec.ts:11:7 › Settings Page › should display user information (1.5s)
+  ✓  107 [chromium] › e2e/settings.spec.ts:17:7 › Settings Page › should display sign out button (796ms)
+  ✘  108 [chromium] › e2e/settings.spec.ts:22:7 › Settings Page › should sign out user (1.9s)
+  ✘  109 [chromium] › e2e/settings.spec.ts:22:7 › Settings Page › should sign out user (retry #1) (10.7s)
+  ✘  110 [chromium] › e2e/settings.spec.ts:31:7 › Settings Page › should navigate back to dashboard (11.5s)
+  ✘  111 [chromium] › e2e/settings.spec.ts:31:7 › Settings Page › should navigate back to dashboard (retry #1) (11.2s)
+  ✘  112 [chromium] › e2e/streak.spec.ts:11:7 › Streak System › should display current streak count (10.8s)
+  ✘  113 [chromium] › e2e/streak.spec.ts:11:7 › Streak System › should display current streak count (retry #1) (10.9s)
+  ✘  114 [chromium] › e2e/streak.spec.ts:21:7 › Streak System › should display longest streak count (10.8s)
+  ✘  115 [chromium] › e2e/streak.spec.ts:21:7 › Streak System › should display longest streak count (retry #1) (10.8s)
+  ✘  116 [chromium] › e2e/streak.spec.ts:31:7 › Streak System › should display streak milestone badges (10.7s)
+  ✘  117 [chromium] › e2e/streak.spec.ts:31:7 › Streak System › should display streak milestone badges (retry #1) (10.9s)
+  ✘  118 [chromium] › e2e/streak.spec.ts:50:7 › Streak System › should display streak freeze information (11.0s)
+  ✘  119 [chromium] › e2e/streak.spec.ts:50:7 › Streak System › should display streak freeze information (retry #1) (10.9s)
+  ✘  120 [chromium] › e2e/streak.spec.ts:64:7 › Streak System › should update streak after creating daily log (10.9s)
+  ✘  121 [chromium] › e2e/streak.spec.ts:64:7 › Streak System › should update streak after creating daily log (retry #1) (11.0s)
+  ✘  122 [chromium] › e2e/streak.spec.ts:90:7 › Streak System › should display progress to next milestone (11.0s)
+  ✘  123 [chromium] › e2e/streak.spec.ts:90:7 › Streak System › should display progress to next milestone (retry #1) (10.9s)
+
+
+  1) [chromium] › e2e/daily-log.spec.ts:15:7 › Daily Log Feature › should create a new daily log and appear in history 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('main').getByText(/5 problems/i)
+    Expected: visible
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 15000ms[22m
+    [2m  - waiting for locator('main').getByText(/5 problems/i)[22m
+
+
+      44 |     // Wait for the log to appear in the history list (it should say "5 problems")
+      45 |     // We use getByText with a regular expression for flexibility
+    > 46 |     await expect(page.locator('main').getByText(/5 problems/i)).toBeVisible({ timeout: 15000 });
+         |                                                                 ^
+      47 |   });
+      48 |
+      49 |   test("should validate required fields and appear in history", async ({ page }) => {
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/daily-log.spec.ts:46:65
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/daily-log-Daily-Log-Featur-6ba60-y-log-and-appear-in-history-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/daily-log-Daily-Log-Featur-6ba60-y-log-and-appear-in-history-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('main').getByText(/5 problems/i)
+    Expected: visible
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 15000ms[22m
+    [2m  - waiting for locator('main').getByText(/5 problems/i)[22m
+
+
+      44 |     // Wait for the log to appear in the history list (it should say "5 problems")
+      45 |     // We use getByText with a regular expression for flexibility
+    > 46 |     await expect(page.locator('main').getByText(/5 problems/i)).toBeVisible({ timeout: 15000 });
+         |                                                                 ^
+      47 |   });
+      48 |
+      49 |   test("should validate required fields and appear in history", async ({ page }) => {
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/daily-log.spec.ts:46:65
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/daily-log-Daily-Log-Featur-6ba60-y-log-and-appear-in-history-chromium-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/daily-log-Daily-Log-Featur-6ba60-y-log-and-appear-in-history-chromium-retry1/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/daily-log-Daily-Log-Featur-6ba60-y-log-and-appear-in-history-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/daily-log-Daily-Log-Featur-6ba60-y-log-and-appear-in-history-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [chromium] › e2e/daily-log.spec.ts:49:7 › Daily Log Feature › should validate required fields and appear in history 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('main').getByText(/0 problems/i)
+    Expected: visible
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 15000ms[22m
+    [2m  - waiting for locator('main').getByText(/0 problems/i)[22m
+
+
+      59 |
+      60 |     // Wait for the item to render in the history (which will say "0 problems")
+    > 61 |     await expect(page.locator('main').getByText(/0 problems/i)).toBeVisible({ timeout: 15000 });
+         |                                                                 ^
+      62 |   });
+      63 |
+      64 |   test("should prevent duplicate entries for same date", async ({ page }) => {
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/daily-log.spec.ts:61:65
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/daily-log-Daily-Log-Featur-aaddb-ields-and-appear-in-history-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/daily-log-Daily-Log-Featur-aaddb-ields-and-appear-in-history-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('main').getByText(/0 problems/i)
+    Expected: visible
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 15000ms[22m
+    [2m  - waiting for locator('main').getByText(/0 problems/i)[22m
+
+
+      59 |
+      60 |     // Wait for the item to render in the history (which will say "0 problems")
+    > 61 |     await expect(page.locator('main').getByText(/0 problems/i)).toBeVisible({ timeout: 15000 });
+         |                                                                 ^
+      62 |   });
+      63 |
+      64 |   test("should prevent duplicate entries for same date", async ({ page }) => {
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/daily-log.spec.ts:61:65
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/daily-log-Daily-Log-Featur-aaddb-ields-and-appear-in-history-chromium-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/daily-log-Daily-Log-Featur-aaddb-ields-and-appear-in-history-chromium-retry1/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/daily-log-Daily-Log-Featur-aaddb-ields-and-appear-in-history-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/daily-log-Daily-Log-Featur-aaddb-ields-and-appear-in-history-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [chromium] › e2e/daily-log.spec.ts:64:7 › Daily Log Feature › should prevent duplicate entries for same date 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('text=3 problems')
+    Expected: visible
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 15000ms[22m
+    [2m  - waiting for locator('text=3 problems')[22m
+
+
+      73 |
+      74 |     // Wait for submission
+    > 75 |     await expect(page.locator("text=3 problems")).toBeVisible({ timeout: 15000 });
+         |                                                   ^
+      76 |
+      77 |     // Try to create another log for the same date
+      78 |     await page.fill('input[type="date"]', dateStr);
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/daily-log.spec.ts:75:51
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/daily-log-Daily-Log-Featur-5f51a-icate-entries-for-same-date-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/daily-log-Daily-Log-Featur-5f51a-icate-entries-for-same-date-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('text=3 problems')
+    Expected: visible
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 15000ms[22m
+    [2m  - waiting for locator('text=3 problems')[22m
+
+
+      73 |
+      74 |     // Wait for submission
+    > 75 |     await expect(page.locator("text=3 problems")).toBeVisible({ timeout: 15000 });
+         |                                                   ^
+      76 |
+      77 |     // Try to create another log for the same date
+      78 |     await page.fill('input[type="date"]', dateStr);
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/daily-log.spec.ts:75:51
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/daily-log-Daily-Log-Featur-5f51a-icate-entries-for-same-date-chromium-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/daily-log-Daily-Log-Featur-5f51a-icate-entries-for-same-date-chromium-retry1/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/daily-log-Daily-Log-Featur-5f51a-icate-entries-for-same-date-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/daily-log-Daily-Log-Featur-5f51a-icate-entries-for-same-date-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [chromium] › e2e/daily-log.spec.ts:112:7 › Daily Log Feature › should handle notes character limit 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('text=Notes must be 1000 characters or less')
+    Expected: visible
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 10000ms[22m
+    [2m  - waiting for locator('text=Notes must be 1000 characters or less')[22m
+
+
+      120 |
+      121 |     // Check for error message
+    > 122 |     await expect(page.locator("text=Notes must be 1000 characters or less")).toBeVisible();
+          |                                                                              ^
+      123 |   });
+      124 |
+      125 |   test("should filter logs by date range", async ({ page }) => {
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/daily-log.spec.ts:122:78
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/daily-log-Daily-Log-Featur-8d8a4-andle-notes-character-limit-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/daily-log-Daily-Log-Featur-8d8a4-andle-notes-character-limit-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('text=Notes must be 1000 characters or less')
+    Expected: visible
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 10000ms[22m
+    [2m  - waiting for locator('text=Notes must be 1000 characters or less')[22m
+
+
+      120 |
+      121 |     // Check for error message
+    > 122 |     await expect(page.locator("text=Notes must be 1000 characters or less")).toBeVisible();
+          |                                                                              ^
+      123 |   });
+      124 |
+      125 |   test("should filter logs by date range", async ({ page }) => {
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/daily-log.spec.ts:122:78
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/daily-log-Daily-Log-Featur-8d8a4-andle-notes-character-limit-chromium-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/daily-log-Daily-Log-Featur-8d8a4-andle-notes-character-limit-chromium-retry1/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/daily-log-Daily-Log-Featur-8d8a4-andle-notes-character-limit-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/daily-log-Daily-Log-Featur-8d8a4-andle-notes-character-limit-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5) [chromium] › e2e/daily-log.spec.ts:125:7 › Daily Log Feature › should filter logs by date range 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('text=3 problems')
+    Expected: visible
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 15000ms[22m
+    [2m  - waiting for locator('text=3 problems')[22m
+
+
+      134 |     await page.fill('input[type="number"]', "3");
+      135 |     await page.click('button[type="submit"]');
+    > 136 |     await expect(page.locator("text=3 problems")).toBeVisible({ timeout: 15000 });
+          |                                                   ^
+      137 |
+      138 |     // Create log for yesterday
+      139 |     await page.fill('input[type="date"]', yesterdayStr);
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/daily-log.spec.ts:136:51
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/daily-log-Daily-Log-Feature-should-filter-logs-by-date-range-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/daily-log-Daily-Log-Feature-should-filter-logs-by-date-range-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('text=3 problems')
+    Expected: visible
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 15000ms[22m
+    [2m  - waiting for locator('text=3 problems')[22m
+
+
+      134 |     await page.fill('input[type="number"]', "3");
+      135 |     await page.click('button[type="submit"]');
+    > 136 |     await expect(page.locator("text=3 problems")).toBeVisible({ timeout: 15000 });
+          |                                                   ^
+      137 |
+      138 |     // Create log for yesterday
+      139 |     await page.fill('input[type="date"]', yesterdayStr);
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/daily-log.spec.ts:136:51
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/daily-log-Daily-Log-Feature-should-filter-logs-by-date-range-chromium-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/daily-log-Daily-Log-Feature-should-filter-logs-by-date-range-chromium-retry1/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/daily-log-Daily-Log-Feature-should-filter-logs-by-date-range-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/daily-log-Daily-Log-Feature-should-filter-logs-by-date-range-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  6) [chromium] › e2e/daily-log.spec.ts:164:7 › Daily Log Feature › should show all logs when filter is set to all time 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('text=4 problems')
+    Expected: visible
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 15000ms[22m
+    [2m  - waiting for locator('text=4 problems')[22m
+
+
+      171 |     await page.click('button[type="submit"]');
+      172 |     await respPromise;
+    > 173 |     await expect(page.locator("text=4 problems")).toBeVisible({ timeout: 15000 });
+          |                                                   ^
+      174 |
+      175 |     // Switch to "Last 30 days" then back to "All time"
+      176 |     await page.getByLabel("Select date range").click();
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/daily-log.spec.ts:173:51
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/daily-log-Daily-Log-Featur-d68c2-n-filter-is-set-to-all-time-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/daily-log-Daily-Log-Featur-d68c2-n-filter-is-set-to-all-time-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('text=4 problems')
+    Expected: visible
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 15000ms[22m
+    [2m  - waiting for locator('text=4 problems')[22m
+
+
+      171 |     await page.click('button[type="submit"]');
+      172 |     await respPromise;
+    > 173 |     await expect(page.locator("text=4 problems")).toBeVisible({ timeout: 15000 });
+          |                                                   ^
+      174 |
+      175 |     // Switch to "Last 30 days" then back to "All time"
+      176 |     await page.getByLabel("Select date range").click();
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/daily-log.spec.ts:173:51
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/daily-log-Daily-Log-Featur-d68c2-n-filter-is-set-to-all-time-chromium-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/daily-log-Daily-Log-Featur-d68c2-n-filter-is-set-to-all-time-chromium-retry1/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/daily-log-Daily-Log-Featur-d68c2-n-filter-is-set-to-all-time-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/daily-log-Daily-Log-Featur-d68c2-n-filter-is-set-to-all-time-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  7) [chromium] › e2e/daily-log.spec.ts:186:7 › Daily Log Feature › should load more logs when Load more button is clicked 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('text=1 problem')
+    Expected: visible
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 15000ms[22m
+    [2m  - waiting for locator('text=1 problem')[22m
+
+
+      196 |       await page.fill('input[type="number"]', String(i + 1));
+      197 |       await page.click('button[type="submit"]');
+    > 198 |       await expect(page.locator(`text=${i + 1} problem`)).toBeVisible({ timeout: 15000 });
+          |                                                           ^
+      199 |     }
+      200 |
+      201 |     // Switch to "All time" filter to see all logs
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/daily-log.spec.ts:198:59
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/daily-log-Daily-Log-Featur-51453-Load-more-button-is-clicked-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/daily-log-Daily-Log-Featur-51453-Load-more-button-is-clicked-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('text=1 problem')
+    Expected: visible
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 15000ms[22m
+    [2m  - waiting for locator('text=1 problem')[22m
+
+
+      196 |       await page.fill('input[type="number"]', String(i + 1));
+      197 |       await page.click('button[type="submit"]');
+    > 198 |       await expect(page.locator(`text=${i + 1} problem`)).toBeVisible({ timeout: 15000 });
+          |                                                           ^
+      199 |     }
+      200 |
+      201 |     // Switch to "All time" filter to see all logs
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/daily-log.spec.ts:198:59
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/daily-log-Daily-Log-Featur-51453-Load-more-button-is-clicked-chromium-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/daily-log-Daily-Log-Featur-51453-Load-more-button-is-clicked-chromium-retry1/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/daily-log-Daily-Log-Featur-51453-Load-more-button-is-clicked-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/daily-log-Daily-Log-Featur-51453-Load-more-button-is-clicked-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  8) [chromium] › e2e/daily-log.spec.ts:216:7 › Daily Log Feature › should delete a daily log ──────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('text=4 problems')
+    Expected: visible
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 15000ms[22m
+    [2m  - waiting for locator('text=4 problems')[22m
+
+
+      226 |  
+      227 |     // Wait for submission
+    > 228 |     await expect(page.locator("text=4 problems")).toBeVisible({ timeout: 15000 });
+          |                                                   ^
+      229 |
+      230 |     // Delete the log
+      231 |     await page.click('button[aria-label*="Delete"]');
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/daily-log.spec.ts:228:51
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/daily-log-Daily-Log-Feature-should-delete-a-daily-log-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/daily-log-Daily-Log-Feature-should-delete-a-daily-log-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('text=4 problems')
+    Expected: visible
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 15000ms[22m
+    [2m  - waiting for locator('text=4 problems')[22m
+
+
+      226 |  
+      227 |     // Wait for submission
+    > 228 |     await expect(page.locator("text=4 problems")).toBeVisible({ timeout: 15000 });
+          |                                                   ^
+      229 |
+      230 |     // Delete the log
+      231 |     await page.click('button[aria-label*="Delete"]');
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/daily-log.spec.ts:228:51
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/daily-log-Daily-Log-Feature-should-delete-a-daily-log-chromium-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/daily-log-Daily-Log-Feature-should-delete-a-daily-log-chromium-retry1/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/daily-log-Daily-Log-Feature-should-delete-a-daily-log-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/daily-log-Daily-Log-Feature-should-delete-a-daily-log-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  9) [chromium] › e2e/dashboard.spec.ts:11:7 › Dashboard Feature › should display dashboard stats cards 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('[data-slot="card-title"]:has-text("Problems")')
+    Expected: visible
+    Error: strict mode violation: locator('[data-slot="card-title"]:has-text("Problems")') resolved to 2 elements:
+        1) <div data-slot="card-title" class="font-heading group-data-[size=sm]/card:text-sm text-sm font-medium text-muted-foreground">Problems</div> aka getByText('Problems', { exact: true })
+        2) <div data-slot="card-title" class="font-heading group-data-[size=sm]/card:text-sm text-sm font-semibold text-foreground">Problems Solved Per Week</div> aka getByText('Problems Solved Per Week')
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 10000ms[22m
+    [2m  - waiting for locator('[data-slot="card-title"]:has-text("Problems")')[22m
+
+
+      14 |
+      15 |     // Verify all stats cards titles are present using data-slot to avoid strict mode violations
+    > 16 |     await expect(page.locator('[data-slot="card-title"]:has-text("Problems")')).toBeVisible();
+         |                                                                                 ^
+      17 |     await expect(page.locator('[data-slot="card-title"]:has-text("Streak")')).toBeVisible();
+      18 |     await expect(page.locator('[data-slot="card-title"]:has-text("Projects")')).toBeVisible();
+      19 |     await expect(page.locator('[data-slot="card-title"]:has-text("Today")')).toBeVisible();
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/dashboard.spec.ts:16:81
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/dashboard-Dashboard-Featur-d169e-splay-dashboard-stats-cards-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/dashboard-Dashboard-Featur-d169e-splay-dashboard-stats-cards-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('[data-slot="card-title"]:has-text("Problems")')
+    Expected: visible
+    Error: strict mode violation: locator('[data-slot="card-title"]:has-text("Problems")') resolved to 2 elements:
+        1) <div data-slot="card-title" class="font-heading group-data-[size=sm]/card:text-sm text-sm font-medium text-muted-foreground">Problems</div> aka getByText('Problems', { exact: true })
+        2) <div data-slot="card-title" class="font-heading group-data-[size=sm]/card:text-sm text-sm font-semibold text-foreground">Problems Solved Per Week</div> aka getByText('Problems Solved Per Week')
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 10000ms[22m
+    [2m  - waiting for locator('[data-slot="card-title"]:has-text("Problems")')[22m
+
+
+      14 |
+      15 |     // Verify all stats cards titles are present using data-slot to avoid strict mode violations
+    > 16 |     await expect(page.locator('[data-slot="card-title"]:has-text("Problems")')).toBeVisible();
+         |                                                                                 ^
+      17 |     await expect(page.locator('[data-slot="card-title"]:has-text("Streak")')).toBeVisible();
+      18 |     await expect(page.locator('[data-slot="card-title"]:has-text("Projects")')).toBeVisible();
+      19 |     await expect(page.locator('[data-slot="card-title"]:has-text("Today")')).toBeVisible();
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/dashboard.spec.ts:16:81
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/dashboard-Dashboard-Featur-d169e-splay-dashboard-stats-cards-chromium-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/dashboard-Dashboard-Featur-d169e-splay-dashboard-stats-cards-chromium-retry1/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/dashboard-Dashboard-Featur-d169e-splay-dashboard-stats-cards-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/dashboard-Dashboard-Featur-d169e-splay-dashboard-stats-cards-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  10) [chromium] › e2e/dashboard.spec.ts:153:7 › Dashboard Feature › should display peak productivity times 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('[data-slot="card-title"]:has-text("Peak Time")')
+    Expected: visible
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 10000ms[22m
+    [2m  - waiting for locator('[data-slot="card-title"]:has-text("Peak Time")')[22m
+
+
+      153 |   test("should display peak productivity times", async ({ page }) => {
+      154 |     // Check for Peak Time card
+    > 155 |     await expect(page.locator('[data-slot="card-title"]:has-text("Peak Time")')).toBeVisible();
+          |                                                                                  ^
+      156 |     
+      157 |     // Should show a value like "Morning", "Afternoon", "Evening", "Night", or "N/A" for brand new users
+      158 |     const content = await page.content();
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/dashboard.spec.ts:155:82
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/dashboard-Dashboard-Featur-01875-lay-peak-productivity-times-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/dashboard-Dashboard-Featur-01875-lay-peak-productivity-times-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('[data-slot="card-title"]:has-text("Peak Time")')
+    Expected: visible
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 10000ms[22m
+    [2m  - waiting for locator('[data-slot="card-title"]:has-text("Peak Time")')[22m
+
+
+      153 |   test("should display peak productivity times", async ({ page }) => {
+      154 |     // Check for Peak Time card
+    > 155 |     await expect(page.locator('[data-slot="card-title"]:has-text("Peak Time")')).toBeVisible();
+          |                                                                                  ^
+      156 |     
+      157 |     // Should show a value like "Morning", "Afternoon", "Evening", "Night", or "N/A" for brand new users
+      158 |     const content = await page.content();
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/dashboard.spec.ts:155:82
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/dashboard-Dashboard-Featur-01875-lay-peak-productivity-times-chromium-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/dashboard-Dashboard-Featur-01875-lay-peak-productivity-times-chromium-retry1/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/dashboard-Dashboard-Featur-01875-lay-peak-productivity-times-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/dashboard-Dashboard-Featur-01875-lay-peak-productivity-times-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  11) [chromium] › e2e/dsa-problem.spec.ts:11:7 › DSA Problem Feature › should create a new DSA problem 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('text=DSA Problems')
+    Expected: visible
+    Error: strict mode violation: locator('text=DSA Problems') resolved to 2 elements:
+        1) <a href="/dashboard/problems" class="flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-all duration-200 group bg-primary/10 text-primary font-semibold">…</a> aka getByRole('link', { name: 'DSA Problems' })
+        2) <h2 class="text-foreground text-lg font-semibold">DSA Problems</h2> aka getByRole('heading', { name: 'DSA Problems' })
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 15000ms[22m
+    [2m  - waiting for locator('text=DSA Problems')[22m
+
+
+       6 |   test.beforeEach(async ({ page }) => {
+       7 |     await page.goto("/dashboard/problems");
+    >  8 |     await expect(page.locator("text=DSA Problems")).toBeVisible({ timeout: 15000 });
+         |                                                     ^
+       9 |   });
+      10 |
+      11 |   test("should create a new DSA problem", async ({ page }) => {
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/dsa-problem.spec.ts:8:53
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/dsa-problem-DSA-Problem-Fe-b6cdf-ld-create-a-new-DSA-problem-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/dsa-problem-DSA-Problem-Fe-b6cdf-ld-create-a-new-DSA-problem-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('text=DSA Problems')
+    Expected: visible
+    Error: strict mode violation: locator('text=DSA Problems') resolved to 2 elements:
+        1) <a href="/dashboard/problems" class="flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-all duration-200 group bg-primary/10 text-primary font-semibold">…</a> aka getByRole('link', { name: 'DSA Problems' })
+        2) <h2 class="text-foreground text-lg font-semibold">DSA Problems</h2> aka getByRole('heading', { name: 'DSA Problems' })
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 15000ms[22m
+    [2m  - waiting for locator('text=DSA Problems')[22m
+
+
+       6 |   test.beforeEach(async ({ page }) => {
+       7 |     await page.goto("/dashboard/problems");
+    >  8 |     await expect(page.locator("text=DSA Problems")).toBeVisible({ timeout: 15000 });
+         |                                                     ^
+       9 |   });
+      10 |
+      11 |   test("should create a new DSA problem", async ({ page }) => {
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/dsa-problem.spec.ts:8:53
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/dsa-problem-DSA-Problem-Fe-b6cdf-ld-create-a-new-DSA-problem-chromium-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/dsa-problem-DSA-Problem-Fe-b6cdf-ld-create-a-new-DSA-problem-chromium-retry1/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/dsa-problem-DSA-Problem-Fe-b6cdf-ld-create-a-new-DSA-problem-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/dsa-problem-DSA-Problem-Fe-b6cdf-ld-create-a-new-DSA-problem-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  12) [chromium] › e2e/dsa-problem.spec.ts:37:7 › DSA Problem Feature › should validate required fields 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('text=DSA Problems')
+    Expected: visible
+    Error: strict mode violation: locator('text=DSA Problems') resolved to 3 elements:
+        1) <a href="/dashboard/problems" class="flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-all duration-200 group bg-primary/10 text-primary font-semibold">…</a> aka getByRole('link', { name: 'DSA Problems' })
+        2) <h2 class="text-3xl font-bold tracking-tight">DSA Problems</h2> aka getByRole('heading', { name: 'DSA Problems' })
+        3) <h2 class="text-foreground text-lg font-semibold">DSA Problems</h2> aka getByText('DSA Problems').nth(2)
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 15000ms[22m
+    [2m  - waiting for locator('text=DSA Problems')[22m
+
+
+       6 |   test.beforeEach(async ({ page }) => {
+       7 |     await page.goto("/dashboard/problems");
+    >  8 |     await expect(page.locator("text=DSA Problems")).toBeVisible({ timeout: 15000 });
+         |                                                     ^
+       9 |   });
+      10 |
+      11 |   test("should create a new DSA problem", async ({ page }) => {
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/dsa-problem.spec.ts:8:53
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/dsa-problem-DSA-Problem-Fe-df4d6-ld-validate-required-fields-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/dsa-problem-DSA-Problem-Fe-df4d6-ld-validate-required-fields-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('text=DSA Problems')
+    Expected: visible
+    Error: strict mode violation: locator('text=DSA Problems') resolved to 2 elements:
+        1) <a href="/dashboard/problems" class="flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-all duration-200 group bg-primary/10 text-primary font-semibold">…</a> aka getByRole('link', { name: 'DSA Problems' })
+        2) <h2 class="text-foreground text-lg font-semibold">DSA Problems</h2> aka getByRole('heading', { name: 'DSA Problems' })
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 15000ms[22m
+    [2m  - waiting for locator('text=DSA Problems')[22m
+
+
+       6 |   test.beforeEach(async ({ page }) => {
+       7 |     await page.goto("/dashboard/problems");
+    >  8 |     await expect(page.locator("text=DSA Problems")).toBeVisible({ timeout: 15000 });
+         |                                                     ^
+       9 |   });
+      10 |
+      11 |   test("should create a new DSA problem", async ({ page }) => {
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/dsa-problem.spec.ts:8:53
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/dsa-problem-DSA-Problem-Fe-df4d6-ld-validate-required-fields-chromium-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/dsa-problem-DSA-Problem-Fe-df4d6-ld-validate-required-fields-chromium-retry1/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/dsa-problem-DSA-Problem-Fe-df4d6-ld-validate-required-fields-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/dsa-problem-DSA-Problem-Fe-df4d6-ld-validate-required-fields-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  13) [chromium] › e2e/dsa-problem.spec.ts:50:7 › DSA Problem Feature › should filter problems by difficulty 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('text=DSA Problems')
+    Expected: visible
+    Error: strict mode violation: locator('text=DSA Problems') resolved to 2 elements:
+        1) <a href="/dashboard/problems" class="flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-all duration-200 group bg-primary/10 text-primary font-semibold">…</a> aka getByRole('link', { name: 'DSA Problems' })
+        2) <h2 class="text-foreground text-lg font-semibold">DSA Problems</h2> aka getByRole('heading', { name: 'DSA Problems' })
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 15000ms[22m
+    [2m  - waiting for locator('text=DSA Problems')[22m
+
+
+       6 |   test.beforeEach(async ({ page }) => {
+       7 |     await page.goto("/dashboard/problems");
+    >  8 |     await expect(page.locator("text=DSA Problems")).toBeVisible({ timeout: 15000 });
+         |                                                     ^
+       9 |   });
+      10 |
+      11 |   test("should create a new DSA problem", async ({ page }) => {
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/dsa-problem.spec.ts:8:53
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/dsa-problem-DSA-Problem-Fe-39f4a-lter-problems-by-difficulty-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/dsa-problem-DSA-Problem-Fe-39f4a-lter-problems-by-difficulty-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('text=DSA Problems')
+    Expected: visible
+    Error: strict mode violation: locator('text=DSA Problems') resolved to 2 elements:
+        1) <a href="/dashboard/problems" class="flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-all duration-200 group bg-primary/10 text-primary font-semibold">…</a> aka getByRole('link', { name: 'DSA Problems' })
+        2) <h2 class="text-foreground text-lg font-semibold">DSA Problems</h2> aka getByRole('heading', { name: 'DSA Problems' })
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 15000ms[22m
+    [2m  - waiting for locator('text=DSA Problems')[22m
+
+
+       6 |   test.beforeEach(async ({ page }) => {
+       7 |     await page.goto("/dashboard/problems");
+    >  8 |     await expect(page.locator("text=DSA Problems")).toBeVisible({ timeout: 15000 });
+         |                                                     ^
+       9 |   });
+      10 |
+      11 |   test("should create a new DSA problem", async ({ page }) => {
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/dsa-problem.spec.ts:8:53
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/dsa-problem-DSA-Problem-Fe-39f4a-lter-problems-by-difficulty-chromium-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/dsa-problem-DSA-Problem-Fe-39f4a-lter-problems-by-difficulty-chromium-retry1/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/dsa-problem-DSA-Problem-Fe-39f4a-lter-problems-by-difficulty-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/dsa-problem-DSA-Problem-Fe-39f4a-lter-problems-by-difficulty-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  14) [chromium] › e2e/dsa-problem.spec.ts:106:7 › DSA Problem Feature › should edit an existing problem 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('text=DSA Problems')
+    Expected: visible
+    Error: strict mode violation: locator('text=DSA Problems') resolved to 2 elements:
+        1) <a href="/dashboard/problems" class="flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-all duration-200 group bg-primary/10 text-primary font-semibold">…</a> aka getByRole('link', { name: 'DSA Problems' })
+        2) <h2 class="text-foreground text-lg font-semibold">DSA Problems</h2> aka getByRole('heading', { name: 'DSA Problems' })
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 15000ms[22m
+    [2m  - waiting for locator('text=DSA Problems')[22m
+
+
+       6 |   test.beforeEach(async ({ page }) => {
+       7 |     await page.goto("/dashboard/problems");
+    >  8 |     await expect(page.locator("text=DSA Problems")).toBeVisible({ timeout: 15000 });
+         |                                                     ^
+       9 |   });
+      10 |
+      11 |   test("should create a new DSA problem", async ({ page }) => {
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/dsa-problem.spec.ts:8:53
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/dsa-problem-DSA-Problem-Fe-9de07-ld-edit-an-existing-problem-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/dsa-problem-DSA-Problem-Fe-9de07-ld-edit-an-existing-problem-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('text=DSA Problems')
+    Expected: visible
+    Error: strict mode violation: locator('text=DSA Problems') resolved to 3 elements:
+        1) <a href="/dashboard/problems" class="flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-all duration-200 group bg-primary/10 text-primary font-semibold">…</a> aka getByRole('link', { name: 'DSA Problems' })
+        2) <h2 class="text-3xl font-bold tracking-tight">DSA Problems</h2> aka getByRole('heading', { name: 'DSA Problems' })
+        3) <h2 class="text-foreground text-lg font-semibold">DSA Problems</h2> aka getByText('DSA Problems').nth(2)
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 15000ms[22m
+    [2m  - waiting for locator('text=DSA Problems')[22m
+
+
+       6 |   test.beforeEach(async ({ page }) => {
+       7 |     await page.goto("/dashboard/problems");
+    >  8 |     await expect(page.locator("text=DSA Problems")).toBeVisible({ timeout: 15000 });
+         |                                                     ^
+       9 |   });
+      10 |
+      11 |   test("should create a new DSA problem", async ({ page }) => {
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/dsa-problem.spec.ts:8:53
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/dsa-problem-DSA-Problem-Fe-9de07-ld-edit-an-existing-problem-chromium-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/dsa-problem-DSA-Problem-Fe-9de07-ld-edit-an-existing-problem-chromium-retry1/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/dsa-problem-DSA-Problem-Fe-9de07-ld-edit-an-existing-problem-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/dsa-problem-DSA-Problem-Fe-9de07-ld-edit-an-existing-problem-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  15) [chromium] › e2e/dsa-problem.spec.ts:132:7 › DSA Problem Feature › should delete a problem ───
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('text=DSA Problems')
+    Expected: visible
+    Error: strict mode violation: locator('text=DSA Problems') resolved to 2 elements:
+        1) <a href="/dashboard/problems" class="flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-all duration-200 group bg-primary/10 text-primary font-semibold">…</a> aka getByRole('link', { name: 'DSA Problems' })
+        2) <h2 class="text-foreground text-lg font-semibold">DSA Problems</h2> aka getByRole('heading', { name: 'DSA Problems' })
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 15000ms[22m
+    [2m  - waiting for locator('text=DSA Problems')[22m
+
+
+       6 |   test.beforeEach(async ({ page }) => {
+       7 |     await page.goto("/dashboard/problems");
+    >  8 |     await expect(page.locator("text=DSA Problems")).toBeVisible({ timeout: 15000 });
+         |                                                     ^
+       9 |   });
+      10 |
+      11 |   test("should create a new DSA problem", async ({ page }) => {
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/dsa-problem.spec.ts:8:53
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/dsa-problem-DSA-Problem-Feature-should-delete-a-problem-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/dsa-problem-DSA-Problem-Feature-should-delete-a-problem-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('text=DSA Problems')
+    Expected: visible
+    Error: strict mode violation: locator('text=DSA Problems') resolved to 2 elements:
+        1) <a href="/dashboard/problems" class="flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-all duration-200 group bg-primary/10 text-primary font-semibold">…</a> aka getByRole('link', { name: 'DSA Problems' })
+        2) <h2 class="text-foreground text-lg font-semibold">DSA Problems</h2> aka getByRole('heading', { name: 'DSA Problems' })
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 15000ms[22m
+    [2m  - waiting for locator('text=DSA Problems')[22m
+
+
+       6 |   test.beforeEach(async ({ page }) => {
+       7 |     await page.goto("/dashboard/problems");
+    >  8 |     await expect(page.locator("text=DSA Problems")).toBeVisible({ timeout: 15000 });
+         |                                                     ^
+       9 |   });
+      10 |
+      11 |   test("should create a new DSA problem", async ({ page }) => {
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/dsa-problem.spec.ts:8:53
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/dsa-problem-DSA-Problem-Feature-should-delete-a-problem-chromium-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/dsa-problem-DSA-Problem-Feature-should-delete-a-problem-chromium-retry1/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/dsa-problem-DSA-Problem-Feature-should-delete-a-problem-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/dsa-problem-DSA-Problem-Feature-should-delete-a-problem-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  16) [chromium] › e2e/dsa-problem.spec.ts:155:7 › DSA Problem Feature › should display empty state when no problems 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('text=DSA Problems')
+    Expected: visible
+    Error: strict mode violation: locator('text=DSA Problems') resolved to 3 elements:
+        1) <a href="/dashboard/problems" class="flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-all duration-200 group bg-primary/10 text-primary font-semibold">…</a> aka getByRole('link', { name: 'DSA Problems' })
+        2) <h2 class="text-3xl font-bold tracking-tight">DSA Problems</h2> aka getByRole('heading', { name: 'DSA Problems' })
+        3) <h2 class="text-foreground text-lg font-semibold">DSA Problems</h2> aka getByText('DSA Problems').nth(2)
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 15000ms[22m
+    [2m  - waiting for locator('text=DSA Problems')[22m
+
+
+       6 |   test.beforeEach(async ({ page }) => {
+       7 |     await page.goto("/dashboard/problems");
+    >  8 |     await expect(page.locator("text=DSA Problems")).toBeVisible({ timeout: 15000 });
+         |                                                     ^
+       9 |   });
+      10 |
+      11 |   test("should create a new DSA problem", async ({ page }) => {
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/dsa-problem.spec.ts:8:53
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/dsa-problem-DSA-Problem-Fe-3a683-mpty-state-when-no-problems-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/dsa-problem-DSA-Problem-Fe-3a683-mpty-state-when-no-problems-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('text=DSA Problems')
+    Expected: visible
+    Error: strict mode violation: locator('text=DSA Problems') resolved to 3 elements:
+        1) <a href="/dashboard/problems" class="flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-all duration-200 group bg-primary/10 text-primary font-semibold">…</a> aka getByRole('link', { name: 'DSA Problems' })
+        2) <h2 class="text-3xl font-bold tracking-tight">DSA Problems</h2> aka getByRole('heading', { name: 'DSA Problems' })
+        3) <h2 class="text-foreground text-lg font-semibold">DSA Problems</h2> aka getByText('DSA Problems').nth(2)
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 15000ms[22m
+    [2m  - waiting for locator('text=DSA Problems')[22m
+
+
+       6 |   test.beforeEach(async ({ page }) => {
+       7 |     await page.goto("/dashboard/problems");
+    >  8 |     await expect(page.locator("text=DSA Problems")).toBeVisible({ timeout: 15000 });
+         |                                                     ^
+       9 |   });
+      10 |
+      11 |   test("should create a new DSA problem", async ({ page }) => {
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/dsa-problem.spec.ts:8:53
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/dsa-problem-DSA-Problem-Fe-3a683-mpty-state-when-no-problems-chromium-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/dsa-problem-DSA-Problem-Fe-3a683-mpty-state-when-no-problems-chromium-retry1/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/dsa-problem-DSA-Problem-Fe-3a683-mpty-state-when-no-problems-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/dsa-problem-DSA-Problem-Fe-3a683-mpty-state-when-no-problems-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  17) [chromium] › e2e/dsa-problem.spec.ts:168:7 › DSA Problem Feature › should create a problem with notes 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('text=DSA Problems')
+    Expected: visible
+    Error: strict mode violation: locator('text=DSA Problems') resolved to 3 elements:
+        1) <a href="/dashboard/problems" class="flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-all duration-200 group bg-primary/10 text-primary font-semibold">…</a> aka getByRole('link', { name: 'DSA Problems' })
+        2) <h2 class="text-3xl font-bold tracking-tight">DSA Problems</h2> aka getByRole('heading', { name: 'DSA Problems' })
+        3) <h2 class="text-foreground text-lg font-semibold">DSA Problems</h2> aka getByText('DSA Problems').nth(2)
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 15000ms[22m
+    [2m  - waiting for locator('text=DSA Problems')[22m
+
+
+       6 |   test.beforeEach(async ({ page }) => {
+       7 |     await page.goto("/dashboard/problems");
+    >  8 |     await expect(page.locator("text=DSA Problems")).toBeVisible({ timeout: 15000 });
+         |                                                     ^
+       9 |   });
+      10 |
+      11 |   test("should create a new DSA problem", async ({ page }) => {
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/dsa-problem.spec.ts:8:53
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/dsa-problem-DSA-Problem-Fe-dfbca-create-a-problem-with-notes-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/dsa-problem-DSA-Problem-Fe-dfbca-create-a-problem-with-notes-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('text=DSA Problems')
+    Expected: visible
+    Error: strict mode violation: locator('text=DSA Problems') resolved to 2 elements:
+        1) <a href="/dashboard/problems" class="flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-all duration-200 group bg-primary/10 text-primary font-semibold">…</a> aka getByRole('link', { name: 'DSA Problems' })
+        2) <h2 class="text-foreground text-lg font-semibold">DSA Problems</h2> aka getByRole('heading', { name: 'DSA Problems' })
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 15000ms[22m
+    [2m  - waiting for locator('text=DSA Problems')[22m
+
+
+       6 |   test.beforeEach(async ({ page }) => {
+       7 |     await page.goto("/dashboard/problems");
+    >  8 |     await expect(page.locator("text=DSA Problems")).toBeVisible({ timeout: 15000 });
+         |                                                     ^
+       9 |   });
+      10 |
+      11 |   test("should create a new DSA problem", async ({ page }) => {
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/dsa-problem.spec.ts:8:53
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/dsa-problem-DSA-Problem-Fe-dfbca-create-a-problem-with-notes-chromium-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/dsa-problem-DSA-Problem-Fe-dfbca-create-a-problem-with-notes-chromium-retry1/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/dsa-problem-DSA-Problem-Fe-dfbca-create-a-problem-with-notes-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/dsa-problem-DSA-Problem-Fe-dfbca-create-a-problem-with-notes-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  18) [chromium] › e2e/dsa-problem.spec.ts:194:7 › DSA Problem Feature › should edit problem notes ─
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('text=DSA Problems')
+    Expected: visible
+    Error: strict mode violation: locator('text=DSA Problems') resolved to 2 elements:
+        1) <a href="/dashboard/problems" class="flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-all duration-200 group bg-primary/10 text-primary font-semibold">…</a> aka getByRole('link', { name: 'DSA Problems' })
+        2) <h2 class="text-foreground text-lg font-semibold">DSA Problems</h2> aka getByRole('heading', { name: 'DSA Problems' })
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 15000ms[22m
+    [2m  - waiting for locator('text=DSA Problems')[22m
+
+
+       6 |   test.beforeEach(async ({ page }) => {
+       7 |     await page.goto("/dashboard/problems");
+    >  8 |     await expect(page.locator("text=DSA Problems")).toBeVisible({ timeout: 15000 });
+         |                                                     ^
+       9 |   });
+      10 |
+      11 |   test("should create a new DSA problem", async ({ page }) => {
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/dsa-problem.spec.ts:8:53
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/dsa-problem-DSA-Problem-Feature-should-edit-problem-notes-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/dsa-problem-DSA-Problem-Feature-should-edit-problem-notes-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('text=DSA Problems')
+    Expected: visible
+    Error: strict mode violation: locator('text=DSA Problems') resolved to 2 elements:
+        1) <a href="/dashboard/problems" class="flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-all duration-200 group bg-primary/10 text-primary font-semibold">…</a> aka getByRole('link', { name: 'DSA Problems' })
+        2) <h2 class="text-foreground text-lg font-semibold">DSA Problems</h2> aka getByRole('heading', { name: 'DSA Problems' })
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 15000ms[22m
+    [2m  - waiting for locator('text=DSA Problems')[22m
+
+
+       6 |   test.beforeEach(async ({ page }) => {
+       7 |     await page.goto("/dashboard/problems");
+    >  8 |     await expect(page.locator("text=DSA Problems")).toBeVisible({ timeout: 15000 });
+         |                                                     ^
+       9 |   });
+      10 |
+      11 |   test("should create a new DSA problem", async ({ page }) => {
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/dsa-problem.spec.ts:8:53
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/dsa-problem-DSA-Problem-Feature-should-edit-problem-notes-chromium-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/dsa-problem-DSA-Problem-Feature-should-edit-problem-notes-chromium-retry1/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/dsa-problem-DSA-Problem-Feature-should-edit-problem-notes-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/dsa-problem-DSA-Problem-Feature-should-edit-problem-notes-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  19) [chromium] › e2e/dsa-problem.spec.ts:223:7 › DSA Problem Feature › should validate notes character limit 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('text=DSA Problems')
+    Expected: visible
+    Error: strict mode violation: locator('text=DSA Problems') resolved to 3 elements:
+        1) <a href="/dashboard/problems" class="flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-all duration-200 group bg-primary/10 text-primary font-semibold">…</a> aka getByRole('link', { name: 'DSA Problems' })
+        2) <h2 class="text-3xl font-bold tracking-tight">DSA Problems</h2> aka getByRole('heading', { name: 'DSA Problems' })
+        3) <h2 class="text-foreground text-lg font-semibold">DSA Problems</h2> aka getByText('DSA Problems').nth(2)
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 15000ms[22m
+    [2m  - waiting for locator('text=DSA Problems')[22m
+
+
+       6 |   test.beforeEach(async ({ page }) => {
+       7 |     await page.goto("/dashboard/problems");
+    >  8 |     await expect(page.locator("text=DSA Problems")).toBeVisible({ timeout: 15000 });
+         |                                                     ^
+       9 |   });
+      10 |
+      11 |   test("should create a new DSA problem", async ({ page }) => {
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/dsa-problem.spec.ts:8:53
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/dsa-problem-DSA-Problem-Fe-aac4c-idate-notes-character-limit-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/dsa-problem-DSA-Problem-Fe-aac4c-idate-notes-character-limit-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('text=DSA Problems')
+    Expected: visible
+    Error: strict mode violation: locator('text=DSA Problems') resolved to 2 elements:
+        1) <a href="/dashboard/problems" class="flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-all duration-200 group bg-primary/10 text-primary font-semibold">…</a> aka getByRole('link', { name: 'DSA Problems' })
+        2) <h2 class="text-foreground text-lg font-semibold">DSA Problems</h2> aka getByRole('heading', { name: 'DSA Problems' })
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 15000ms[22m
+    [2m  - waiting for locator('text=DSA Problems')[22m
+
+
+       6 |   test.beforeEach(async ({ page }) => {
+       7 |     await page.goto("/dashboard/problems");
+    >  8 |     await expect(page.locator("text=DSA Problems")).toBeVisible({ timeout: 15000 });
+         |                                                     ^
+       9 |   });
+      10 |
+      11 |   test("should create a new DSA problem", async ({ page }) => {
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/dsa-problem.spec.ts:8:53
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/dsa-problem-DSA-Problem-Fe-aac4c-idate-notes-character-limit-chromium-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/dsa-problem-DSA-Problem-Fe-aac4c-idate-notes-character-limit-chromium-retry1/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/dsa-problem-DSA-Problem-Fe-aac4c-idate-notes-character-limit-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/dsa-problem-DSA-Problem-Fe-aac4c-idate-notes-character-limit-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  20) [chromium] › e2e/dsa-problem.spec.ts:237:7 › DSA Problem Feature › should search problems by title 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('text=DSA Problems')
+    Expected: visible
+    Error: strict mode violation: locator('text=DSA Problems') resolved to 3 elements:
+        1) <a href="/dashboard/problems" class="flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-all duration-200 group bg-primary/10 text-primary font-semibold">…</a> aka getByRole('link', { name: 'DSA Problems' })
+        2) <h2 class="text-3xl font-bold tracking-tight">DSA Problems</h2> aka getByRole('heading', { name: 'DSA Problems' })
+        3) <h2 class="text-foreground text-lg font-semibold">DSA Problems</h2> aka getByText('DSA Problems').nth(2)
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 15000ms[22m
+    [2m  - waiting for locator('text=DSA Problems')[22m
+
+
+       6 |   test.beforeEach(async ({ page }) => {
+       7 |     await page.goto("/dashboard/problems");
+    >  8 |     await expect(page.locator("text=DSA Problems")).toBeVisible({ timeout: 15000 });
+         |                                                     ^
+       9 |   });
+      10 |
+      11 |   test("should create a new DSA problem", async ({ page }) => {
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/dsa-problem.spec.ts:8:53
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/dsa-problem-DSA-Problem-Fe-b0404-ld-search-problems-by-title-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/dsa-problem-DSA-Problem-Fe-b0404-ld-search-problems-by-title-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('text=DSA Problems')
+    Expected: visible
+    Error: strict mode violation: locator('text=DSA Problems') resolved to 2 elements:
+        1) <a href="/dashboard/problems" class="flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-all duration-200 group bg-primary/10 text-primary font-semibold">…</a> aka getByRole('link', { name: 'DSA Problems' })
+        2) <h2 class="text-foreground text-lg font-semibold">DSA Problems</h2> aka getByRole('heading', { name: 'DSA Problems' })
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 15000ms[22m
+    [2m  - waiting for locator('text=DSA Problems')[22m
+
+
+       6 |   test.beforeEach(async ({ page }) => {
+       7 |     await page.goto("/dashboard/problems");
+    >  8 |     await expect(page.locator("text=DSA Problems")).toBeVisible({ timeout: 15000 });
+         |                                                     ^
+       9 |   });
+      10 |
+      11 |   test("should create a new DSA problem", async ({ page }) => {
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/dsa-problem.spec.ts:8:53
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/dsa-problem-DSA-Problem-Fe-b0404-ld-search-problems-by-title-chromium-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/dsa-problem-DSA-Problem-Fe-b0404-ld-search-problems-by-title-chromium-retry1/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/dsa-problem-DSA-Problem-Fe-b0404-ld-search-problems-by-title-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/dsa-problem-DSA-Problem-Fe-b0404-ld-search-problems-by-title-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  21) [chromium] › e2e/dsa-problem.spec.ts:251:7 › DSA Problem Feature › should paginate through problems 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('text=DSA Problems')
+    Expected: visible
+    Error: strict mode violation: locator('text=DSA Problems') resolved to 3 elements:
+        1) <a href="/dashboard/problems" class="flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-all duration-200 group bg-primary/10 text-primary font-semibold">…</a> aka getByRole('link', { name: 'DSA Problems' })
+        2) <h2 class="text-3xl font-bold tracking-tight">DSA Problems</h2> aka getByRole('heading', { name: 'DSA Problems' })
+        3) <h2 class="text-foreground text-lg font-semibold">DSA Problems</h2> aka getByText('DSA Problems').nth(2)
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 15000ms[22m
+    [2m  - waiting for locator('text=DSA Problems')[22m
+
+
+       6 |   test.beforeEach(async ({ page }) => {
+       7 |     await page.goto("/dashboard/problems");
+    >  8 |     await expect(page.locator("text=DSA Problems")).toBeVisible({ timeout: 15000 });
+         |                                                     ^
+       9 |   });
+      10 |
+      11 |   test("should create a new DSA problem", async ({ page }) => {
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/dsa-problem.spec.ts:8:53
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/dsa-problem-DSA-Problem-Fe-cc079-d-paginate-through-problems-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/dsa-problem-DSA-Problem-Fe-cc079-d-paginate-through-problems-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('text=DSA Problems')
+    Expected: visible
+    Error: strict mode violation: locator('text=DSA Problems') resolved to 2 elements:
+        1) <a href="/dashboard/problems" class="flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-all duration-200 group bg-primary/10 text-primary font-semibold">…</a> aka getByRole('link', { name: 'DSA Problems' })
+        2) <h2 class="text-foreground text-lg font-semibold">DSA Problems</h2> aka getByRole('heading', { name: 'DSA Problems' })
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 15000ms[22m
+    [2m  - waiting for locator('text=DSA Problems')[22m
+
+
+       6 |   test.beforeEach(async ({ page }) => {
+       7 |     await page.goto("/dashboard/problems");
+    >  8 |     await expect(page.locator("text=DSA Problems")).toBeVisible({ timeout: 15000 });
+         |                                                     ^
+       9 |   });
+      10 |
+      11 |   test("should create a new DSA problem", async ({ page }) => {
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/dsa-problem.spec.ts:8:53
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/dsa-problem-DSA-Problem-Fe-cc079-d-paginate-through-problems-chromium-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/dsa-problem-DSA-Problem-Fe-cc079-d-paginate-through-problems-chromium-retry1/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/dsa-problem-DSA-Problem-Fe-cc079-d-paginate-through-problems-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/dsa-problem-DSA-Problem-Fe-cc079-d-paginate-through-problems-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  22) [chromium] › e2e/error.spec.ts:4:7 › Error Pages › should display 404 page for non-existent routes 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('text=Page Not Found, text=404')
+    Expected: visible
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 10000ms[22m
+    [2m  - waiting for locator('text=Page Not Found, text=404')[22m
+
+
+       7 |
+       8 |     // Should show 404 text or Not Found
+    >  9 |     await expect(page.locator("text=Page Not Found, text=404")).toBeVisible();
+         |                                                                 ^
+      10 |     
+      11 |     // Should have a link back to home
+      12 |     await expect(page.getByRole("link", { name: /Go Back|Home|Dashboard/i })).toBeVisible();
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/error.spec.ts:9:65
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/error-Error-Pages-should-d-698cd-age-for-non-existent-routes-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/error-Error-Pages-should-d-698cd-age-for-non-existent-routes-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('text=Page Not Found, text=404')
+    Expected: visible
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 10000ms[22m
+    [2m  - waiting for locator('text=Page Not Found, text=404')[22m
+
+
+       7 |
+       8 |     // Should show 404 text or Not Found
+    >  9 |     await expect(page.locator("text=Page Not Found, text=404")).toBeVisible();
+         |                                                                 ^
+      10 |     
+      11 |     // Should have a link back to home
+      12 |     await expect(page.getByRole("link", { name: /Go Back|Home|Dashboard/i })).toBeVisible();
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/error.spec.ts:9:65
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/error-Error-Pages-should-d-698cd-age-for-non-existent-routes-chromium-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/error-Error-Pages-should-d-698cd-age-for-non-existent-routes-chromium-retry1/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/error-Error-Pages-should-d-698cd-age-for-non-existent-routes-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/error-Error-Pages-should-d-698cd-age-for-non-existent-routes-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  23) [chromium] › e2e/milestone.spec.ts:11:7 › Project Milestones › should display milestones for a project 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('text=Milestone Test Project').first()
+    Expected: visible
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 15000ms[22m
+    [2m  - waiting for locator('text=Milestone Test Project').first()[22m
+
+
+      18 |     
+      19 |     // Wait for the new project card to appear
+    > 20 |     await expect(page.locator("text=Milestone Test Project").first()).toBeVisible({ timeout: 15000 });
+         |                                                                       ^
+      21 |  
+      22 |     // Click on the project to view details
+      23 |     await page.locator("text=Milestone Test Project").first().click();
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/milestone.spec.ts:20:71
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/milestone-Project-Mileston-d74b6-ay-milestones-for-a-project-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/milestone-Project-Mileston-d74b6-ay-milestones-for-a-project-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('text=Milestone Test Project').first()
+    Expected: visible
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 15000ms[22m
+    [2m  - waiting for locator('text=Milestone Test Project').first()[22m
+
+
+      18 |     
+      19 |     // Wait for the new project card to appear
+    > 20 |     await expect(page.locator("text=Milestone Test Project").first()).toBeVisible({ timeout: 15000 });
+         |                                                                       ^
+      21 |  
+      22 |     // Click on the project to view details
+      23 |     await page.locator("text=Milestone Test Project").first().click();
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/milestone.spec.ts:20:71
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/milestone-Project-Mileston-d74b6-ay-milestones-for-a-project-chromium-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/milestone-Project-Mileston-d74b6-ay-milestones-for-a-project-chromium-retry1/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/milestone-Project-Mileston-d74b6-ay-milestones-for-a-project-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/milestone-Project-Mileston-d74b6-ay-milestones-for-a-project-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  24) [chromium] › e2e/milestone.spec.ts:29:7 › Project Milestones › should add a milestone to a project 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('text=Add Milestone Project').first()
+    Expected: visible
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 15000ms[22m
+    [2m  - waiting for locator('text=Add Milestone Project').first()[22m
+
+
+      31 |     await page.getByLabel(/project name/i).fill("Add Milestone Project");
+      32 |     await page.click('button[type="submit"]');
+    > 33 |     await expect(page.locator("text=Add Milestone Project").first()).toBeVisible({ timeout: 15000 });
+         |                                                                      ^
+      34 |
+      35 |     // Open project details
+      36 |     await page.locator("text=Add Milestone Project").first().click();
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/milestone.spec.ts:33:70
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/milestone-Project-Mileston-2fae6-dd-a-milestone-to-a-project-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/milestone-Project-Mileston-2fae6-dd-a-milestone-to-a-project-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('text=Add Milestone Project').first()
+    Expected: visible
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 15000ms[22m
+    [2m  - waiting for locator('text=Add Milestone Project').first()[22m
+
+
+      31 |     await page.getByLabel(/project name/i).fill("Add Milestone Project");
+      32 |     await page.click('button[type="submit"]');
+    > 33 |     await expect(page.locator("text=Add Milestone Project").first()).toBeVisible({ timeout: 15000 });
+         |                                                                      ^
+      34 |
+      35 |     // Open project details
+      36 |     await page.locator("text=Add Milestone Project").first().click();
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/milestone.spec.ts:33:70
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/milestone-Project-Mileston-2fae6-dd-a-milestone-to-a-project-chromium-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/milestone-Project-Mileston-2fae6-dd-a-milestone-to-a-project-chromium-retry1/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/milestone-Project-Mileston-2fae6-dd-a-milestone-to-a-project-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/milestone-Project-Mileston-2fae6-dd-a-milestone-to-a-project-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  25) [chromium] › e2e/milestone.spec.ts:51:7 › Project Milestones › should complete a milestone ───
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('text=Complete Milestone Project').first()
+    Expected: visible
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 15000ms[22m
+    [2m  - waiting for locator('text=Complete Milestone Project').first()[22m
+
+
+      53 |     await page.getByLabel(/project name/i).fill("Complete Milestone Project");
+      54 |     await page.click('button[type="submit"]');
+    > 55 |     await expect(page.locator("text=Complete Milestone Project").first()).toBeVisible({ timeout: 15000 });
+         |                                                                           ^
+      56 |
+      57 |     // Open project details
+      58 |     await page.locator("text=Complete Milestone Project").first().click();
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/milestone.spec.ts:55:75
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/milestone-Project-Milestones-should-complete-a-milestone-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/milestone-Project-Milestones-should-complete-a-milestone-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('text=Complete Milestone Project').first()
+    Expected: visible
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 15000ms[22m
+    [2m  - waiting for locator('text=Complete Milestone Project').first()[22m
+
+
+      53 |     await page.getByLabel(/project name/i).fill("Complete Milestone Project");
+      54 |     await page.click('button[type="submit"]');
+    > 55 |     await expect(page.locator("text=Complete Milestone Project").first()).toBeVisible({ timeout: 15000 });
+         |                                                                           ^
+      56 |
+      57 |     // Open project details
+      58 |     await page.locator("text=Complete Milestone Project").first().click();
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/milestone.spec.ts:55:75
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/milestone-Project-Milestones-should-complete-a-milestone-chromium-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/milestone-Project-Milestones-should-complete-a-milestone-chromium-retry1/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/milestone-Project-Milestones-should-complete-a-milestone-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/milestone-Project-Milestones-should-complete-a-milestone-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  26) [chromium] › e2e/milestone.spec.ts:72:7 › Project Milestones › should delete a milestone ─────
+
+    [31mTest timeout of 45000ms exceeded.[39m
+
+    Error: locator.click: Test timeout of 45000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('text=Delete Milestone Project').first()[22m
+
+
+      77 |
+      78 |     // Open project details
+    > 79 |     await page.locator("text=Delete Milestone Project").first().click();
+         |                                                                 ^
+      80 |
+      81 |     // Add a milestone first
+      82 |     await page.getByRole("button", { name: "Add Milestone" }).click();
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/milestone.spec.ts:79:65
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/milestone-Project-Milestones-should-delete-a-milestone-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/milestone-Project-Milestones-should-delete-a-milestone-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    [31mTest timeout of 45000ms exceeded.[39m
+
+    Error: locator.click: Test timeout of 45000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('text=Delete Milestone Project').first()[22m
+
+
+      77 |
+      78 |     // Open project details
+    > 79 |     await page.locator("text=Delete Milestone Project").first().click();
+         |                                                                 ^
+      80 |
+      81 |     // Add a milestone first
+      82 |     await page.getByRole("button", { name: "Add Milestone" }).click();
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/milestone.spec.ts:79:65
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/milestone-Project-Milestones-should-delete-a-milestone-chromium-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/milestone-Project-Milestones-should-delete-a-milestone-chromium-retry1/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/milestone-Project-Milestones-should-delete-a-milestone-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/milestone-Project-Milestones-should-delete-a-milestone-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  27) [chromium] › e2e/milestone.spec.ts:93:7 › Project Milestones › should update project progress when milestone is completed 
+
+    [31mTest timeout of 45000ms exceeded.[39m
+
+    Error: locator.click: Test timeout of 45000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('text=Progress Test Project').first()[22m
+
+
+       98 |
+       99 |     // Open project details
+    > 100 |     await page.locator("text=Progress Test Project").first().click();
+          |                                                              ^
+      101 |
+      102 |     // Verify project shows progress
+      103 |     await expect(page.getByText(/Progress/)).toBeVisible();
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/milestone.spec.ts:100:62
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/milestone-Project-Mileston-a7f4f-when-milestone-is-completed-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/milestone-Project-Mileston-a7f4f-when-milestone-is-completed-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    [31mTest timeout of 45000ms exceeded.[39m
+
+    Error: locator.click: Test timeout of 45000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('text=Progress Test Project').first()[22m
+
+
+       98 |
+       99 |     // Open project details
+    > 100 |     await page.locator("text=Progress Test Project").first().click();
+          |                                                              ^
+      101 |
+      102 |     // Verify project shows progress
+      103 |     await expect(page.getByText(/Progress/)).toBeVisible();
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/milestone.spec.ts:100:62
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/milestone-Project-Mileston-a7f4f-when-milestone-is-completed-chromium-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/milestone-Project-Mileston-a7f4f-when-milestone-is-completed-chromium-retry1/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/milestone-Project-Mileston-a7f4f-when-milestone-is-completed-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/milestone-Project-Mileston-a7f4f-when-milestone-is-completed-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  28) [chromium] › e2e/pattern-intelligence.spec.ts:11:7 › Pattern Intelligence on DSA Problems › should display pattern insights panel 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('text=DSA Problems')
+    Expected: visible
+    Error: strict mode violation: locator('text=DSA Problems') resolved to 2 elements:
+        1) <a href="/dashboard/problems" class="flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-all duration-200 group bg-primary/10 text-primary font-semibold">…</a> aka getByRole('link', { name: 'DSA Problems' })
+        2) <h2 class="text-foreground text-lg font-semibold">DSA Problems</h2> aka getByRole('heading', { name: 'DSA Problems' })
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 10000ms[22m
+    [2m  - waiting for locator('text=DSA Problems')[22m
+
+
+       6 |   test.beforeEach(async ({ page }) => {
+       7 |     await page.goto("/dashboard/problems");
+    >  8 |     await expect(page.locator("text=DSA Problems")).toBeVisible();
+         |                                                     ^
+       9 |   });
+      10 |
+      11 |   test("should display pattern insights panel", async ({ page }) => {
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/pattern-intelligence.spec.ts:8:53
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/pattern-intelligence-Patte-18633-play-pattern-insights-panel-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/pattern-intelligence-Patte-18633-play-pattern-insights-panel-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('text=DSA Problems')
+    Expected: visible
+    Error: strict mode violation: locator('text=DSA Problems') resolved to 2 elements:
+        1) <a href="/dashboard/problems" class="flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-all duration-200 group bg-primary/10 text-primary font-semibold">…</a> aka getByRole('link', { name: 'DSA Problems' })
+        2) <h2 class="text-foreground text-lg font-semibold">DSA Problems</h2> aka getByRole('heading', { name: 'DSA Problems' })
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 10000ms[22m
+    [2m  - waiting for locator('text=DSA Problems')[22m
+
+
+       6 |   test.beforeEach(async ({ page }) => {
+       7 |     await page.goto("/dashboard/problems");
+    >  8 |     await expect(page.locator("text=DSA Problems")).toBeVisible();
+         |                                                     ^
+       9 |   });
+      10 |
+      11 |   test("should display pattern insights panel", async ({ page }) => {
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/pattern-intelligence.spec.ts:8:53
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/pattern-intelligence-Patte-18633-play-pattern-insights-panel-chromium-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/pattern-intelligence-Patte-18633-play-pattern-insights-panel-chromium-retry1/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/pattern-intelligence-Patte-18633-play-pattern-insights-panel-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/pattern-intelligence-Patte-18633-play-pattern-insights-panel-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  29) [chromium] › e2e/pattern-intelligence.spec.ts:25:7 › Pattern Intelligence on DSA Problems › should display most practiced patterns 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('text=DSA Problems')
+    Expected: visible
+    Error: strict mode violation: locator('text=DSA Problems') resolved to 2 elements:
+        1) <a href="/dashboard/problems" class="flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-all duration-200 group bg-primary/10 text-primary font-semibold">…</a> aka getByRole('link', { name: 'DSA Problems' })
+        2) <h2 class="text-foreground text-lg font-semibold">DSA Problems</h2> aka getByRole('heading', { name: 'DSA Problems' })
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 10000ms[22m
+    [2m  - waiting for locator('text=DSA Problems')[22m
+
+
+       6 |   test.beforeEach(async ({ page }) => {
+       7 |     await page.goto("/dashboard/problems");
+    >  8 |     await expect(page.locator("text=DSA Problems")).toBeVisible();
+         |                                                     ^
+       9 |   });
+      10 |
+      11 |   test("should display pattern insights panel", async ({ page }) => {
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/pattern-intelligence.spec.ts:8:53
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/pattern-intelligence-Patte-fda22-lay-most-practiced-patterns-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/pattern-intelligence-Patte-fda22-lay-most-practiced-patterns-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('text=DSA Problems')
+    Expected: visible
+    Error: strict mode violation: locator('text=DSA Problems') resolved to 2 elements:
+        1) <a href="/dashboard/problems" class="flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-all duration-200 group bg-primary/10 text-primary font-semibold">…</a> aka getByRole('link', { name: 'DSA Problems' })
+        2) <h2 class="text-foreground text-lg font-semibold">DSA Problems</h2> aka getByRole('heading', { name: 'DSA Problems' })
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 10000ms[22m
+    [2m  - waiting for locator('text=DSA Problems')[22m
+
+
+       6 |   test.beforeEach(async ({ page }) => {
+       7 |     await page.goto("/dashboard/problems");
+    >  8 |     await expect(page.locator("text=DSA Problems")).toBeVisible();
+         |                                                     ^
+       9 |   });
+      10 |
+      11 |   test("should display pattern insights panel", async ({ page }) => {
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/pattern-intelligence.spec.ts:8:53
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/pattern-intelligence-Patte-fda22-lay-most-practiced-patterns-chromium-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/pattern-intelligence-Patte-fda22-lay-most-practiced-patterns-chromium-retry1/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/pattern-intelligence-Patte-fda22-lay-most-practiced-patterns-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/pattern-intelligence-Patte-fda22-lay-most-practiced-patterns-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  30) [chromium] › e2e/pattern-intelligence.spec.ts:50:7 › Pattern Intelligence on DSA Problems › should show pattern mastery progress 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('text=DSA Problems')
+    Expected: visible
+    Error: strict mode violation: locator('text=DSA Problems') resolved to 2 elements:
+        1) <a href="/dashboard/problems" class="flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-all duration-200 group bg-primary/10 text-primary font-semibold">…</a> aka getByRole('link', { name: 'DSA Problems' })
+        2) <h2 class="text-foreground text-lg font-semibold">DSA Problems</h2> aka getByRole('heading', { name: 'DSA Problems' })
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 10000ms[22m
+    [2m  - waiting for locator('text=DSA Problems')[22m
+
+
+       6 |   test.beforeEach(async ({ page }) => {
+       7 |     await page.goto("/dashboard/problems");
+    >  8 |     await expect(page.locator("text=DSA Problems")).toBeVisible();
+         |                                                     ^
+       9 |   });
+      10 |
+      11 |   test("should display pattern insights panel", async ({ page }) => {
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/pattern-intelligence.spec.ts:8:53
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/pattern-intelligence-Patte-480c4-ow-pattern-mastery-progress-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/pattern-intelligence-Patte-480c4-ow-pattern-mastery-progress-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('text=DSA Problems')
+    Expected: visible
+    Error: strict mode violation: locator('text=DSA Problems') resolved to 2 elements:
+        1) <a href="/dashboard/problems" class="flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-all duration-200 group bg-primary/10 text-primary font-semibold">…</a> aka getByRole('link', { name: 'DSA Problems' })
+        2) <h2 class="text-foreground text-lg font-semibold">DSA Problems</h2> aka getByRole('heading', { name: 'DSA Problems' })
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 10000ms[22m
+    [2m  - waiting for locator('text=DSA Problems')[22m
+
+
+       6 |   test.beforeEach(async ({ page }) => {
+       7 |     await page.goto("/dashboard/problems");
+    >  8 |     await expect(page.locator("text=DSA Problems")).toBeVisible();
+         |                                                     ^
+       9 |   });
+      10 |
+      11 |   test("should display pattern insights panel", async ({ page }) => {
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/pattern-intelligence.spec.ts:8:53
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/pattern-intelligence-Patte-480c4-ow-pattern-mastery-progress-chromium-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/pattern-intelligence-Patte-480c4-ow-pattern-mastery-progress-chromium-retry1/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/pattern-intelligence-Patte-480c4-ow-pattern-mastery-progress-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/pattern-intelligence-Patte-480c4-ow-pattern-mastery-progress-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  31) [chromium] › e2e/pattern-intelligence.spec.ts:64:7 › Pattern Intelligence on DSA Problems › should recommend patterns to learn 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('text=DSA Problems')
+    Expected: visible
+    Error: strict mode violation: locator('text=DSA Problems') resolved to 3 elements:
+        1) <a href="/dashboard/problems" class="flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-all duration-200 group bg-primary/10 text-primary font-semibold">…</a> aka getByRole('link', { name: 'DSA Problems' })
+        2) <h2 class="text-3xl font-bold tracking-tight">DSA Problems</h2> aka getByText('DSA Problems').nth(1)
+        3) <h2 class="text-foreground text-lg font-semibold">DSA Problems</h2> aka getByText('DSA Problems').nth(2)
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 10000ms[22m
+    [2m  - waiting for locator('text=DSA Problems')[22m
+
+
+       6 |   test.beforeEach(async ({ page }) => {
+       7 |     await page.goto("/dashboard/problems");
+    >  8 |     await expect(page.locator("text=DSA Problems")).toBeVisible();
+         |                                                     ^
+       9 |   });
+      10 |
+      11 |   test("should display pattern insights panel", async ({ page }) => {
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/pattern-intelligence.spec.ts:8:53
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/pattern-intelligence-Patte-1bebe-recommend-patterns-to-learn-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/pattern-intelligence-Patte-1bebe-recommend-patterns-to-learn-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('text=DSA Problems')
+    Expected: visible
+    Error: strict mode violation: locator('text=DSA Problems') resolved to 2 elements:
+        1) <a href="/dashboard/problems" class="flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-all duration-200 group bg-primary/10 text-primary font-semibold">…</a> aka getByRole('link', { name: 'DSA Problems' })
+        2) <h2 class="text-foreground text-lg font-semibold">DSA Problems</h2> aka getByRole('heading', { name: 'DSA Problems' })
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 10000ms[22m
+    [2m  - waiting for locator('text=DSA Problems')[22m
+
+
+       6 |   test.beforeEach(async ({ page }) => {
+       7 |     await page.goto("/dashboard/problems");
+    >  8 |     await expect(page.locator("text=DSA Problems")).toBeVisible();
+         |                                                     ^
+       9 |   });
+      10 |
+      11 |   test("should display pattern insights panel", async ({ page }) => {
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/pattern-intelligence.spec.ts:8:53
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/pattern-intelligence-Patte-1bebe-recommend-patterns-to-learn-chromium-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/pattern-intelligence-Patte-1bebe-recommend-patterns-to-learn-chromium-retry1/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/pattern-intelligence-Patte-1bebe-recommend-patterns-to-learn-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/pattern-intelligence-Patte-1bebe-recommend-patterns-to-learn-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  32) [chromium] › e2e/pattern-intelligence.spec.ts:76:7 › Pattern Intelligence on DSA Problems › should display weak patterns to strengthen 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('text=DSA Problems')
+    Expected: visible
+    Error: strict mode violation: locator('text=DSA Problems') resolved to 3 elements:
+        1) <a href="/dashboard/problems" class="flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-all duration-200 group bg-primary/10 text-primary font-semibold">…</a> aka getByRole('link', { name: 'DSA Problems' })
+        2) <h2 class="text-3xl font-bold tracking-tight">DSA Problems</h2> aka getByRole('heading', { name: 'DSA Problems' })
+        3) <h2 class="text-foreground text-lg font-semibold">DSA Problems</h2> aka getByText('DSA Problems').nth(2)
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 10000ms[22m
+    [2m  - waiting for locator('text=DSA Problems')[22m
+
+
+       6 |   test.beforeEach(async ({ page }) => {
+       7 |     await page.goto("/dashboard/problems");
+    >  8 |     await expect(page.locator("text=DSA Problems")).toBeVisible();
+         |                                                     ^
+       9 |   });
+      10 |
+      11 |   test("should display pattern insights panel", async ({ page }) => {
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/pattern-intelligence.spec.ts:8:53
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/pattern-intelligence-Patte-6db41-weak-patterns-to-strengthen-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/pattern-intelligence-Patte-6db41-weak-patterns-to-strengthen-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('text=DSA Problems')
+    Expected: visible
+    Error: strict mode violation: locator('text=DSA Problems') resolved to 2 elements:
+        1) <a href="/dashboard/problems" class="flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-all duration-200 group bg-primary/10 text-primary font-semibold">…</a> aka getByRole('link', { name: 'DSA Problems' })
+        2) <h2 class="text-foreground text-lg font-semibold">DSA Problems</h2> aka getByRole('heading', { name: 'DSA Problems' })
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 10000ms[22m
+    [2m  - waiting for locator('text=DSA Problems')[22m
+
+
+       6 |   test.beforeEach(async ({ page }) => {
+       7 |     await page.goto("/dashboard/problems");
+    >  8 |     await expect(page.locator("text=DSA Problems")).toBeVisible();
+         |                                                     ^
+       9 |   });
+      10 |
+      11 |   test("should display pattern insights panel", async ({ page }) => {
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/pattern-intelligence.spec.ts:8:53
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/pattern-intelligence-Patte-6db41-weak-patterns-to-strengthen-chromium-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/pattern-intelligence-Patte-6db41-weak-patterns-to-strengthen-chromium-retry1/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/pattern-intelligence-Patte-6db41-weak-patterns-to-strengthen-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/pattern-intelligence-Patte-6db41-weak-patterns-to-strengthen-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  33) [chromium] › e2e/project.spec.ts:11:7 › Project Feature › should create a new project ────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('text=Test Project').first()
+    Expected: visible
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 15000ms[22m
+    [2m  - waiting for locator('text=Test Project').first()[22m
+
+
+      35 |
+      36 |     // Wait for success (new project card appears)
+    > 37 |     await expect(page.locator("text=Test Project").first()).toBeVisible({ timeout: 15000 });
+         |                                                             ^
+      38 |   });
+      39 |
+      40 |   test("should validate required fields", async ({ page }) => {
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/project.spec.ts:37:61
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/project-Project-Feature-should-create-a-new-project-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/project-Project-Feature-should-create-a-new-project-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('text=Test Project').first()
+    Expected: visible
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 15000ms[22m
+    [2m  - waiting for locator('text=Test Project').first()[22m
+
+
+      35 |
+      36 |     // Wait for success (new project card appears)
+    > 37 |     await expect(page.locator("text=Test Project").first()).toBeVisible({ timeout: 15000 });
+         |                                                             ^
+      38 |   });
+      39 |
+      40 |   test("should validate required fields", async ({ page }) => {
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/project.spec.ts:37:61
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/project-Project-Feature-should-create-a-new-project-chromium-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/project-Project-Feature-should-create-a-new-project-chromium-retry1/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/project-Project-Feature-should-create-a-new-project-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/project-Project-Feature-should-create-a-new-project-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  34) [chromium] › e2e/project.spec.ts:48:7 › Project Feature › should edit an existing project ────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('text=Edit Test Project').first()
+    Expected: visible
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 15000ms[22m
+    [2m  - waiting for locator('text=Edit Test Project').first()[22m
+
+
+      55 |
+      56 |     // Wait for submission
+    > 57 |     await expect(page.locator("text=Edit Test Project").first()).toBeVisible({ timeout: 15000 });
+         |                                                                  ^
+      58 |
+      59 |     // Click edit button
+      60 |     await page.getByLabel(/Edit/).first().click();
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/project.spec.ts:57:66
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/project-Project-Feature-should-edit-an-existing-project-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/project-Project-Feature-should-edit-an-existing-project-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('text=Edit Test Project').first()
+    Expected: visible
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 15000ms[22m
+    [2m  - waiting for locator('text=Edit Test Project').first()[22m
+
+
+      55 |
+      56 |     // Wait for submission
+    > 57 |     await expect(page.locator("text=Edit Test Project").first()).toBeVisible({ timeout: 15000 });
+         |                                                                  ^
+      58 |
+      59 |     // Click edit button
+      60 |     await page.getByLabel(/Edit/).first().click();
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/project.spec.ts:57:66
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/project-Project-Feature-should-edit-an-existing-project-chromium-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/project-Project-Feature-should-edit-an-existing-project-chromium-retry1/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/project-Project-Feature-should-edit-an-existing-project-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/project-Project-Feature-should-edit-an-existing-project-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  35) [chromium] › e2e/project.spec.ts:76:7 › Project Feature › should delete a project ────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('text=Delete Test Project').first()
+    Expected: visible
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 15000ms[22m
+    [2m  - waiting for locator('text=Delete Test Project').first()[22m
+
+
+      83 |
+      84 |     // Wait for submission
+    > 85 |     await expect(page.locator("text=Delete Test Project").first()).toBeVisible({ timeout: 15000 });
+         |                                                                    ^
+      86 |
+      87 |     // Click delete button
+      88 |     await page.getByLabel(/Delete/).first().click();
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/project.spec.ts:85:68
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/project-Project-Feature-should-delete-a-project-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/project-Project-Feature-should-delete-a-project-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('text=Delete Test Project').first()
+    Expected: visible
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 15000ms[22m
+    [2m  - waiting for locator('text=Delete Test Project').first()[22m
+
+
+      83 |
+      84 |     // Wait for submission
+    > 85 |     await expect(page.locator("text=Delete Test Project").first()).toBeVisible({ timeout: 15000 });
+         |                                                                    ^
+      86 |
+      87 |     // Click delete button
+      88 |     await page.getByLabel(/Delete/).first().click();
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/project.spec.ts:85:68
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/project-Project-Feature-should-delete-a-project-chromium-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/project-Project-Feature-should-delete-a-project-chromium-retry1/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/project-Project-Feature-should-delete-a-project-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/project-Project-Feature-should-delete-a-project-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  36) [chromium] › e2e/project.spec.ts:97:7 › Project Feature › should change project status ───────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('text=Status Test Project').first()
+    Expected: visible
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 15000ms[22m
+    [2m  - waiting for locator('text=Status Test Project').first()[22m
+
+
+      101 |
+      102 |     // Wait for submission
+    > 103 |     await expect(page.locator("text=Status Test Project").first()).toBeVisible({ timeout: 15000 });
+          |                                                                    ^
+      104 |
+      105 |     // Click edit to access status change
+      106 |     await page.getByLabel(/Edit/).first().click();
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/project.spec.ts:103:68
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/project-Project-Feature-should-change-project-status-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/project-Project-Feature-should-change-project-status-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('text=Status Test Project').first()
+    Expected: visible
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 15000ms[22m
+    [2m  - waiting for locator('text=Status Test Project').first()[22m
+
+
+      101 |
+      102 |     // Wait for submission
+    > 103 |     await expect(page.locator("text=Status Test Project").first()).toBeVisible({ timeout: 15000 });
+          |                                                                    ^
+      104 |
+      105 |     // Click edit to access status change
+      106 |     await page.getByLabel(/Edit/).first().click();
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/project.spec.ts:103:68
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/project-Project-Feature-should-change-project-status-chromium-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/project-Project-Feature-should-change-project-status-chromium-retry1/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/project-Project-Feature-should-change-project-status-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/project-Project-Feature-should-change-project-status-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  37) [chromium] › e2e/project.spec.ts:140:7 › Project Feature › should display project progress ───
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('text=Progress Test').first()
+    Expected: visible
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 15000ms[22m
+    [2m  - waiting for locator('text=Progress Test').first()[22m
+
+
+      144 |
+      145 |     // Wait for submission
+    > 146 |     await expect(page.locator("text=Progress Test").first()).toBeVisible({ timeout: 15000 });
+          |                                                              ^
+      147 |
+      148 |     // Look for progress indicator or status
+      149 |     const content = await page.content();
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/project.spec.ts:146:62
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/project-Project-Feature-should-display-project-progress-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/project-Project-Feature-should-display-project-progress-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('text=Progress Test').first()
+    Expected: visible
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 15000ms[22m
+    [2m  - waiting for locator('text=Progress Test').first()[22m
+
+
+      144 |
+      145 |     // Wait for submission
+    > 146 |     await expect(page.locator("text=Progress Test").first()).toBeVisible({ timeout: 15000 });
+          |                                                              ^
+      147 |
+      148 |     // Look for progress indicator or status
+      149 |     const content = await page.content();
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/project.spec.ts:146:62
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/project-Project-Feature-should-display-project-progress-chromium-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/project-Project-Feature-should-display-project-progress-chromium-retry1/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/project-Project-Feature-should-display-project-progress-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/project-Project-Feature-should-display-project-progress-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  38) [chromium] › e2e/project.spec.ts:169:7 › Project Feature › should update project progress when milestones are completed 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('text=Progress Flow Project').first()
+    Expected: visible
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 15000ms[22m
+    [2m  - waiting for locator('text=Progress Flow Project').first()[22m
+
+
+      173 |     await page.getByLabel(/project name/i).fill(projectName);
+      174 |     await page.click('button[type="submit"]');
+    > 175 |     await expect(page.locator(`text=${projectName}`).first()).toBeVisible({ timeout: 15000 });
+          |                                                               ^
+      176 |  
+      177 |     // 2. Navigate to project details
+      178 |     await page.click(`text=${projectName}`);
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/project.spec.ts:175:63
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/project-Project-Feature-sh-41d61-en-milestones-are-completed-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/project-Project-Feature-sh-41d61-en-milestones-are-completed-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('text=Progress Flow Project').first()
+    Expected: visible
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 15000ms[22m
+    [2m  - waiting for locator('text=Progress Flow Project').first()[22m
+
+
+      173 |     await page.getByLabel(/project name/i).fill(projectName);
+      174 |     await page.click('button[type="submit"]');
+    > 175 |     await expect(page.locator(`text=${projectName}`).first()).toBeVisible({ timeout: 15000 });
+          |                                                               ^
+      176 |  
+      177 |     // 2. Navigate to project details
+      178 |     await page.click(`text=${projectName}`);
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/project.spec.ts:175:63
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/project-Project-Feature-sh-41d61-en-milestones-are-completed-chromium-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/project-Project-Feature-sh-41d61-en-milestones-are-completed-chromium-retry1/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/project-Project-Feature-sh-41d61-en-milestones-are-completed-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/project-Project-Feature-sh-41d61-en-milestones-are-completed-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  39) [chromium] › e2e/settings.spec.ts:22:7 › Settings Page › should sign out user ────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('text=Sign in')
+    Expected: visible
+    Error: strict mode violation: locator('text=Sign in') resolved to 2 elements:
+        1) <p class="text-muted-foreground mt-2 text-sm">Sign in to continue your progress</p> aka getByText('Sign in to continue your')
+        2) <button type="submit" data-slot="button" data-size="default" data-variant="default" class="group/button inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent bg-clip-padding text-sm whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark…>Sign in</button> aka getByRole('button', { name: 'Sign in' })
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 10000ms[22m
+    [2m  - waiting for locator('text=Sign in')[22m
+
+
+      26 |     // Should redirect to login
+      27 |     await expect(page).toHaveURL(/.*login.*/);
+    > 28 |     await expect(page.locator("text=Sign in")).toBeVisible();
+         |                                                ^
+      29 |   });
+      30 |
+      31 |   test("should navigate back to dashboard", async ({ page }) => {
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/settings.spec.ts:28:48
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/settings-Settings-Page-should-sign-out-user-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/settings-Settings-Page-should-sign-out-user-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: getByRole('heading', { name: 'Settings' })
+    Expected: visible
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 10000ms[22m
+    [2m  - waiting for getByRole('heading', { name: 'Settings' })[22m
+
+
+       6 |   test.beforeEach(async ({ page }) => {
+       7 |     await page.goto("/dashboard/settings");
+    >  8 |     await expect(page.getByRole("heading", { name: "Settings" })).toBeVisible();
+         |                                                                   ^
+       9 |   });
+      10 |
+      11 |   test("should display user information", async ({ page }) => {
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/settings.spec.ts:8:67
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/settings-Settings-Page-should-sign-out-user-chromium-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/settings-Settings-Page-should-sign-out-user-chromium-retry1/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/settings-Settings-Page-should-sign-out-user-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/settings-Settings-Page-should-sign-out-user-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  40) [chromium] › e2e/settings.spec.ts:31:7 › Settings Page › should navigate back to dashboard ───
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: getByRole('heading', { name: 'Settings' })
+    Expected: visible
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 10000ms[22m
+    [2m  - waiting for getByRole('heading', { name: 'Settings' })[22m
+
+
+       6 |   test.beforeEach(async ({ page }) => {
+       7 |     await page.goto("/dashboard/settings");
+    >  8 |     await expect(page.getByRole("heading", { name: "Settings" })).toBeVisible();
+         |                                                                   ^
+       9 |   });
+      10 |
+      11 |   test("should display user information", async ({ page }) => {
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/settings.spec.ts:8:67
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/settings-Settings-Page-should-navigate-back-to-dashboard-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/settings-Settings-Page-should-navigate-back-to-dashboard-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: getByRole('heading', { name: 'Settings' })
+    Expected: visible
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 10000ms[22m
+    [2m  - waiting for getByRole('heading', { name: 'Settings' })[22m
+
+
+       6 |   test.beforeEach(async ({ page }) => {
+       7 |     await page.goto("/dashboard/settings");
+    >  8 |     await expect(page.getByRole("heading", { name: "Settings" })).toBeVisible();
+         |                                                                   ^
+       9 |   });
+      10 |
+      11 |   test("should display user information", async ({ page }) => {
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/settings.spec.ts:8:67
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/settings-Settings-Page-should-navigate-back-to-dashboard-chromium-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/settings-Settings-Page-should-navigate-back-to-dashboard-chromium-retry1/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/settings-Settings-Page-should-navigate-back-to-dashboard-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/settings-Settings-Page-should-navigate-back-to-dashboard-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  41) [chromium] › e2e/streak.spec.ts:11:7 › Streak System › should display current streak count ───
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: getByRole('heading', { name: 'Overview' })
+    Expected: visible
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 10000ms[22m
+    [2m  - waiting for getByRole('heading', { name: 'Overview' })[22m
+
+
+       6 |   test.beforeEach(async ({ page }) => {
+       7 |     await page.goto("/dashboard");
+    >  8 |     await expect(page.getByRole("heading", { name: "Overview" })).toBeVisible();
+         |                                                                   ^
+       9 |   });
+      10 |
+      11 |   test("should display current streak count", async ({ page }) => {
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/streak.spec.ts:8:67
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/streak-Streak-System-should-display-current-streak-count-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/streak-Streak-System-should-display-current-streak-count-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: getByRole('heading', { name: 'Overview' })
+    Expected: visible
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 10000ms[22m
+    [2m  - waiting for getByRole('heading', { name: 'Overview' })[22m
+
+
+       6 |   test.beforeEach(async ({ page }) => {
+       7 |     await page.goto("/dashboard");
+    >  8 |     await expect(page.getByRole("heading", { name: "Overview" })).toBeVisible();
+         |                                                                   ^
+       9 |   });
+      10 |
+      11 |   test("should display current streak count", async ({ page }) => {
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/streak.spec.ts:8:67
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/streak-Streak-System-should-display-current-streak-count-chromium-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/streak-Streak-System-should-display-current-streak-count-chromium-retry1/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/streak-Streak-System-should-display-current-streak-count-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/streak-Streak-System-should-display-current-streak-count-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  42) [chromium] › e2e/streak.spec.ts:21:7 › Streak System › should display longest streak count ───
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: getByRole('heading', { name: 'Overview' })
+    Expected: visible
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 10000ms[22m
+    [2m  - waiting for getByRole('heading', { name: 'Overview' })[22m
+
+
+       6 |   test.beforeEach(async ({ page }) => {
+       7 |     await page.goto("/dashboard");
+    >  8 |     await expect(page.getByRole("heading", { name: "Overview" })).toBeVisible();
+         |                                                                   ^
+       9 |   });
+      10 |
+      11 |   test("should display current streak count", async ({ page }) => {
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/streak.spec.ts:8:67
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/streak-Streak-System-should-display-longest-streak-count-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/streak-Streak-System-should-display-longest-streak-count-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: getByRole('heading', { name: 'Overview' })
+    Expected: visible
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 10000ms[22m
+    [2m  - waiting for getByRole('heading', { name: 'Overview' })[22m
+
+
+       6 |   test.beforeEach(async ({ page }) => {
+       7 |     await page.goto("/dashboard");
+    >  8 |     await expect(page.getByRole("heading", { name: "Overview" })).toBeVisible();
+         |                                                                   ^
+       9 |   });
+      10 |
+      11 |   test("should display current streak count", async ({ page }) => {
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/streak.spec.ts:8:67
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/streak-Streak-System-should-display-longest-streak-count-chromium-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/streak-Streak-System-should-display-longest-streak-count-chromium-retry1/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/streak-Streak-System-should-display-longest-streak-count-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/streak-Streak-System-should-display-longest-streak-count-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  43) [chromium] › e2e/streak.spec.ts:31:7 › Streak System › should display streak milestone badges 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: getByRole('heading', { name: 'Overview' })
+    Expected: visible
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 10000ms[22m
+    [2m  - waiting for getByRole('heading', { name: 'Overview' })[22m
+
+
+       6 |   test.beforeEach(async ({ page }) => {
+       7 |     await page.goto("/dashboard");
+    >  8 |     await expect(page.getByRole("heading", { name: "Overview" })).toBeVisible();
+         |                                                                   ^
+       9 |   });
+      10 |
+      11 |   test("should display current streak count", async ({ page }) => {
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/streak.spec.ts:8:67
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/streak-Streak-System-should-display-streak-milestone-badges-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/streak-Streak-System-should-display-streak-milestone-badges-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: getByRole('heading', { name: 'Overview' })
+    Expected: visible
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 10000ms[22m
+    [2m  - waiting for getByRole('heading', { name: 'Overview' })[22m
+
+
+       6 |   test.beforeEach(async ({ page }) => {
+       7 |     await page.goto("/dashboard");
+    >  8 |     await expect(page.getByRole("heading", { name: "Overview" })).toBeVisible();
+         |                                                                   ^
+       9 |   });
+      10 |
+      11 |   test("should display current streak count", async ({ page }) => {
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/streak.spec.ts:8:67
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/streak-Streak-System-should-display-streak-milestone-badges-chromium-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/streak-Streak-System-should-display-streak-milestone-badges-chromium-retry1/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/streak-Streak-System-should-display-streak-milestone-badges-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/streak-Streak-System-should-display-streak-milestone-badges-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  44) [chromium] › e2e/streak.spec.ts:50:7 › Streak System › should display streak freeze information 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: getByRole('heading', { name: 'Overview' })
+    Expected: visible
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 10000ms[22m
+    [2m  - waiting for getByRole('heading', { name: 'Overview' })[22m
+
+
+       6 |   test.beforeEach(async ({ page }) => {
+       7 |     await page.goto("/dashboard");
+    >  8 |     await expect(page.getByRole("heading", { name: "Overview" })).toBeVisible();
+         |                                                                   ^
+       9 |   });
+      10 |
+      11 |   test("should display current streak count", async ({ page }) => {
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/streak.spec.ts:8:67
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/streak-Streak-System-shoul-f7814-y-streak-freeze-information-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/streak-Streak-System-shoul-f7814-y-streak-freeze-information-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: getByRole('heading', { name: 'Overview' })
+    Expected: visible
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 10000ms[22m
+    [2m  - waiting for getByRole('heading', { name: 'Overview' })[22m
+
+
+       6 |   test.beforeEach(async ({ page }) => {
+       7 |     await page.goto("/dashboard");
+    >  8 |     await expect(page.getByRole("heading", { name: "Overview" })).toBeVisible();
+         |                                                                   ^
+       9 |   });
+      10 |
+      11 |   test("should display current streak count", async ({ page }) => {
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/streak.spec.ts:8:67
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/streak-Streak-System-shoul-f7814-y-streak-freeze-information-chromium-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/streak-Streak-System-shoul-f7814-y-streak-freeze-information-chromium-retry1/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/streak-Streak-System-shoul-f7814-y-streak-freeze-information-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/streak-Streak-System-shoul-f7814-y-streak-freeze-information-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  45) [chromium] › e2e/streak.spec.ts:64:7 › Streak System › should update streak after creating daily log 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: getByRole('heading', { name: 'Overview' })
+    Expected: visible
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 10000ms[22m
+    [2m  - waiting for getByRole('heading', { name: 'Overview' })[22m
+
+
+       6 |   test.beforeEach(async ({ page }) => {
+       7 |     await page.goto("/dashboard");
+    >  8 |     await expect(page.getByRole("heading", { name: "Overview" })).toBeVisible();
+         |                                                                   ^
+       9 |   });
+      10 |
+      11 |   test("should display current streak count", async ({ page }) => {
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/streak.spec.ts:8:67
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/streak-Streak-System-shoul-4afd6-ak-after-creating-daily-log-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/streak-Streak-System-shoul-4afd6-ak-after-creating-daily-log-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: getByRole('heading', { name: 'Overview' })
+    Expected: visible
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 10000ms[22m
+    [2m  - waiting for getByRole('heading', { name: 'Overview' })[22m
+
+
+       6 |   test.beforeEach(async ({ page }) => {
+       7 |     await page.goto("/dashboard");
+    >  8 |     await expect(page.getByRole("heading", { name: "Overview" })).toBeVisible();
+         |                                                                   ^
+       9 |   });
+      10 |
+      11 |   test("should display current streak count", async ({ page }) => {
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/streak.spec.ts:8:67
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/streak-Streak-System-shoul-4afd6-ak-after-creating-daily-log-chromium-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/streak-Streak-System-shoul-4afd6-ak-after-creating-daily-log-chromium-retry1/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/streak-Streak-System-shoul-4afd6-ak-after-creating-daily-log-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/streak-Streak-System-shoul-4afd6-ak-after-creating-daily-log-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  46) [chromium] › e2e/streak.spec.ts:90:7 › Streak System › should display progress to next milestone 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: getByRole('heading', { name: 'Overview' })
+    Expected: visible
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 10000ms[22m
+    [2m  - waiting for getByRole('heading', { name: 'Overview' })[22m
+
+
+       6 |   test.beforeEach(async ({ page }) => {
+       7 |     await page.goto("/dashboard");
+    >  8 |     await expect(page.getByRole("heading", { name: "Overview" })).toBeVisible();
+         |                                                                   ^
+       9 |   });
+      10 |
+      11 |   test("should display current streak count", async ({ page }) => {
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/streak.spec.ts:8:67
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/streak-Streak-System-shoul-03e09--progress-to-next-milestone-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/streak-Streak-System-shoul-03e09--progress-to-next-milestone-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: getByRole('heading', { name: 'Overview' })
+    Expected: visible
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 10000ms[22m
+    [2m  - waiting for getByRole('heading', { name: 'Overview' })[22m
+
+
+       6 |   test.beforeEach(async ({ page }) => {
+       7 |     await page.goto("/dashboard");
+    >  8 |     await expect(page.getByRole("heading", { name: "Overview" })).toBeVisible();
+         |                                                                   ^
+       9 |   });
+      10 |
+      11 |   test("should display current streak count", async ({ page }) => {
+        at /Users/shaileshchaudhary/Desktop/Coding/devtrack/e2e/streak.spec.ts:8:67
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/streak-Streak-System-shoul-03e09--progress-to-next-milestone-chromium-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/streak-Streak-System-shoul-03e09--progress-to-next-milestone-chromium-retry1/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/streak-Streak-System-shoul-03e09--progress-to-next-milestone-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/streak-Streak-System-shoul-03e09--progress-to-next-milestone-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  46 failed
+    [chromium] › e2e/daily-log.spec.ts:15:7 › Daily Log Feature › should create a new daily log and appear in history 
+    [chromium] › e2e/daily-log.spec.ts:49:7 › Daily Log Feature › should validate required fields and appear in history 
+    [chromium] › e2e/daily-log.spec.ts:64:7 › Daily Log Feature › should prevent duplicate entries for same date 
+    [chromium] › e2e/daily-log.spec.ts:112:7 › Daily Log Feature › should handle notes character limit 
+    [chromium] › e2e/daily-log.spec.ts:125:7 › Daily Log Feature › should filter logs by date range 
+    [chromium] › e2e/daily-log.spec.ts:164:7 › Daily Log Feature › should show all logs when filter is set to all time 
+    [chromium] › e2e/daily-log.spec.ts:186:7 › Daily Log Feature › should load more logs when Load more button is clicked 
+    [chromium] › e2e/daily-log.spec.ts:216:7 › Daily Log Feature › should delete a daily log ───────
+    [chromium] › e2e/dashboard.spec.ts:11:7 › Dashboard Feature › should display dashboard stats cards 
+    [chromium] › e2e/dashboard.spec.ts:153:7 › Dashboard Feature › should display peak productivity times 
+    [chromium] › e2e/dsa-problem.spec.ts:11:7 › DSA Problem Feature › should create a new DSA problem 
+    [chromium] › e2e/dsa-problem.spec.ts:37:7 › DSA Problem Feature › should validate required fields 
+    [chromium] › e2e/dsa-problem.spec.ts:50:7 › DSA Problem Feature › should filter problems by difficulty 
+    [chromium] › e2e/dsa-problem.spec.ts:106:7 › DSA Problem Feature › should edit an existing problem 
+    [chromium] › e2e/dsa-problem.spec.ts:132:7 › DSA Problem Feature › should delete a problem ─────
+    [chromium] › e2e/dsa-problem.spec.ts:155:7 › DSA Problem Feature › should display empty state when no problems 
+    [chromium] › e2e/dsa-problem.spec.ts:168:7 › DSA Problem Feature › should create a problem with notes 
+    [chromium] › e2e/dsa-problem.spec.ts:194:7 › DSA Problem Feature › should edit problem notes ───
+    [chromium] › e2e/dsa-problem.spec.ts:223:7 › DSA Problem Feature › should validate notes character limit 
+    [chromium] › e2e/dsa-problem.spec.ts:237:7 › DSA Problem Feature › should search problems by title 
+    [chromium] › e2e/dsa-problem.spec.ts:251:7 › DSA Problem Feature › should paginate through problems 
+    [chromium] › e2e/error.spec.ts:4:7 › Error Pages › should display 404 page for non-existent routes 
+    [chromium] › e2e/milestone.spec.ts:11:7 › Project Milestones › should display milestones for a project 
+    [chromium] › e2e/milestone.spec.ts:29:7 › Project Milestones › should add a milestone to a project 
+    [chromium] › e2e/milestone.spec.ts:51:7 › Project Milestones › should complete a milestone ─────
+    [chromium] › e2e/milestone.spec.ts:72:7 › Project Milestones › should delete a milestone ───────
+    [chromium] › e2e/milestone.spec.ts:93:7 › Project Milestones › should update project progress when milestone is completed 
+    [chromium] › e2e/pattern-intelligence.spec.ts:11:7 › Pattern Intelligence on DSA Problems › should display pattern insights panel 
+    [chromium] › e2e/pattern-intelligence.spec.ts:25:7 › Pattern Intelligence on DSA Problems › should display most practiced patterns 
+    [chromium] › e2e/pattern-intelligence.spec.ts:50:7 › Pattern Intelligence on DSA Problems › should show pattern mastery progress 
+    [chromium] › e2e/pattern-intelligence.spec.ts:64:7 › Pattern Intelligence on DSA Problems › should recommend patterns to learn 
+    [chromium] › e2e/pattern-intelligence.spec.ts:76:7 › Pattern Intelligence on DSA Problems › should display weak patterns to strengthen 
+    [chromium] › e2e/project.spec.ts:11:7 › Project Feature › should create a new project ──────────
+    [chromium] › e2e/project.spec.ts:48:7 › Project Feature › should edit an existing project ──────
+    [chromium] › e2e/project.spec.ts:76:7 › Project Feature › should delete a project ──────────────
+    [chromium] › e2e/project.spec.ts:97:7 › Project Feature › should change project status ─────────
+    [chromium] › e2e/project.spec.ts:140:7 › Project Feature › should display project progress ─────
+    [chromium] › e2e/project.spec.ts:169:7 › Project Feature › should update project progress when milestones are completed 
+    [chromium] › e2e/settings.spec.ts:22:7 › Settings Page › should sign out user ──────────────────
+    [chromium] › e2e/settings.spec.ts:31:7 › Settings Page › should navigate back to dashboard ─────
+    [chromium] › e2e/streak.spec.ts:11:7 › Streak System › should display current streak count ─────
+    [chromium] › e2e/streak.spec.ts:21:7 › Streak System › should display longest streak count ─────
+    [chromium] › e2e/streak.spec.ts:31:7 › Streak System › should display streak milestone badges ──
+    [chromium] › e2e/streak.spec.ts:50:7 › Streak System › should display streak freeze information 
+    [chromium] › e2e/streak.spec.ts:64:7 › Streak System › should update streak after creating daily log 
+    [chromium] › e2e/streak.spec.ts:90:7 › Streak System › should display progress to next milestone 
+  31 passed (18.9m)

@@ -39,40 +39,40 @@ export function WeeklyProgressChart({ data }: WeeklyProgressChartProps) {
                 dataKey="week"
                 axisLine={false}
                 tickLine={false}
-                tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
+                tick={{ fontSize: 11, fill: "var(--muted-foreground)" }}
                 minTickGap={15}
               />
               <YAxis
                 axisLine={false}
                 tickLine={false}
-                tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
+                tick={{ fontSize: 11, fill: "var(--muted-foreground)" }}
                 allowDecimals={false}
               />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: "hsl(var(--background))",
-                  border: "1px solid hsl(var(--border))",
+                  backgroundColor: "var(--background)",
+                  border: "1px solid var(--border)",
                   borderRadius: "6px",
                   fontSize: "12px",
                 }}
-                cursor={{ fill: "hsl(var(--muted))", opacity: 0.4 }}
+                cursor={{ fill: "var(--muted)", opacity: 0.4 }}
               />
               <Bar 
                 dataKey="easy" 
                 stackId="a" 
-                fill="oklch(0.70 0.1 142)" // green
+                fill="var(--chart-easy)"
                 radius={[0, 0, 0, 0]} 
               />
               <Bar 
                 dataKey="medium" 
                 stackId="a" 
-                fill="oklch(0.75 0.12 70)" // amber
+                fill="var(--chart-medium)"
                 radius={[0, 0, 0, 0]} 
               />
               <Bar 
                 dataKey="hard" 
                 stackId="a" 
-                fill="oklch(0.65 0.18 27)" // red
+                fill="var(--chart-hard)"
                 radius={[4, 4, 0, 0]} 
               />
             </BarChart>

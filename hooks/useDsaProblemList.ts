@@ -65,11 +65,11 @@ export function formatSolvedDate(isoString: string): string {
 export function getDifficultyColor(difficulty: string): string {
   switch (difficulty) {
     case "EASY":
-      return "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400";
+      return "bg-[var(--difficulty-easy-bg)] text-[var(--difficulty-easy-text)]";
     case "MEDIUM":
-      return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400";
+      return "bg-[var(--difficulty-medium-bg)] text-[var(--difficulty-medium-text)]";
     case "HARD":
-      return "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400";
+      return "bg-[var(--difficulty-hard-bg)] text-[var(--difficulty-hard-text)]";
     default:
       return "bg-muted text-muted-foreground";
   }

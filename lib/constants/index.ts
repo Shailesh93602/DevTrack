@@ -46,19 +46,19 @@ export const PROJECT_STATUS_CONFIG = {
     label: "In Progress",
     icon: Clock,
     variant: "default" as const,
-    dotClass: "bg-primary",
+    dotClass: "bg-[var(--status-in-progress)]",
   },
   COMPLETED: {
     label: "Completed",
     icon: CheckCircle2,
     variant: "secondary" as const,
-    dotClass: "bg-green-500",
+    dotClass: "bg-[var(--status-completed)]",
   },
   ON_HOLD: {
     label: "On Hold",
     icon: AlertCircle,
     variant: "outline" as const,
-    dotClass: "bg-muted-foreground",
+    dotClass: "bg-[var(--status-hold)]",
   },
 } as const;
 

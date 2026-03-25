@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { SidebarContent } from "./sidebar";
+import { ThemeToggle } from "@/components/shared/ThemeToggle";
 
 interface HeaderProps {
   email?: string;
@@ -54,7 +55,8 @@ export function Header({ email }: HeaderProps) {
         </DialogContent>
       </Dialog>
 
-      <div className="flex flex-1 items-center justify-end gap-4">
+      <div className="flex flex-1 items-center justify-end gap-2">
+        <ThemeToggle />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="relative h-8 w-8 rounded-full border border-border">

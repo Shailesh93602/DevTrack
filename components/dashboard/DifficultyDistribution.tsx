@@ -13,9 +13,9 @@ interface DifficultyDistributionProps {
 
 export function DifficultyDistribution({ data }: DifficultyDistributionProps) {
   const chartData = [
-    { name: "Easy", value: data.easy, color: "oklch(0.70 0.1 142)" }, // green
-    { name: "Medium", value: data.medium, color: "oklch(0.75 0.12 70)" }, // amber
-    { name: "Hard", value: data.hard, color: "oklch(0.65 0.18 27)" }, // red
+    { name: "Easy", value: data.easy, color: "var(--chart-easy)" },
+    { name: "Medium", value: data.medium, color: "var(--chart-medium)" },
+    { name: "Hard", value: data.hard, color: "var(--chart-hard)" },
   ].filter((d) => d.value > 0);
 
   if (chartData.length === 0) {
@@ -57,8 +57,8 @@ export function DifficultyDistribution({ data }: DifficultyDistributionProps) {
               </Pie>
               <Tooltip
                 contentStyle={{
-                  backgroundColor: "hsl(var(--background))",
-                  border: "1px solid hsl(var(--border))",
+                  backgroundColor: "var(--background)",
+                  border: "1px solid var(--border)",
                   borderRadius: "6px",
                   fontSize: "12px",
                 }}

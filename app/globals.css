@@ -77,6 +77,21 @@
   --color-error:              var(--error);
   --color-error-foreground:   var(--error-foreground);
 
+  /* Difficulty colors */
+  --color-difficulty-easy:    var(--difficulty-easy);
+  --color-difficulty-medium:  var(--difficulty-medium);
+  --color-difficulty-hard:    var(--difficulty-hard);
+
+  /* Status colors */
+  --color-status-pending:     var(--status-pending);
+  --color-status-processing:  var(--status-processing);
+  --color-status-completed:   var(--status-completed);
+  --color-status-failed:      var(--status-failed);
+
+  /* Success message colors */
+  --color-success-message:            var(--success-message);
+  --color-success-message-foreground: var(--success-message-foreground);
+
   /* Sidebar */
   --color-sidebar:                    var(--sidebar);
   --color-sidebar-foreground:         var(--sidebar-foreground);
@@ -93,6 +108,11 @@
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
+  --color-chart-fill-1: var(--chart-fill-1);
+  --color-chart-fill-2: var(--chart-fill-2);
+  --color-chart-fill-3: var(--chart-fill-3);
+  --color-chart-fill-4: var(--chart-fill-4);
+  --color-chart-fill-5: var(--chart-fill-5);
 }
 
 /* ─────────────────────────────────────────
@@ -142,12 +162,34 @@
   --error-foreground:  oklch(0.985 0 0);
   --destructive:       oklch(0.55 0.18 27);
 
+  /* Difficulty colors */
+  --difficulty-easy:   oklch(0.42 0.1 142);
+  --difficulty-medium: oklch(0.52 0.1 70);
+  --difficulty-hard:   oklch(0.55 0.18 27);
+
+  /* Status colors */
+  --status-pending:    oklch(0.52 0.05 270); /* muted purple */
+  --status-processing: oklch(0.52 0.05 70);  /* muted amber */
+  --status-completed:  oklch(0.42 0.1 142);  /* muted green */
+  --status-failed:     oklch(0.55 0.18 27);  /* muted red */
+
+  /* Success message colors */
+  --success-message:            oklch(0.96 0 0);
+  --success-message-foreground: oklch(0.42 0.1 142);
+
   /* Charts — grayscale steps */
   --chart-1: oklch(0.18 0 0);
   --chart-2: oklch(0.40 0 0);
   --chart-3: oklch(0.56 0 0);
   --chart-4: oklch(0.72 0 0);
   --chart-5: oklch(0.88 0 0);
+
+  /* Chart fill colors (lighter versions) */
+  --chart-fill-1: oklch(0.96 0 0);
+  --chart-fill-2: oklch(0.94 0 0);
+  --chart-fill-3: oklch(0.92 0 0);
+  --chart-fill-4: oklch(0.90 0 0);
+  --chart-fill-5: oklch(0.88 0 0);
 
   /* Sidebar */
   --sidebar:                    oklch(0.985 0 0);  /* ~#fafafa */
@@ -197,11 +239,34 @@
   --error-foreground:   oklch(0.10 0 0);
   --destructive:        oklch(0.65 0.18 27);
 
+  /* Difficulty colors */
+  --difficulty-easy:   oklch(0.55 0.1 142);
+  --difficulty-medium: oklch(0.65 0.1 70);
+  --difficulty-hard:   oklch(0.65 0.18 27);
+
+  /* Status colors */
+  --status-pending:    oklch(0.65 0.05 270);
+  --status-processing: oklch(0.65 0.05 70);
+  --status-completed:  oklch(0.55 0.1 142);
+  --status-failed:     oklch(0.65 0.18 27);
+
+  /* Success message colors */
+  --success-message:            oklch(0.20 0 0);
+  --success-message-foreground: oklch(0.55 0.1 142);
+
+  /* Charts — grayscale steps */
   --chart-1: oklch(0.88 0 0);
   --chart-2: oklch(0.72 0 0);
   --chart-3: oklch(0.56 0 0);
   --chart-4: oklch(0.40 0 0);
   --chart-5: oklch(0.25 0 0);
+
+  /* Chart fill colors (darker versions) */
+  --chart-fill-1: oklch(0.20 0 0);
+  --chart-fill-2: oklch(0.25 0 0);
+  --chart-fill-3: oklch(0.30 0 0);
+  --chart-fill-4: oklch(0.35 0 0);
+  --chart-fill-5: oklch(0.40 0 0);
 
   --sidebar:                    oklch(0.145 0 0);
   --sidebar-foreground:         oklch(0.97 0 0);
