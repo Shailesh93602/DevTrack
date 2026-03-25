@@ -1,5 +1,5 @@
 import { type ApiResponse } from "./errors";
-import { type DailyLogFormInput } from "@/lib/validations/daily-log";
+import { type DailyLogFormInput } from "@/lib/validations";
 
 /**
  * API Wrapper for Daily Log operations

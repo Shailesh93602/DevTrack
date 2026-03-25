@@ -111,3 +111,37 @@ export async function calculateStreaks(userId: string): Promise<StreakResult> {
 
   return { currentStreak, longestStreak };
 }
+
+/**
+ * Synchronize user's streak stats by calculating and persisting new records.
+ * Fetches recent logs and updates User.longestStreak if new record found.
+ */
+export async function syncUserStreak(userId: string): Promise<void> {
+  const cutoffDate = new Date();
+  cutoffDate.setDate(cutoffDate.getDate() - STREAK_CUTOFF_DAYS);
+
+  const logs = await prisma.dailyLog.findMany({
+    where: { userId, date: { gte: cutoffDate } },
+    select: { date: true },
+    orderBy: { date: "asc" },
+  });
+
+  if (logs.length === 0) return;
+
+  const dates = logs.map((log) => toUtcDateString(log.date));
+  const { longestStreak } = calculateStreakFromDates(dates);
+
+  // We fetch user first to avoid unnecessary updates if current longest is already higher
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { longestStreak: true }
+  });
+
+  if (user && longestStreak > user.longestStreak) {
+    await prisma.user.update({
+      where: { id: userId },
+      data: { longestStreak },
+    });
+  }
+}
+

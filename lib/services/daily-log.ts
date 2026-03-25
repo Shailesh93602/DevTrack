@@ -1,8 +1,9 @@
 import { prisma } from "@/lib/db/prisma";
 import { Prisma } from "@prisma/client";
 import { parseUtcDate, normalizeToUtcMidnight } from "@/lib/utils/date";
-import type { CreateDailyLogInput, UpdateDailyLogInput, DailyLogQueryParams } from "@/lib/validations/daily-log";
+import type { CreateDailyLogInput, UpdateDailyLogInput, DailyLogQueryParams } from "@/lib/validations";
 import { ensureUserInDb } from "./user";
+import { syncUserStreak } from "./streak";
 
 export type DailyLogWithUser = Prisma.DailyLogGetPayload<{
   include: { user: { select: { id: true; email: true } } };
@@ -27,7 +28,7 @@ export async function createDailyLog(
   if (email) {
     await ensureUserInDb(userId, email);
   }
-  return prisma.dailyLog.create({
+  const log = await prisma.dailyLog.create({
     data: {
       ...data,
       date: parseUtcDate(data.date),
@@ -35,6 +36,11 @@ export async function createDailyLog(
     },
     select: defaultSelect,
   });
+
+  // Background update the streak (best effort)
+  syncUserStreak(userId).catch(e => console.error("Failed to sync streak:", e));
+
+  return log;
 }
 
 export async function getDailyLogs(userId: string, params: DailyLogQueryParams) {
@@ -88,11 +94,16 @@ export async function updateDailyLog(
 
   if (!existing) return null;
 
-  return prisma.dailyLog.update({
+  const log = await prisma.dailyLog.update({
     where: { id },
     data: updateData,
     select: defaultSelect,
   });
+
+  // Background update the streak (best effort)
+  syncUserStreak(userId).catch(e => console.error("Failed to sync streak:", e));
+
+  return log;
 }
 
 export async function deleteDailyLog(userId: string, id: string) {
