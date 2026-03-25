@@ -7,6 +7,7 @@ import {
   YAxis,
   Tooltip,
   ResponsiveContainer,
+  CartesianGrid,
 } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -55,8 +56,9 @@ export function WeeklyProgressChart({ data }: WeeklyProgressChartProps) {
                   borderRadius: "6px",
                   fontSize: "12px",
                 }}
-                cursor={{ fill: "var(--muted)", opacity: 0.4 }}
+                cursor={{ fill: "var(--chart-muted)", opacity: 0.4 }}
               />
+              <CartesianGrid vertical={false} stroke="var(--chart-grid)" strokeDasharray="3 3" />
               <Bar 
                 dataKey="easy" 
                 stackId="a" 

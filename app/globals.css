@@ -182,12 +182,14 @@
   --chart-medium: #f59e0b;    /* amber-500 */
   --chart-hard:   #ef4444;    /* red-500 */
 
-  /* Charts — grayscale steps */
-  --chart-1: oklch(0.18 0 0);
-  --chart-2: oklch(0.40 0 0);
-  --chart-3: oklch(0.56 0 0);
-  --chart-4: oklch(0.72 0 0);
-  --chart-5: oklch(0.88 0 0);
+  /* Charts — grayscale steps (Hex for SVG compatibility) */
+  --chart-muted:  #f5f5f5;    /* stone-100 */
+  --chart-grid:   #e5e5e5;    /* stone-200 */
+  --chart-1:      #18181b;    /* stone-900 */
+  --chart-2:      #52525b;    /* stone-600 */
+  --chart-3:      #a1a1aa;    /* stone-400 */
+  --chart-4:      #d4d4d8;    /* stone-200 */
+  --chart-5:      #f4f4f5;    /* stone-100 */
 
   /* Chart fill colors (lighter versions) */
   --chart-fill-1: oklch(0.96 0 0);
@@ -264,12 +266,14 @@
   --chart-medium: #fbbf24;    /* amber-400 */
   --chart-hard:   #f87171;    /* red-400 */
 
-  /* Charts — grayscale steps */
-  --chart-1: oklch(0.88 0 0);
-  --chart-2: oklch(0.72 0 0);
-  --chart-3: oklch(0.56 0 0);
-  --chart-4: oklch(0.40 0 0);
-  --chart-5: oklch(0.25 0 0);
+  /* Charts — grayscale steps (Vibrant Hex for dark bg) */
+  --chart-muted:  #262626;    /* neutral-800 */
+  --chart-grid:   #404040;    /* neutral-700 */
+  --chart-1:      #f9fafb;    /* gray-50 */
+  --chart-2:      #e5e7eb;    /* gray-200 */
+  --chart-3:      #d1d5db;    /* gray-300 */
+  --chart-4:      #9ca3af;    /* gray-400 */
+  --chart-5:      #4b5563;    /* gray-600 */
 
   /* Chart fill colors (darker versions) */
   --chart-fill-1: oklch(0.20 0 0);

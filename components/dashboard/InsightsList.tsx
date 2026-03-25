@@ -61,10 +61,12 @@ export function InsightsList({ insights, maxInsights = 3 }: InsightsListProps) {
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-6 pt-5">
-        {displayInsights.map((insight) => (
-          <div key={insight.id} className="group flex gap-4">
+        <ul className="space-y-6">
+          {displayInsights.map((insight) => (
+            <li key={insight.id} className="group flex gap-4">
             <div
               className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full border shadow-sm ${priorityVariants[insight.priority]}`}
+              aria-hidden="true"
             >
               {typeIcons[insight.type]}
             </div>
@@ -97,8 +99,9 @@ export function InsightsList({ insights, maxInsights = 3 }: InsightsListProps) {
                 </div>
               )}
             </div>
-          </div>
-        ))}
+            </li>
+          ))}
+        </ul>
       </CardContent>
     </Card>
   );

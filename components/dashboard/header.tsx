@@ -37,7 +37,7 @@ export function Header({ email }: HeaderProps) {
       <div className="flex items-center gap-2 lg:hidden">
         <Button
           variant="ghost"
-          size="icon-sm"
+          size="icon-lg"
           onClick={() => setIsOpen(true)}
           aria-label="Toggle navigation"
         >

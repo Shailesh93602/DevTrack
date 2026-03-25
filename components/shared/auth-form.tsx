@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/shared/PasswordInput";
 import { useAuthForm } from "@/hooks/useAuthForm";
 
-import { loginSchema, signupSchema, type LoginFormData, type SignupFormData } from "@/lib/validations/auth";
+import { loginSchema, signupSchema, type LoginFormData, type SignupFormData } from "@/lib/validations";
 
 interface AuthFormProps {
   mode: "login" | "signup";

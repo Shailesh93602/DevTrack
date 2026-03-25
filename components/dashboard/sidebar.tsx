@@ -41,7 +41,7 @@ export function SidebarContent({ className, onItemClick }: { className?: string,
                   href={href}
                   onClick={onItemClick}
                   className={cn(
-                    "flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-all duration-200 group",
+                    "flex items-center gap-3 rounded-md px-3 py-3 text-sm transition-all duration-200 group",
                     isActive
                       ? "bg-primary/10 text-primary font-semibold"
                       : "text-muted-foreground font-medium hover:bg-accent hover:text-accent-foreground"
