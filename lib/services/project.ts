@@ -59,7 +59,44 @@ export async function getProjects(userId: string, params: ProjectQueryParams) {
   return { projects, total, limit, offset };
 }
 
-export async function getProjectById(userId: string, id: string) {
+export type ProjectWithDetails = Prisma.ProjectGetPayload<{
+  select: {
+    id: true;
+    userId: true;
+    name: true;
+    description: true;
+    status: true;
+    progress: true;
+    dueDate: true;
+    techStack: true;
+    createdAt: true;
+    updatedAt: true;
+    milestones: {
+      select: {
+        id: true;
+        title: true;
+        description: true;
+        dueDate: true;
+        completedAt: true;
+        order: true;
+        createdAt: true;
+      };
+    };
+    activityLogs: {
+      select: {
+        id: true;
+        action: true;
+        metadata: true;
+        createdAt: true;
+      };
+    };
+  };
+}>;
+
+export async function getProjectById(
+  userId: string,
+  id: string
+): Promise<ProjectWithDetails | null> {
   return prisma.project.findFirst({
     where: { id, userId },
     select: {
@@ -87,7 +124,7 @@ export async function getProjectById(userId: string, id: string) {
         },
       },
     },
-  });
+  }) as Promise<ProjectWithDetails | null>;
 }
 
 export async function updateProject(

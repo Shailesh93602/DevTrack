@@ -30,10 +30,9 @@ export default async function ProjectDetailPage({
   if (!user) redirect("/login");
 
   const project = await getProjectById(user.id, id);
-
   if (!project) notFound();
 
-  const status = PROJECT_STATUS_CONFIG[project.status];
+  const status = PROJECT_STATUS_CONFIG[project.status as keyof typeof PROJECT_STATUS_CONFIG];
   const serializedMilestones = project.milestones.map(serializeMilestone);
 
   return (
