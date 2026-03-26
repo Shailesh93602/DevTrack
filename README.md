@@ -26,19 +26,19 @@ The application adopts a modern, highly decoupled architecture using the **Serve
 ```mermaid
 graph TD
     Client[Web Client / Browser] -->|HTTPS| Vercel[Next.js App on Vercel]
-    
+
     subgraph Frontend [Presentation Layer - Next.js]
         Vercel --> ServerComponents[React Server Components]
         Vercel --> ClientComponents[React Client Components]
         ServerComponents --> Forms[React Hook Form + Zod]
         ClientComponents --> UI[Shadcn UI + Tailwind]
     end
-    
+
     subgraph Backend [Data Access Layer]
         ServerComponents --> Prisma[Prisma ORM]
         ServerComponents --> SupabaseAuth[Supabase Auth / SSR]
     end
-    
+
     subgraph Database [Persistence Layer]
         Prisma --> PostgreSQL[(PostgreSQL Database)]
         SupabaseAuth --> PostgreSQL
@@ -48,7 +48,7 @@ graph TD
     classDef primary fill:#000,stroke:#333,stroke-width:2px,color:#fff;
     classDef secondary fill:#fff,stroke:#333,stroke-width:2px,color:#000;
     classDef db fill:#3ECF8E,stroke:#1A202C,stroke-width:2px,color:#000;
-    
+
     class Client,Vercel primary;
     class Frontend,Backend secondary;
     class Database db;
@@ -66,18 +66,18 @@ graph TD
 
 ## 🛠 Tech Stack
 
-| Category | Technology | Description |
-| :--- | :--- | :--- |
-| **Framework** | Next.js (App Router) | React framework for production |
-| **UI Library** | React 19 | Component-based UI rendering |
-| **Styling** | Tailwind CSS 4.0 | Utility-first CSS framework |
-| **Components** | Shadcn UI, Radix PR | Accessible, unstyled UI primitives |
-| **Database** | PostgreSQL | Relational database |
-| **ORM** | Prisma 7.5 | Next-generation Node.js and TypeScript ORM |
-| **Backend/Auth**| Supabase SSR | Open source Firebase alternative |
-| **Forms** | React Hook Form & Zod | Form state management and schema validation |
-| **Visuals** | Recharts, Lucide | Charts and SVG icon assets |
-| **Testing** | Playwright | End-to-end robust UI testing |
+| Category         | Technology            | Description                                 |
+| :--------------- | :-------------------- | :------------------------------------------ |
+| **Framework**    | Next.js (App Router)  | React framework for production              |
+| **UI Library**   | React 19              | Component-based UI rendering                |
+| **Styling**      | Tailwind CSS 4.0      | Utility-first CSS framework                 |
+| **Components**   | Shadcn UI, Radix PR   | Accessible, unstyled UI primitives          |
+| **Database**     | PostgreSQL            | Relational database                         |
+| **ORM**          | Prisma 7.5            | Next-generation Node.js and TypeScript ORM  |
+| **Backend/Auth** | Supabase SSR          | Open source Firebase alternative            |
+| **Forms**        | React Hook Form & Zod | Form state management and schema validation |
+| **Visuals**      | Recharts, Lucide      | Charts and SVG icon assets                  |
+| **Testing**      | Playwright            | End-to-end robust UI testing                |
 
 ## 🚀 Getting Started
 
@@ -90,18 +90,21 @@ graph TD
 ### Installation & Setup
 
 1. **Clone & Install Dependencies**
+
    ```bash
    npm install
    ```
 
 2. **Environment Variables Configuration**
    Duplicate `.env.example` and rename to `.env`. Configure your actual database strings:
+
    ```bash
    cp .env.example .env
    ```
 
 3. **Database Initialization**
    Generate the Prisma client and push your schema to the remote database:
+
    ```bash
    npx prisma generate
    npx prisma migrate dev
@@ -111,7 +114,7 @@ graph TD
    ```bash
    npm run dev
    ```
-   *The application will boot on [http://localhost:3000](http://localhost:3000).*
+   _The application will boot on [http://localhost:3000](http://localhost:3000)._
 
 ## 🎨 Design Guidelines
 
@@ -120,7 +123,7 @@ Maintaining consistency is critical for our UI/UX:
 - **Strictly Semantic Dark Mode**: DO NOT use `dark:` Tailwind prefixes inline. All colors are defined as variables in `globals.css` that transition based on the `.dark` class on the `<html>` element.
 - **Anti-FOUC Strategies**: We utilize blocking inline scripts in `app/layout.tsx` to detect theme preference pre-paint.
 - **Charts Compatibility**: Always use explicit HEX-based CSS variables for SVG elements (Grid: `var(--chart-grid)`, Muted: `var(--chart-muted)`, Primary: `var(--primary)`).
-- **Accessibility FIRST**: 
+- **Accessibility FIRST**:
   - Provide unique `id` and `aria-label` tags on all interactive elements.
   - Rely on semantic HTML landmarks (`main`, `nav`, `section`).
   - Maintain a minimum **44x44px** touch target for mobile-exclusive controls.
@@ -145,8 +148,10 @@ npm run test:report
 This application is highly optimized for deployment on [Vercel](https://vercel.com/new).
 
 To ensure a successful build:
+
 ```bash
-npm run build 
+npm run build
 # This runs \`npm run type-check && next build\`
 ```
-*Note: Ensure your Production Environment Variables on Vercel reflect your actual production Supabase / Postgres URIs.*
+
+_Note: Ensure your Production Environment Variables on Vercel reflect your actual production Supabase / Postgres URIs._
