@@ -32,7 +32,8 @@ export default async function ProjectDetailPage({
   const project = await getProjectById(user.id, id);
   if (!project) notFound();
 
-  const status = PROJECT_STATUS_CONFIG[project.status as keyof typeof PROJECT_STATUS_CONFIG];
+  const status =
+    PROJECT_STATUS_CONFIG[project.status as keyof typeof PROJECT_STATUS_CONFIG];
   const serializedMilestones = project.milestones.map(serializeMilestone);
 
   return (

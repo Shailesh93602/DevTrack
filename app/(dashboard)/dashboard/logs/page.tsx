@@ -29,7 +29,9 @@ export default async function DailyLogsPage() {
 
   const todayUTC = getTodayUtcString();
   const rawTodaysLog =
-    logs.find((log: DailyLogSummary) => toUtcDateString(log.date) === todayUTC) ?? null;
+    logs.find(
+      (log: DailyLogSummary) => toUtcDateString(log.date) === todayUTC
+    ) ?? null;
 
   const todaysLog = rawTodaysLog ? serializeLog(rawTodaysLog) : null;
   const allLogs = logs.map(serializeLog);

@@ -213,9 +213,7 @@ export function SessionTracker({ initialActiveSession }: SessionTrackerProps) {
                   {activeSession.activities
                     .slice(0, 3)
                     .map(
-                      (
-                        event: SessionWithActivities["activities"][number]
-                      ) => (
+                      (event: SessionWithActivities["activities"][number]) => (
                         <div
                           key={event.id}
                           className="bg-muted/20 border-border/20 flex items-start gap-2 rounded-lg border p-2 text-xs"
