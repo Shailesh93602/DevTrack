@@ -13,7 +13,26 @@ const createPrismaClient = () => {
     throw new Error("DATABASE_URL is not defined");
   }
 
-  const pool = globalForPrisma.pool ?? new Pool({ connectionString });
+  let maxConnections: number | undefined =
+    process.env.NODE_ENV === "production" ? 1 : undefined;
+  try {
+    const url = new URL(connectionString);
+    const limit = url.searchParams.get("connection_limit");
+    if (limit) {
+      maxConnections = parseInt(limit, 10);
+    }
+  } catch {
+    // Ignore parsing errors for unusual connection strings
+  }
+
+  const pool =
+    globalForPrisma.pool ??
+    new Pool({
+      connectionString,
+      max: maxConnections,
+      allowExitOnIdle: true,
+    });
+
   if (process.env.NODE_ENV !== "production") globalForPrisma.pool = pool;
 
   const adapter = new PrismaPg(pool);
