@@ -23,11 +23,13 @@ interface UseRealtimeLogsResult {
  */
 export function useRealtimeLogs(
   userId: string,
-  initialLogs: SerializedDailyLog[],
+  initialLogs: SerializedDailyLog[]
 ): UseRealtimeLogsResult {
   const [logs, setLogs] = useState<SerializedDailyLog[]>(initialLogs);
   const [status, setStatus] = useState<RealtimeStatus>("connecting");
-  const channelRef = useRef<ReturnType<ReturnType<typeof createClient>["channel"]> | null>(null);
+  const channelRef = useRef<ReturnType<
+    ReturnType<typeof createClient>["channel"]
+  > | null>(null);
 
   // Keep logs in sync when parent re-fetches (server refresh)
   useEffect(() => {
@@ -70,12 +72,12 @@ export function useRealtimeLogs(
               notes: (payload.new.notes as string | null) ?? null,
             };
             setLogs((prev) =>
-              prev.map((l) => (l.id === updated.id ? updated : l)),
+              prev.map((l) => (l.id === updated.id ? updated : l))
             );
           } else if (payload.eventType === "DELETE") {
             setLogs((prev) => prev.filter((l) => l.id !== payload.old.id));
           }
-        },
+        }
       )
       .subscribe((status) => {
         if (status === "SUBSCRIBED") {

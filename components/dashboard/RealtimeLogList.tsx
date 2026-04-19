@@ -30,7 +30,11 @@ export function RealtimeLogList({ userId, initialLogs }: RealtimeLogListProps) {
   );
 }
 
-function LiveIndicator({ status }: { status: "connecting" | "live" | "error" }) {
+function LiveIndicator({
+  status,
+}: {
+  status: "connecting" | "live" | "error";
+}) {
   const config = {
     connecting: { color: "bg-amber-400", label: "Connecting…" },
     live: { color: "bg-green-500", label: "Live" },
@@ -38,12 +42,14 @@ function LiveIndicator({ status }: { status: "connecting" | "live" | "error" }) 
   }[status];
 
   return (
-    <span className="flex items-center gap-1.5 text-xs text-muted-foreground select-none">
+    <span className="text-muted-foreground flex items-center gap-1.5 text-xs select-none">
       <span className="relative flex h-2 w-2">
         {status === "live" && (
           <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75" />
         )}
-        <span className={`relative inline-flex h-2 w-2 rounded-full ${config.color}`} />
+        <span
+          className={`relative inline-flex h-2 w-2 rounded-full ${config.color}`}
+        />
       </span>
       {config.label}
     </span>
