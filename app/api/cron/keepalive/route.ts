@@ -29,6 +29,7 @@ async function handleKeepalive(request: Request) {
     >`SELECT NOW() as now`;
     return NextResponse.json({
       ok: true,
+      project: "devtrack",
       db: "postgres",
       now: rows[0]?.now,
     });
