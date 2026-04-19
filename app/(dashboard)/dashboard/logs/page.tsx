@@ -11,7 +11,7 @@ import {
 import { createServerSupabaseClient } from "@/lib/auth/supabase-server";
 import { getDailyLogs, type DailyLogSummary } from "@/lib/services/daily-log";
 import { DailyLogForm } from "@/components/dashboard/DailyLogForm";
-import { DailyLogList } from "@/components/dashboard/DailyLogList";
+import { RealtimeLogList } from "@/components/dashboard/RealtimeLogList";
 import { serializeLog } from "@/lib/utils/serialization";
 import { getTodayUtcString, toUtcDateString } from "@/lib/utils/date";
 
@@ -70,7 +70,7 @@ export default async function DailyLogsPage() {
         <h3 className="text-foreground mb-4 text-sm font-semibold">History</h3>
         <Card className="border-border rounded-lg border shadow-none">
           <CardContent className="px-6 py-0">
-            <DailyLogList logs={historyLogs} />
+            <RealtimeLogList userId={user.id} initialLogs={historyLogs} />
           </CardContent>
         </Card>
       </div>
