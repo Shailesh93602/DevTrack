@@ -304,6 +304,30 @@
     box-sizing: border-box;
   }
 
+  /* Bug 107 — Respect the OS-level 'Reduce motion' preference.
+     Clamps every CSS transition + animation to near-zero duration
+     for users who set this in macOS Accessibility / Windows Ease
+     of Access. Doesn't disable motion for everyone else. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  /* Bug 64 — Higher-contrast focus rings in dark mode. The default
+     ring/50 opacity dropped below AA on the deep slate bg. Set a
+     2px solid ring at full opacity using the token color so both
+     themes comfortably clear 3:1. */
+  :focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+  }
+
   html {
     @apply font-sans antialiased;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";

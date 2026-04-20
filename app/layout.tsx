@@ -77,6 +77,15 @@ export default function RootLayout({
         />
       </head>
       <body className="flex min-h-full flex-col">
+        {/* Skip-to-content link — hidden off-screen until focused.
+            Keyboard users tab into it before the nav so they can jump
+            straight to main content without traversing the whole nav. */}
+        <a
+          href="#main-content"
+          className="bg-primary text-primary-foreground sr-only focus-visible:not-sr-only focus-visible:fixed focus-visible:top-4 focus-visible:left-4 focus-visible:z-[100] focus-visible:rounded-md focus-visible:px-4 focus-visible:py-2 focus-visible:shadow-lg"
+        >
+          Skip to main content
+        </a>
         {children}
         <Toaster richColors position="bottom-right" />
       </body>
