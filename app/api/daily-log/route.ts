@@ -6,9 +6,14 @@ import {
   handleAuthError,
   handleApiError,
 } from "@/lib/api/errors";
-import { createDailyLog, getDailyLogs } from "@/lib/services/daily-log";
+import {
+  createDailyLog,
+  DailyLogDuplicateDateError,
+  getDailyLogs,
+} from "@/lib/services/daily-log";
 import { createDailyLogSchema, dailyLogQuerySchema } from "@/lib/validations";
 import { parseQueryParams } from "@/lib/utils/api";
+import { NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   try {
@@ -34,6 +39,20 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     if (error instanceof Error && error.message === "UNAUTHORIZED") {
       return handleAuthError(error);
+    }
+    // Friendly 409 for the duplicate-date case instead of a 500 with a
+    // raw Prisma P2002 message.
+    if (error instanceof DailyLogDuplicateDateError) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "DAILY_LOG_DUPLICATE_DATE",
+          message: error.message,
+          existingLogId: error.existingLogId,
+          date: error.date,
+        },
+        { status: 409 }
+      );
     }
     return handleApiError(error);
   }

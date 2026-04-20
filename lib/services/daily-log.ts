@@ -35,6 +35,24 @@ export interface GetDailyLogsResult {
   offset: number;
 }
 
+/**
+ * Thrown when the user tries to create a DailyLog for a date that already
+ * has one. The API layer catches this and returns a 409 with a friendly
+ * message instead of letting a raw Prisma P2002 leak to the client.
+ */
+export class DailyLogDuplicateDateError extends Error {
+  readonly existingLogId: string;
+  readonly date: string;
+  constructor(existingLogId: string, date: string) {
+    super(
+      `A log for ${date} already exists — open the existing entry to edit it.`
+    );
+    this.name = "DailyLogDuplicateDateError";
+    this.existingLogId = existingLogId;
+    this.date = date;
+  }
+}
+
 export async function createDailyLog(
   userId: string,
   data: CreateDailyLogInput,
@@ -43,21 +61,43 @@ export async function createDailyLog(
   if (email) {
     await ensureUserInDb(userId, email);
   }
-  const log = await prisma.dailyLog.create({
-    data: {
-      ...data,
-      date: parseUtcDate(data.date),
-      userId,
-    },
-    select: defaultSelect,
-  });
+  const date = parseUtcDate(data.date);
+  try {
+    const log = await prisma.dailyLog.create({
+      data: {
+        ...data,
+        date,
+        userId,
+      },
+      select: defaultSelect,
+    });
 
-  // Background update the streak (best effort)
-  syncUserStreak(userId).catch((e) =>
-    console.error("Failed to sync streak:", e)
-  );
+    // Background update the streak (best effort)
+    syncUserStreak(userId).catch((e) =>
+      console.error("Failed to sync streak:", e)
+    );
 
-  return log;
+    return log;
+  } catch (e) {
+    // Translate Prisma's P2002 (unique-constraint on userId+date) into a
+    // domain error so the API can respond 409 + a message the UI shows as
+    // "already logged today — open existing entry" rather than the raw
+    // 'Unique constraint failed on the fields: (userId,date)' leaking.
+    if (
+      e instanceof Prisma.PrismaClientKnownRequestError &&
+      e.code === "P2002"
+    ) {
+      const existing = await prisma.dailyLog.findFirst({
+        where: { userId, date },
+        select: { id: true },
+      });
+      throw new DailyLogDuplicateDateError(
+        existing?.id ?? "",
+        data.date.toString()
+      );
+    }
+    throw e;
+  }
 }
 
 export async function getDailyLogs(
