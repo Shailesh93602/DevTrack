@@ -6,6 +6,7 @@ import {
   handleApiError,
 } from "@/lib/api/errors";
 import { createProject, getProjects } from "@/lib/services/project";
+import { ensureUserInDb } from "@/lib/services/user";
 import { createProjectSchema, projectQuerySchema } from "@/lib/validations";
 import { parseQueryParams } from "@/lib/utils/api";
 
@@ -19,6 +20,12 @@ export async function POST(request: NextRequest) {
     if (!user) {
       throw new Error("UNAUTHORIZED");
     }
+
+    // Guard the Project.userId foreign key: if the Supabase auth row exists
+    // but the Prisma User row doesn't (stale account predating the ensure
+    // logic, partial signup, deleted-and-re-invited user, etc.) creating a
+    // Project throws 'Foreign key constraint failed on userId'. Idempotent.
+    await ensureUserInDb(user.id, user.email ?? "");
 
     const body = await request.json();
     const validatedData = createProjectSchema.parse(body);

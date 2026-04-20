@@ -6,6 +6,7 @@ import {
   handleApiError,
 } from "@/lib/api/errors";
 import { createDsaProblem, getDsaProblems } from "@/lib/services/dsa-problem";
+import { ensureUserInDb } from "@/lib/services/user";
 import {
   createDsaProblemSchema,
   dsaProblemQuerySchema,
@@ -22,6 +23,11 @@ export async function POST(request: NextRequest) {
     if (!user) {
       throw new Error("UNAUTHORIZED");
     }
+
+    // Backfill the Prisma User row if missing — DsaProblem.userId FK needs
+    // it. Idempotent. Matches the pattern now used by /api/project and
+    // already used by daily-log service.
+    await ensureUserInDb(user.id, user.email ?? "");
 
     const body = await request.json();
     const validatedData = createDsaProblemSchema.parse(body);
