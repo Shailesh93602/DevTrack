@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 
 /**
  * Read-only display of the browser's detected IANA timezone.
@@ -11,24 +11,40 @@ import { useEffect, useState } from "react";
  * being recorded in so global users can reconcile 'logged yesterday'
  * with their local calendar.
  */
-export function DetectedTimezoneRow() {
-  const [tz, setTz] = useState<string | null>(null);
-  const [offset, setOffset] = useState<string | null>(null);
 
-  useEffect(() => {
-    try {
-      const detected = Intl.DateTimeFormat().resolvedOptions().timeZone;
-      setTz(detected);
-      const mins = new Date().getTimezoneOffset();
-      const sign = mins <= 0 ? "+" : "-";
-      const abs = Math.abs(mins);
-      const hh = String(Math.floor(abs / 60)).padStart(2, "0");
-      const mm = String(abs % 60).padStart(2, "0");
-      setOffset(`UTC${sign}${hh}:${mm}`);
-    } catch {
-      // Intl not supported — leave null, the UI falls back to a dash
-    }
-  }, []);
+// useSyncExternalStore avoids the react-hooks/set-state-in-effect lint
+// and cleanly separates server snapshot (null) from client snapshot
+// (detected zone). Subscribe is a no-op — timezone doesn't change
+// during a session under any realistic condition we care about.
+const NOOP_UNSUBSCRIBE = () => {};
+const subscribe = () => NOOP_UNSUBSCRIBE;
+
+function getClientSnapshot(): { tz: string; offset: string } | null {
+  try {
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const mins = new Date().getTimezoneOffset();
+    const sign = mins <= 0 ? "+" : "-";
+    const abs = Math.abs(mins);
+    const hh = String(Math.floor(abs / 60)).padStart(2, "0");
+    const mm = String(abs % 60).padStart(2, "0");
+    return { tz, offset: `UTC${sign}${hh}:${mm}` };
+  } catch {
+    return null;
+  }
+}
+
+function getServerSnapshot(): { tz: string; offset: string } | null {
+  return null;
+}
+
+export function DetectedTimezoneRow() {
+  const detected = useSyncExternalStore(
+    subscribe,
+    getClientSnapshot,
+    getServerSnapshot
+  );
+  const tz = detected?.tz ?? null;
+  const offset = detected?.offset ?? null;
 
   return (
     <div className="space-y-1">

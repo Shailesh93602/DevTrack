@@ -1,6 +1,6 @@
 "use client";
 
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { Check, X } from "lucide-react";
@@ -29,7 +29,7 @@ export function AuthForm({ mode }: AuthFormProps) {
   const {
     register,
     handleSubmit,
-    watch,
+    control,
     formState: { errors },
   } = useForm<LoginFormData | SignupFormData>({
     resolver: zodResolver(schema),
@@ -39,10 +39,10 @@ export function AuthForm({ mode }: AuthFormProps) {
     },
   });
 
-  // Watch password field so password-requirement checkmarks go green
-  // live as the user types — previously the list was static text that
-  // didn't reflect progress.
-  const passwordValue = watch("password") ?? "";
+  // Subscribe to the password field via useWatch — plain watch() isn't
+  // memoization-safe under the react-hooks compiler rule. useWatch is
+  // the recommended pattern for deep subscriptions in the render body.
+  const passwordValue = useWatch({ control, name: "password" }) ?? "";
   const passwordChecks = {
     length: passwordValue.length >= 8,
     upper: /[A-Z]/.test(passwordValue),
