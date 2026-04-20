@@ -3,7 +3,7 @@
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { Check, X } from "lucide-react";
+import { Check, X, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/shared/PasswordInput";
@@ -36,7 +36,8 @@ export function AuthForm({ mode }: AuthFormProps) {
     defaultValues: {
       email: "",
       password: "",
-    },
+      confirmPassword: "",
+    } as Partial<LoginFormData | SignupFormData>,
   });
 
   // Subscribe to the password field via useWatch — plain watch() isn't
@@ -129,6 +130,28 @@ export function AuthForm({ mode }: AuthFormProps) {
         )}
       </div>
 
+      {mode === "signup" && (
+        <div className="space-y-2">
+          <PasswordInput
+            id="confirmPassword"
+            label="Confirm password"
+            placeholder="••••••••"
+            autoComplete="new-password"
+            className="h-11"
+            {...register("confirmPassword" as keyof SignupFormData)}
+          />
+          {(errors as Record<string, { message?: string }>).confirmPassword
+            ?.message && (
+            <p className="text-destructive text-sm">
+              {
+                (errors as Record<string, { message?: string }>).confirmPassword
+                  ?.message
+              }
+            </p>
+          )}
+        </div>
+      )}
+
       {serverError && (
         <div className="bg-destructive/10 text-destructive border-destructive/20 rounded-md border p-3 text-sm">
           {serverError}
@@ -145,7 +168,11 @@ export function AuthForm({ mode }: AuthFormProps) {
         type="submit"
         className="h-11 w-full font-medium"
         disabled={isPending}
+        aria-busy={isPending}
       >
+        {isPending && (
+          <Loader2 className="mr-2 size-4 animate-spin" aria-hidden="true" />
+        )}
         {submitLabel}
       </Button>
     </form>
