@@ -87,7 +87,10 @@ export default function RootLayout({
           Skip to main content
         </a>
         {children}
-        <Toaster richColors position="bottom-right" />
+        {/* Bug 74 — bottom-right toasts collided with mobile fixed nav
+            + back button. top-right stays clear of any sticky UI and is
+            in the natural eye-path for post-action confirmation. */}
+        <Toaster richColors position="top-right" closeButton />
       </body>
     </html>
   );
