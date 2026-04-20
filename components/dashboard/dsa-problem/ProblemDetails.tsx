@@ -102,7 +102,7 @@ export function ProblemDetails({
           <Label htmlFor="problem-pattern">Pattern</Label>
           <Input
             id="problem-pattern"
-            placeholder="e.g. Slidind Window"
+            placeholder="e.g. Sliding Window"
             {...register("pattern")}
           />
         </div>

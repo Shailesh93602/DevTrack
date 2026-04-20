@@ -103,6 +103,7 @@ export function DailyLogForm({ log, onSuccess }: DailyLogFormProps) {
           <Input
             id="log-date"
             type="date"
+            max={new Date().toISOString().slice(0, 10)}
             {...register("date")}
             aria-invalid={!!errors.date}
             aria-describedby={errors.date ? "log-date-error" : undefined}
@@ -124,6 +125,8 @@ export function DailyLogForm({ log, onSuccess }: DailyLogFormProps) {
             id="log-problems"
             type="number"
             min={0}
+            max={1000}
+            step={1}
             {...register("problemsSolved", { valueAsNumber: true })}
             aria-invalid={!!errors.problemsSolved}
             aria-describedby={

@@ -11,8 +11,19 @@ export const dailyLogSchema = z.object({
   date: z
     .string()
     .regex(/^\d{4}-\d{2}-\d{2}(T.*)?$/, "Select a valid date")
-    .transform((d) => d.slice(0, 10)),
-  problemsSolved: z.number().int().min(0, "Cannot be negative"),
+    .transform((d) => d.slice(0, 10))
+    // Reject future dates — 'logged problems solved in 2027' was a
+    // reported class of bug. The in-browser date input min/max aren't
+    // authoritative; enforce on the server too. Compares YYYY-MM-DD
+    // strings in the user's local 'now' since we don't know their TZ
+    // here — worst case, a user one timezone ahead logs 'today' from
+    // their POV that reads as tomorrow on the server; accepting that
+    // edge case beats blocking real users on day boundaries.
+    .refine(
+      (d) => d <= new Date().toISOString().slice(0, 10),
+      "Date can't be in the future"
+    ),
+  problemsSolved: z.number().int().min(0, "Cannot be negative").max(1000, "That's too many to log for a single day"),
   topics: z
     .array(z.string().trim().min(1).max(TOPIC_MAX_LENGTH))
     .max(TOPICS_MAX_COUNT),
