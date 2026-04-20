@@ -8,6 +8,7 @@ import { createServerSupabaseClient } from "@/lib/auth/supabase-server";
 import { getDashboardStats } from "@/lib/services/dashboard";
 import { WeeklyProgressChart } from "@/components/dashboard/WeeklyProgressChart";
 import { InsightsList } from "@/components/dashboard/InsightsList";
+import { DashboardGreeting } from "@/components/dashboard/DashboardGreeting";
 import { PatternCard } from "@/components/dashboard/PatternCard";
 import { DifficultyDistribution } from "@/components/dashboard/DifficultyDistribution";
 import { ActivityHeatmap } from "@/components/dashboard/ActivityHeatmap";
@@ -32,15 +33,11 @@ export default async function DashboardPage() {
 
   return (
     <div className="space-y-8 pb-10">
-      {/* Header Section */}
-      <div className="flex flex-col gap-1">
-        <h1 className="text-foreground text-3xl font-bold tracking-tight">
-          Welcome back
-        </h1>
-        <p className="text-muted-foreground">
-          Here&apos;s a comprehensive look at your development journey.
-        </p>
-      </div>
+      {/* Header Section — time-aware greeting replaces the constant
+          'Welcome back' so a 3am session doesn't read the same as a 2pm
+          one. Client component so it follows the user's device clock,
+          not the server's UTC. */}
+      <DashboardGreeting />
 
       <Separator className="opacity-50" />
 

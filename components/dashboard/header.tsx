@@ -4,7 +4,14 @@ import { useState } from "react";
 import { logout } from "@/lib/auth/actions";
 import { Button } from "@/components/ui/button";
 import { Menu, LogOut } from "lucide-react";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,6 +30,7 @@ interface HeaderProps {
 
 export function Header({ email }: HeaderProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [logoutOpen, setLogoutOpen] = useState(false);
 
   const initials = email ? email.substring(0, 2).toUpperCase() : "U";
 
@@ -74,21 +82,48 @@ export function Header({ email }: HeaderProps) {
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem asChild>
-              <form action={logout} className="w-full">
-                <Button
-                  type="submit"
-                  variant="ghost"
-                  className="hover:bg-muted h-9 w-full justify-start rounded-md px-2 text-sm font-normal transition-colors"
-                >
-                  <LogOut className="text-muted-foreground mr-2 h-4 w-4" />
-                  <span>Log out</span>
-                </Button>
-              </form>
+            <DropdownMenuItem
+              onSelect={(e) => {
+                // Don't close the menu before the confirm dialog opens —
+                // keep focus behavior consistent.
+                e.preventDefault();
+                setLogoutOpen(true);
+              }}
+            >
+              <LogOut className="text-muted-foreground mr-2 h-4 w-4" />
+              <span>Log out</span>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
+
+      {/* Bug 80 — Logout confirmation dialog. Accidental click on
+          'Log out' in the avatar dropdown used to drop the session
+          immediately. Now asks for confirmation first. */}
+      <Dialog open={logoutOpen} onOpenChange={setLogoutOpen}>
+        <DialogContent className="sm:max-w-sm">
+          <DialogHeader>
+            <DialogTitle>Sign out?</DialogTitle>
+            <DialogDescription>
+              You&apos;ll need to sign in again to continue logging progress.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="gap-2 sm:gap-2">
+            <Button
+              variant="outline"
+              onClick={() => setLogoutOpen(false)}
+            >
+              Stay signed in
+            </Button>
+            <form action={logout}>
+              <Button type="submit" variant="destructive" className="w-full">
+                <LogOut className="mr-2 h-4 w-4" aria-hidden="true" />
+                Sign out
+              </Button>
+            </form>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </header>
   );
 }
