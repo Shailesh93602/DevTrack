@@ -13,9 +13,43 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://daily-dev-track.vercel.app";
+const SITE_DESCRIPTION =
+  "Log what you shipped, the DSA problems you solved, and the projects you moved forward — and watch the pattern emerge across weeks. Real-time sync across tabs.";
+
 export const metadata: Metadata = {
-  title: "DevTrack",
-  description: "Developer progress tracking dashboard",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "DevTrack — developer progress dashboard",
+    template: "%s — DevTrack",
+  },
+  description: SITE_DESCRIPTION,
+  applicationName: "DevTrack",
+  keywords: [
+    "developer productivity",
+    "daily log",
+    "DSA tracker",
+    "leetcode tracker",
+    "coding streak",
+    "learning log",
+  ],
+  openGraph: {
+    title: "DevTrack — developer progress dashboard",
+    description: SITE_DESCRIPTION,
+    url: SITE_URL,
+    siteName: "DevTrack",
+    type: "website",
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "DevTrack — developer progress dashboard",
+    description: SITE_DESCRIPTION,
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({
