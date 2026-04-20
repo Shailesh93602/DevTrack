@@ -30,10 +30,15 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
-        {/* Inline theme script — runs synchronously before paint to prevent flash of wrong theme */}
+        {/* Inline theme script — runs synchronously before paint to prevent
+            flash of wrong theme. Sets both the .dark class AND the
+            color-scheme CSS property so browser UI (scrollbars, form
+            controls, native date pickers) starts in the right palette.
+            Without color-scheme, a 50-150ms flash of light-themed
+            scrollbars was still visible even with the class set. */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem('devtrack-theme');var d=t==='dark'||(t==='system'||!t)&&matchMedia('(prefers-color-scheme: dark)').matches;if(d)document.documentElement.classList.add('dark');}catch(e){}})();`,
+            __html: `(function(){try{var t=localStorage.getItem('devtrack-theme');var d=t==='dark'||((t==='system'||!t)&&matchMedia('(prefers-color-scheme: dark)').matches);var el=document.documentElement;if(d){el.classList.add('dark');el.style.colorScheme='dark';}else{el.style.colorScheme='light';}}catch(e){}})();`,
           }}
         />
       </head>

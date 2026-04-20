@@ -11,6 +11,37 @@ export type AuthFormState = {
   message?: string;
 };
 
+/**
+ * Translate raw Supabase auth error strings into user-facing copy.
+ * Supabase's defaults read like dev logs ("email rate limit exceeded",
+ * "Invalid login credentials") — product-grade UI should surface
+ * something actionable instead.
+ */
+function translateAuthError(raw: string | undefined): string {
+  if (!raw) return "Something went wrong. Please try again.";
+  const msg = raw.toLowerCase();
+  if (msg.includes("rate limit") || msg.includes("rate-limit")) {
+    return "Too many attempts from this email. Please wait a few minutes and try again, or use a different email.";
+  }
+  if (msg.includes("invalid login") || msg.includes("invalid credentials")) {
+    return "That email and password don't match an account. Check for typos or use 'Forgot password'.";
+  }
+  if (msg.includes("user already registered") || msg.includes("already exists")) {
+    return "An account with that email already exists. Try signing in, or use 'Forgot password' if you've lost access.";
+  }
+  if (msg.includes("email not confirmed")) {
+    return "Your email isn't confirmed yet. Check your inbox for the confirmation link.";
+  }
+  if (msg.includes("password should be at least") || msg.includes("weak password")) {
+    return "That password doesn't meet the requirements. Use at least 8 characters with letters and numbers.";
+  }
+  if (msg.includes("network") || msg.includes("fetch")) {
+    return "Connection problem. Check your internet and try again.";
+  }
+  // Fallback: capitalize the raw message so it doesn't look like a dev log.
+  return raw.charAt(0).toUpperCase() + raw.slice(1);
+}
+
 export async function login(
   _prev: AuthFormState,
   formData: FormData
@@ -28,7 +59,7 @@ export async function login(
   const { error } = await supabase.auth.signInWithPassword(parsed.data);
 
   if (error) {
-    return { error: error.message };
+    return { error: translateAuthError(error.message) };
   }
 
   redirect("/dashboard");
@@ -55,7 +86,7 @@ export async function signup(
   );
 
   if (signUpError) {
-    return { error: signUpError.message };
+    return { error: translateAuthError(signUpError.message) };
   }
 
   // Create user in local database if it doesn't exist

@@ -3,6 +3,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import { Check, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/shared/PasswordInput";
@@ -28,6 +29,7 @@ export function AuthForm({ mode }: AuthFormProps) {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm<LoginFormData | SignupFormData>({
     resolver: zodResolver(schema),
@@ -36,6 +38,17 @@ export function AuthForm({ mode }: AuthFormProps) {
       password: "",
     },
   });
+
+  // Watch password field so password-requirement checkmarks go green
+  // live as the user types — previously the list was static text that
+  // didn't reflect progress.
+  const passwordValue = watch("password") ?? "";
+  const passwordChecks = {
+    length: passwordValue.length >= 8,
+    upper: /[A-Z]/.test(passwordValue),
+    lower: /[a-z]/.test(passwordValue),
+    number: /\d/.test(passwordValue),
+  };
 
   const submitLabel = (() => {
     if (isPending) return "Loading...";
@@ -99,11 +112,19 @@ export function AuthForm({ mode }: AuthFormProps) {
         )}
 
         {mode === "signup" && !errors.password && (
-          <ul className="text-muted-foreground ml-1 space-y-1 text-xs">
-            <li>• At least 8 characters</li>
-            <li>• One uppercase letter</li>
-            <li>• One lowercase letter</li>
-            <li>• One number</li>
+          <ul className="ml-1 space-y-1 text-xs">
+            <PasswordCheckRow met={passwordChecks.length}>
+              At least 8 characters
+            </PasswordCheckRow>
+            <PasswordCheckRow met={passwordChecks.upper}>
+              One uppercase letter
+            </PasswordCheckRow>
+            <PasswordCheckRow met={passwordChecks.lower}>
+              One lowercase letter
+            </PasswordCheckRow>
+            <PasswordCheckRow met={passwordChecks.number}>
+              One number
+            </PasswordCheckRow>
           </ul>
         )}
       </div>
@@ -128,5 +149,25 @@ export function AuthForm({ mode }: AuthFormProps) {
         {submitLabel}
       </Button>
     </form>
+  );
+}
+
+function PasswordCheckRow({
+  met,
+  children,
+}: {
+  met: boolean;
+  children: React.ReactNode;
+}) {
+  const Icon = met ? Check : X;
+  return (
+    <li
+      className={`flex items-center gap-1.5 transition-colors ${
+        met ? "text-green-600 dark:text-green-400" : "text-muted-foreground"
+      }`}
+    >
+      <Icon className="size-3 shrink-0" aria-hidden="true" />
+      <span>{children}</span>
+    </li>
   );
 }
