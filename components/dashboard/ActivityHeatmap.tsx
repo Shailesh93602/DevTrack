@@ -102,16 +102,38 @@ export function ActivityHeatmap({ data }: ActivityHeatmapProps) {
             );
           })}
         </div>
-        <div className="text-muted-foreground mt-2 flex items-center gap-2 text-[10px]">
-          <span>Less</span>
+        {/* Bug 71 — legend now labels each intensity step with the
+            actual contribution count it represents, so 'More' isn't
+            opaque. Title attributes give screen readers / hover users
+            the exact threshold. */}
+        <div
+          className="text-muted-foreground mt-2 flex items-center gap-2 text-[10px]"
+          aria-label="Contribution intensity legend"
+        >
+          <span>0</span>
           <div className="flex gap-1">
-            <div className="bg-muted/30 h-2 w-2 rounded-[1px]" />
-            <div className="bg-primary/20 h-2 w-2 rounded-[1px]" />
-            <div className="bg-primary/40 h-2 w-2 rounded-[1px]" />
-            <div className="bg-primary/60 h-2 w-2 rounded-[1px]" />
-            <div className="bg-primary h-2 w-2 rounded-[1px]" />
+            <div
+              className="bg-muted/30 h-2 w-2 rounded-[1px]"
+              title="0 activity"
+            />
+            <div
+              className="bg-primary/20 h-2 w-2 rounded-[1px]"
+              title="1 activity"
+            />
+            <div
+              className="bg-primary/40 h-2 w-2 rounded-[1px]"
+              title="2–3 activities"
+            />
+            <div
+              className="bg-primary/60 h-2 w-2 rounded-[1px]"
+              title="4–6 activities"
+            />
+            <div
+              className="bg-primary h-2 w-2 rounded-[1px]"
+              title="7+ activities"
+            />
           </div>
-          <span>More</span>
+          <span>7+</span>
         </div>
       </CardContent>
     </Card>

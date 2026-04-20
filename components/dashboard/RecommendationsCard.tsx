@@ -16,25 +16,28 @@ const urgencyConfig: Record<
   RecommendationUrgency,
   { border: string; badge: string; label: string }
 > = {
+  // Bug 59 — 'Critical' read as alarmist on a brand-new user dashboard
+  // where everything is 0. Softened labels to growth-framed language
+  // ('Focus now' vs 'Critical') that reads like a coach, not an alert.
   critical: {
     border: "border-l-4 border-l-destructive",
     badge: "bg-destructive/10 text-destructive",
-    label: "Critical",
+    label: "Focus now",
   },
   high: {
     border: "border-l-4 border-l-amber-500",
     badge: "bg-amber-500/10 text-amber-600 dark:text-amber-400",
-    label: "High",
+    label: "High priority",
   },
   medium: {
     border: "border-l-4 border-l-primary",
     badge: "bg-primary/10 text-primary",
-    label: "Medium",
+    label: "Worth doing",
   },
   low: {
     border: "border-l-4 border-l-muted-foreground/40",
     badge: "bg-muted text-muted-foreground",
-    label: "Low",
+    label: "Nice to have",
   },
 };
 

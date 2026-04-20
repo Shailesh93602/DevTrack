@@ -44,7 +44,7 @@ export default async function DashboardPage() {
       {/* Primary Metrics Grid */}
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 md:gap-6">
         <StatsCard
-          title="Problems"
+          title="DSA Problems"
           value={stats.totalProblems}
           description="Total solved"
         />
