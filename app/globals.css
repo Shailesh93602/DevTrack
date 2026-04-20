@@ -328,6 +328,40 @@
     outline-offset: 2px;
   }
 
+  /* Bug 67 — Branded scrollbars. Default grey OS bars clashed with
+     the dark surfaces. The repo tokens are oklch() so we use a neutral
+     color-mix to dim the muted-foreground down to ~30% alpha without
+     needing a separate token. Firefox + modern Chromium/Safari. */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in oklab, var(--muted-foreground) 30%, transparent)
+      transparent;
+  }
+  *::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  *::-webkit-scrollbar-thumb {
+    background-color: color-mix(
+      in oklab,
+      var(--muted-foreground) 30%,
+      transparent
+    );
+    border-radius: 8px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
+  *::-webkit-scrollbar-thumb:hover {
+    background-color: color-mix(
+      in oklab,
+      var(--muted-foreground) 50%,
+      transparent
+    );
+  }
+
   html {
     @apply font-sans antialiased;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
