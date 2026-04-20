@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { createServerSupabaseClient } from "@/lib/auth/supabase-server";
 import { logout } from "@/lib/auth/actions";
+import { DetectedTimezoneRow } from "@/components/dashboard/DetectedTimezoneRow";
 
 export default async function SettingsPage() {
   const supabase = await createServerSupabaseClient();
@@ -41,6 +42,10 @@ export default async function SettingsPage() {
             <p className="text-foreground text-sm font-medium">Email</p>
             <p className="text-muted-foreground text-sm">{user.email}</p>
           </div>
+
+          <Separator />
+
+          <DetectedTimezoneRow />
 
           <Separator />
 
