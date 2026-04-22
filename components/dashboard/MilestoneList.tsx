@@ -210,7 +210,7 @@ export function MilestoneList({ projectId, milestones }: MilestoneListProps) {
             </div>
             <div className="flex gap-2">
               <Button type="submit" disabled={isSubmitting || !newTitle.trim()}>
-                {isSubmitting ? "Adding..." : "Add Milestone"}
+                {isSubmitting ? "Adding..." : "Save"}
               </Button>
               <Button
                 type="button"

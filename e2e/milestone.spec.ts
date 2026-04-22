@@ -49,8 +49,12 @@ test.describe("Project Milestones", () => {
     // Fill in milestone title
     await page.fill("input#milestone-title", "Initial Setup");
 
-    // Submit
-    await page.getByRole("button", { name: "Add Milestone" }).click();
+    // Submit via the form's Save button. Previously this looked for
+    // "Add Milestone" again which is the trigger button's label, not
+    // the submit's — so the test was relying on the trigger being
+    // swapped out for the form and on strict-mode not catching the
+    // collision. Submit button is now "Save".
+    await page.getByRole("button", { name: "Save" }).click();
 
     // Verify milestone was added
     await expect(page.locator("text=Initial Setup")).toBeVisible();
@@ -70,7 +74,7 @@ test.describe("Project Milestones", () => {
     // Add a milestone first
     await page.getByRole("button", { name: "Add Milestone" }).click();
     await page.fill("input#milestone-title", "Test Milestone");
-    await page.getByRole("button", { name: "Add Milestone" }).click();
+    await page.getByRole("button", { name: "Save" }).click();
 
     // Complete the milestone using the checkbox
     await page.getByLabel("Complete Test Milestone").check();
@@ -91,7 +95,7 @@ test.describe("Project Milestones", () => {
     // Add a milestone first
     await page.getByRole("button", { name: "Add Milestone" }).click();
     await page.fill("input#milestone-title", "Milestone to Delete");
-    await page.getByRole("button", { name: "Add Milestone" }).click();
+    await page.getByRole("button", { name: "Save" }).click();
 
     // Delete the milestone
     await page.getByLabel("Delete Milestone to Delete").click();
@@ -118,7 +122,7 @@ test.describe("Project Milestones", () => {
     // Add a milestone
     await page.getByRole("button", { name: "Add Milestone" }).click();
     await page.fill("input#milestone-title", "First Milestone");
-    await page.getByRole("button", { name: "Add Milestone" }).click();
+    await page.getByRole("button", { name: "Save" }).click();
 
     // Complete the milestone
     await page.getByLabel("Complete First Milestone").check();

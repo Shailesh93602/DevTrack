@@ -31,36 +31,40 @@ test.describe("Streak System", () => {
   });
 
   test("should display streak milestone badges", async ({ page }) => {
-    // Milestones are shown as badges: 7, 30, 60, 100 days
-    const content = await page.content();
+    // Previously the fallback `content.includes("0")` satisfied the
+    // assertion trivially — "0" appears in every rendered page. Scope
+    // the check to the streak region so we actually detect milestones.
+    const streakRegion = page
+      .locator('div:has-text("Current Streak")')
+      .first();
+    await expect(streakRegion).toBeVisible();
 
-    // Check for milestone indicators
-    const hasMilestones =
-      content.includes("Week Warrior") ||
-      content.includes("Monthly Master") ||
-      content.includes("Consistency King") ||
-      content.includes("Century Champion") ||
-      content.includes("🎯") ||
-      content.includes("🔥") ||
-      content.includes("⚡") ||
-      content.includes("👑");
-
-    // Either milestones are shown or streak is 0
-    expect(hasMilestones || content.includes("0")).toBeTruthy();
+    // Streak card always renders *either* a numeric day count or a
+    // milestone label. Assert one of those patterns appears — never
+    // trivially-true substrings.
+    const text = (await streakRegion.textContent()) ?? "";
+    const hasNumberOrMilestone =
+      /\b\d+\s*(day|days)\b/i.test(text) ||
+      /(Week Warrior|Monthly Master|Consistency King|Century Champion)/.test(
+        text
+      );
+    expect(hasNumberOrMilestone).toBeTruthy();
   });
 
   test("should display streak freeze information", async ({ page }) => {
-    // Look for freeze-related content
-    const content = await page.content();
+    // Scope to the streak card so "week" / "freeze" in unrelated UI
+    // can't provide false coverage.
+    const streakRegion = page
+      .locator('div:has-text("Current Streak")')
+      .first();
+    await expect(streakRegion).toBeVisible();
+    const text = (await streakRegion.textContent()) ?? "";
 
-    // Should indicate freeze availability or usage
-    const hasFreezeInfo =
-      content.includes("freeze") ||
-      content.includes("Freeze") ||
-      content.includes("week");
-
-    // Freeze info may not be visible if streak is 0
-    expect(hasFreezeInfo || content.includes("0")).toBeTruthy();
+    // Either freeze copy is present or an explicit zero-streak state
+    // (e.g., "0 days"). No trivial-truthy fallbacks.
+    const hasFreezeInfo = /freeze/i.test(text);
+    const isZeroState = /\b0\s*(day|days)\b/i.test(text);
+    expect(hasFreezeInfo || isZeroState).toBeTruthy();
   });
 
   test("should update streak after creating daily log", async ({ page }) => {
@@ -92,17 +96,21 @@ test.describe("Streak System", () => {
   });
 
   test("should display progress to next milestone", async ({ page }) => {
-    // Look for progress indicators
-    const content = await page.content();
+    // Assert an actual progress indicator element or explicit "X days to …"
+    // copy — not trivially-true substrings on page.content().
+    const hasProgressbar =
+      (await page.locator('[role="progressbar"]').count()) > 0;
+    const hasDaysToCopy = await page
+      .getByText(/\d+\s*day(s)?\s*to\b/i)
+      .first()
+      .isVisible()
+      .catch(() => false);
+    const hasZeroStreak = await page
+      .getByText(/\b0\s*day(s)?\b/i)
+      .first()
+      .isVisible()
+      .catch(() => false);
 
-    // Should show some form of progress (progress bar, percentage, or days remaining)
-    const hasProgress =
-      content.includes("progress") ||
-      content.includes("Progress") ||
-      content.includes("%") ||
-      content.includes("days to");
-
-    // Progress may not show if streak is 0
-    expect(hasProgress || content.includes("0")).toBeTruthy();
+    expect(hasProgressbar || hasDaysToCopy || hasZeroStreak).toBeTruthy();
   });
 });

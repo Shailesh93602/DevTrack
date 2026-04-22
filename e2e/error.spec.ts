@@ -7,8 +7,12 @@ test.describe("Error Pages", () => {
       waitUntil: "networkidle",
     });
 
-    // Should show 404 text or Not Found
-    await expect(page.locator("text=Page Not Found, text=404")).toBeVisible();
+    // Should show 404 text or Not Found. Previously written as
+    // `text=Page Not Found, text=404` which Playwright does not parse
+    // as a union — the comma is not a CSS combinator for the text
+    // engine, so the selector never matched and the test gave false
+    // coverage.
+    await expect(page.getByText(/Page Not Found|404/i).first()).toBeVisible();
 
     // Should have a link back to home
     await expect(
