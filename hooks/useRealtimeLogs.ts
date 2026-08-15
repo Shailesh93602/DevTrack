@@ -12,9 +12,15 @@ interface UseRealtimeLogsResult {
 }
 
 /**
- * Subscribes to Supabase Realtime postgres_changes on the daily_logs table
+ * Subscribes to Supabase Realtime postgres_changes on the DailyLog table
  * for the current user. Merges server-side initial logs with live inserts,
  * updates, and deletes from other tabs/sessions.
+ *
+ * Table/column names are Prisma's — quoted PascalCase table (`DailyLog`) and
+ * camelCase columns (`userId`, `problemsSolved`), because schema.prisma
+ * declares no `@@map`/`@map`. Realtime also requires the table to be in the
+ * `supabase_realtime` publication:
+ *   ALTER PUBLICATION supabase_realtime ADD TABLE "DailyLog";
  *
  * Design note: we optimistically update locally in DailyLogList on the same
  * tab (via router.refresh), so Realtime primarily helps with multi-tab /
@@ -40,21 +46,21 @@ export function useRealtimeLogs(
     const supabase = createClient();
 
     const channel = supabase
-      .channel(`daily_logs:${userId}`)
+      .channel(`DailyLog:${userId}`)
       .on(
         "postgres_changes",
         {
           event: "*",
           schema: "public",
-          table: "daily_logs",
-          filter: `user_id=eq.${userId}`,
+          table: "DailyLog",
+          filter: `userId=eq.${userId}`,
         },
         (payload) => {
           if (payload.eventType === "INSERT") {
             const newLog: SerializedDailyLog = {
               id: payload.new.id as string,
               date: payload.new.date as string,
-              problemsSolved: (payload.new.problems_solved as number) ?? 0,
+              problemsSolved: (payload.new.problemsSolved as number) ?? 0,
               topics: (payload.new.topics as string[]) ?? [],
               notes: (payload.new.notes as string | null) ?? null,
             };
@@ -67,7 +73,7 @@ export function useRealtimeLogs(
             const updated: SerializedDailyLog = {
               id: payload.new.id as string,
               date: payload.new.date as string,
-              problemsSolved: (payload.new.problems_solved as number) ?? 0,
+              problemsSolved: (payload.new.problemsSolved as number) ?? 0,
               topics: (payload.new.topics as string[]) ?? [],
               notes: (payload.new.notes as string | null) ?? null,
             };

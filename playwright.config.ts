@@ -66,7 +66,9 @@ export default defineConfig({
   webServer: {
     command: "npm run dev -- --port 3000",
     url: "http://127.0.0.1:3000",
-    reuseExistingServer: true,
+    // Reuse a dev server you already have running locally, but never on CI —
+    // there, an unexpected listener on :3000 would silently be tested instead.
+    reuseExistingServer: !process.env.CI,
     timeout: 120 * 1000,
   },
 });
