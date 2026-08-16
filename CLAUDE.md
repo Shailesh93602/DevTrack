@@ -9,9 +9,9 @@
 
 **DevTrack** is a developer progress tracking dashboard. It allows developers to log daily coding activity, track DSA problems solved, manage side projects, and visualize progress over time.
 
-**Stage:** Foundation / Setup (no full features yet)
+**Stage:** Shipped — daily logs, DSA tracking + pattern analysis, projects/milestones, streaks, developer score, insights and recommendations are all implemented.
 
-**Live URL:** Not deployed yet
+**Live URL:** https://daily-dev-track.vercel.app
 
 ---
 
@@ -88,7 +88,7 @@
 - **Prisma client** is a singleton via `lib/db/prisma.ts` — never instantiate `PrismaClient` elsewhere
 - **Supabase client**: use `lib/auth/supabase.ts` (browser) and `lib/auth/supabase-server.ts` (server) — never create ad-hoc clients
 - Always run `prisma generate` after any change to `schema.prisma`
-- **Prisma 7:** datasource URL lives in `prisma.config.ts` (not in `schema.prisma`) — this is a Prisma 7 breaking change
+- **Prisma 7:** datasource URL lives in `prisma.config.ts` (not in `schema.prisma`) — this is a Prisma 7 breaking change. The file must sit at the **repo root**: the CLI only looks for it in the current working directory, and from `prisma/prisma.config.ts` it is silently ignored (`Error: The datasource.url property is required in your Prisma config file`).
 
 ---
 
@@ -167,11 +167,25 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=
 DATABASE_URL=
 ```
 
-See `.env.example` for reference.
+Optional: `DIRECT_URL` (Prisma CLI when `DATABASE_URL` is pooled), `SUPABASE_SERVICE_ROLE_KEY` (Playwright global-setup), `CRON_SECRET` (guards `/api/cron/keepalive` — unset means the endpoint is open), `RLS_TEST_DATABASE_URL` (`npm run test:rls`).
+
+See `.env.example` for reference — it is committed via a `!.env.example` negation in `.gitignore`, since `.env*` is otherwise ignored.
 
 ---
 
 ## Session Notes
+
+**2026-08-15** — Clone-and-run verification pass; setup blockers and RLS proof:
+
+- **Fixed — Prisma config was never loaded:** `prisma/prisma.config.ts` moved to the repo root. Prisma 7.8 only looks in the cwd, so `prisma migrate dev` / `db push` failed with "The datasource.url property is required in your Prisma config file" for anyone following the README.
+- **Fixed — `.env.example` was not in the repo:** `.gitignore`'s `.env*` swallowed it, so the README's `cp .env.example .env` failed in a fresh clone. Added `!.env.example` and committed a placeholder-only template covering `DIRECT_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `CRON_SECRET`, `NEXT_PUBLIC_SITE_URL`, `RLS_TEST_DATABASE_URL`.
+- **Added — `prisma/rls/verify-rls.sql` + `npm run test:rls`:** applies the real `001_enable_rls.sql` to a throwaway local Postgres and asserts user A is denied every cross-user read, update, delete and forged insert on all 8 tables (plus anonymous access). Verified passing on Postgres 16; verified failing (exit 3) when the policy file is not applied, so it is not vacuous.
+- **Fixed — Realtime subscribed to a table that doesn't exist:** `hooks/useRealtimeLogs.ts` listened on `daily_logs` / `user_id` / `problems_solved`, but `schema.prisma` declares no `@@map`, so the real names are `"DailyLog"` / `"userId"` / `"problemsSolved"`. Needs a live check plus `ALTER PUBLICATION supabase_realtime ADD TABLE "DailyLog";`.
+- **Fixed — `dotenv` was undeclared** although `prisma.config.ts` imports it (it only worked as a transitive dep of `prisma`); added to devDependencies. `playwright.config.ts` `reuseExistingServer` is now `!process.env.CI`.
+- **README rewritten to match reality:** removed the Framer Motion claim (not a dependency, never used) and the "edge computing" claim (everything is the Node runtime); added the live URL, the unit-test/CI story, the RLS section, `npx playwright install`, and the e2e credential prerequisites.
+- **E2E status unchanged and still red without credentials:** `auth.setup.ts` fails at `page.waitForURL(/.*dashboard.*/)` and all 226 tests report "did not run". No `/api/health` route exists yet.
+
+**Next:** decide on a LICENSE, add a screenshot/demo GIF, and get the e2e suite green against a dedicated Supabase test project.
 
 **2026-03-22** — Design system implementation verified and complete:
 
