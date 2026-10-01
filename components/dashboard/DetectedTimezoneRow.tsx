@@ -60,9 +60,8 @@ export function DetectedTimezoneRow() {
         )}
       </p>
       <p className="text-muted-foreground text-xs">
-        Daily logs are recorded against this detected device time zone.
-        Changing your device time zone will change how today&apos;s log is
-        dated.
+        Daily logs are recorded against this detected device time zone. Changing
+        your device time zone will change how today&apos;s log is dated.
       </p>
     </div>
   );

@@ -26,13 +26,19 @@ function translateAuthError(raw: string | undefined): string {
   if (msg.includes("invalid login") || msg.includes("invalid credentials")) {
     return "That email and password don't match an account. Check for typos or use 'Forgot password'.";
   }
-  if (msg.includes("user already registered") || msg.includes("already exists")) {
+  if (
+    msg.includes("user already registered") ||
+    msg.includes("already exists")
+  ) {
     return "An account with that email already exists. Try signing in, or use 'Forgot password' if you've lost access.";
   }
   if (msg.includes("email not confirmed")) {
     return "Your email isn't confirmed yet. Check your inbox for the confirmation link.";
   }
-  if (msg.includes("password should be at least") || msg.includes("weak password")) {
+  if (
+    msg.includes("password should be at least") ||
+    msg.includes("weak password")
+  ) {
     return "That password doesn't meet the requirements. Use at least 8 characters with letters and numbers.";
   }
   if (msg.includes("network") || msg.includes("fetch")) {

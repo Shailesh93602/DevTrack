@@ -19,9 +19,7 @@ export default function PrivacyPage() {
       <h1 className="text-foreground mb-2 text-3xl font-semibold tracking-tight">
         Privacy Policy
       </h1>
-      <p className="text-muted-foreground text-sm">
-        Last updated: 2026-04-20
-      </p>
+      <p className="text-muted-foreground text-sm">Last updated: 2026-04-20</p>
 
       <div className="prose prose-neutral dark:prose-invert mt-8 max-w-none">
         <h2>What we collect</h2>
@@ -41,8 +39,8 @@ export default function PrivacyPage() {
             every table to the owning user.
           </li>
           <li>
-            Supabase Auth for session / password storage. We never see your
-            raw password.
+            Supabase Auth for session / password storage. We never see your raw
+            password.
           </li>
         </ul>
 
@@ -56,9 +54,8 @@ export default function PrivacyPage() {
         <h2>Export + delete</h2>
         <p>
           You can export your data or delete your account from Settings. A
-          deletion request purges the primary database within 30 days.
-          Supabase backup retention may keep a copy for up to 60 days after
-          that.
+          deletion request purges the primary database within 30 days. Supabase
+          backup retention may keep a copy for up to 60 days after that.
         </p>
 
         <h2>Contact</h2>

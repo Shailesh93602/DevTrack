@@ -23,7 +23,11 @@ export const dailyLogSchema = z.object({
       (d) => d <= new Date().toISOString().slice(0, 10),
       "Date can't be in the future"
     ),
-  problemsSolved: z.number().int().min(0, "Cannot be negative").max(1000, "That's too many to log for a single day"),
+  problemsSolved: z
+    .number()
+    .int()
+    .min(0, "Cannot be negative")
+    .max(1000, "That's too many to log for a single day"),
   topics: z
     .array(z.string().trim().min(1).max(TOPIC_MAX_LENGTH))
     .max(TOPICS_MAX_COUNT),

@@ -25,13 +25,18 @@ export const signupSchema = z
   .object({
     email: emailSchema,
     password: passwordSchema,
-    confirmPassword: z.string().min(1, { message: "Please confirm your password" }),
+    confirmPassword: z
+      .string()
+      .min(1, { message: "Please confirm your password" }),
   })
   // refine() runs after the field-level validators, so required / length
   // errors surface first. Match check only fires when both fields have
   // values — avoids the confusing 'Passwords must match' on empty submit.
   .refine(
-    (data) => !data.password || !data.confirmPassword || data.password === data.confirmPassword,
+    (data) =>
+      !data.password ||
+      !data.confirmPassword ||
+      data.password === data.confirmPassword,
     { message: "Passwords don't match", path: ["confirmPassword"] }
   );
 

@@ -334,7 +334,11 @@
      needing a separate token. Firefox + modern Chromium/Safari. */
   * {
     scrollbar-width: thin;
-    scrollbar-color: color-mix(in oklab, var(--muted-foreground) 30%, transparent)
+    scrollbar-color: color-mix(
+        in oklab,
+        var(--muted-foreground) 30%,
+        transparent
+      )
       transparent;
   }
   *::-webkit-scrollbar {

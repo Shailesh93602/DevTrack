@@ -10,12 +10,16 @@ import {
 
 describe("toUtcDateString", () => {
   it("formats a Date as YYYY-MM-DD in UTC", () => {
-    expect(toUtcDateString(new Date("2026-03-15T10:30:00Z"))).toBe("2026-03-15");
+    expect(toUtcDateString(new Date("2026-03-15T10:30:00Z"))).toBe(
+      "2026-03-15"
+    );
   });
 
   it("uses UTC, not local time, near day boundaries", () => {
     // 23:30 UTC is still the same UTC day regardless of local offset
-    expect(toUtcDateString(new Date("2026-03-15T23:30:00Z"))).toBe("2026-03-15");
+    expect(toUtcDateString(new Date("2026-03-15T23:30:00Z"))).toBe(
+      "2026-03-15"
+    );
   });
 });
 
@@ -58,19 +62,28 @@ describe("isNextDay", () => {
 describe("getDaysDifference", () => {
   it("counts whole days between two dates", () => {
     expect(
-      getDaysDifference(new Date("2026-03-15T00:00:00Z"), new Date("2026-03-20T00:00:00Z"))
+      getDaysDifference(
+        new Date("2026-03-15T00:00:00Z"),
+        new Date("2026-03-20T00:00:00Z")
+      )
     ).toBe(5);
   });
 
   it("is order-independent (absolute value)", () => {
     expect(
-      getDaysDifference(new Date("2026-03-20T00:00:00Z"), new Date("2026-03-15T00:00:00Z"))
+      getDaysDifference(
+        new Date("2026-03-20T00:00:00Z"),
+        new Date("2026-03-15T00:00:00Z")
+      )
     ).toBe(5);
   });
 
   it("ignores the time component", () => {
     expect(
-      getDaysDifference(new Date("2026-03-15T23:59:00Z"), new Date("2026-03-16T00:01:00Z"))
+      getDaysDifference(
+        new Date("2026-03-15T23:59:00Z"),
+        new Date("2026-03-16T00:01:00Z")
+      )
     ).toBe(1);
   });
 });
@@ -90,6 +103,8 @@ describe("toDateInputValue", () => {
   });
 
   it("formats a Date object", () => {
-    expect(toDateInputValue(new Date("2026-03-15T10:00:00Z"))).toBe("2026-03-15");
+    expect(toDateInputValue(new Date("2026-03-15T10:00:00Z"))).toBe(
+      "2026-03-15"
+    );
   });
 });

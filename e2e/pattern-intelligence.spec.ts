@@ -83,7 +83,9 @@ test.describe("Pattern Intelligence on DSA Problems", () => {
       );
       // The body paragraph under the label should not be empty.
       const bodyText = await cardContainer.innerText();
-      expect(bodyText.replace("Recommended to Learn", "").trim().length).toBeGreaterThan(0);
+      expect(
+        bodyText.replace("Recommended to Learn", "").trim().length
+      ).toBeGreaterThan(0);
     } else {
       test.info().annotations.push({
         type: "skip-reason",
@@ -102,9 +104,9 @@ test.describe("Pattern Intelligence on DSA Problems", () => {
       );
       // Each weak pattern renders as a Badge containing `pattern (count)`.
       // Assert at least one badge is present to prove the list is populated.
-      await expect(card.locator(".badge, [class*='Badge']").first()).toBeVisible(
-        { timeout: 5000 }
-      );
+      await expect(
+        card.locator(".badge, [class*='Badge']").first()
+      ).toBeVisible({ timeout: 5000 });
     } else {
       test.info().annotations.push({
         type: "skip-reason",

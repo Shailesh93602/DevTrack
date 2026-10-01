@@ -3,9 +3,7 @@ import { generateRecommendations } from "@/lib/services/recommendations";
 import type { RecommendationContext } from "@/types/recommendations";
 
 /** A healthy, active user that fires NO rules — override fields per test. */
-function ctx(
-  over: Partial<RecommendationContext> = {},
-): RecommendationContext {
+function ctx(over: Partial<RecommendationContext> = {}): RecommendationContext {
   return {
     patternStats: [
       { pattern: "Arrays", count: 5, percentage: 40 },
@@ -46,7 +44,7 @@ describe("generateRecommendations", () => {
         completedMilestones: 0,
         completedProjects: 0,
         patternStats: [],
-      }),
+      })
     );
     expect(recs).toHaveLength(1);
     expect(recs[0]!.id).toBe("rec-start-journey");
@@ -55,7 +53,7 @@ describe("generateRecommendations", () => {
 
   it("warns when an active streak hasn't logged today", () => {
     const recs = generateRecommendations(
-      ctx({ loggedToday: false, currentStreak: 5, daysSinceLastLog: 1 }),
+      ctx({ loggedToday: false, currentStreak: 5, daysSinceLastLog: 1 })
     );
     expect(recs[0]!.id).toBe("rec-streak-at-risk");
     expect(recs[0]!.urgency).toBe("critical");
@@ -63,7 +61,7 @@ describe("generateRecommendations", () => {
 
   it("nudges Easy-only solvers up to Medium", () => {
     const recs = generateRecommendations(
-      ctx({ easyCount: 5, mediumCount: 5, hardCount: 0 }),
+      ctx({ easyCount: 5, mediumCount: 5, hardCount: 0 })
     );
     // medium>0 so not 'level up to medium'; medium>=5 & hard==0 → try hard
     expect(recs.map((r) => r.id)).toContain("rec-try-hard");
@@ -84,7 +82,7 @@ describe("generateRecommendations", () => {
         completedMilestones: 0,
         completedProjects: 0,
         totalProjects: 0,
-      }),
+      })
     );
     expect(recs).toHaveLength(3);
     expect(recs.map((r) => r.id)).toEqual([

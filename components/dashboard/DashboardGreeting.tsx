@@ -30,7 +30,7 @@ export function DashboardGreeting() {
   const greeting = useSyncExternalStore(
     subscribe,
     getClientSnapshot,
-    getServerSnapshot,
+    getServerSnapshot
   );
   return (
     <div className="flex flex-col gap-1">

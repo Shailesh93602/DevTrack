@@ -40,24 +40,35 @@ describe("calculateStreakFromDates — empty / single", () => {
 
 describe("calculateStreakFromDates — current streak", () => {
   it("counts consecutive days ending today", () => {
-    const result = calculateStreakFromDates([daysAgo(2), daysAgo(1), daysAgo(0)]);
+    const result = calculateStreakFromDates([
+      daysAgo(2),
+      daysAgo(1),
+      daysAgo(0),
+    ]);
     expect(result.currentStreak).toBe(3);
     expect(result.longestStreak).toBe(3);
   });
 
   it("is 0 when the most recent log is older than yesterday", () => {
-    expect(calculateStreakFromDates([daysAgo(5), daysAgo(4)]).currentStreak).toBe(0);
+    expect(
+      calculateStreakFromDates([daysAgo(5), daysAgo(4)]).currentStreak
+    ).toBe(0);
   });
 
   it("only counts the consecutive tail, not earlier isolated days", () => {
     // gap at day-3, then a 2-day run ending today
-    const result = calculateStreakFromDates([daysAgo(3), daysAgo(1), daysAgo(0)]);
+    const result = calculateStreakFromDates([
+      daysAgo(3),
+      daysAgo(1),
+      daysAgo(0),
+    ]);
     expect(result.currentStreak).toBe(2);
   });
 
   it("ignores duplicate dates", () => {
     expect(
-      calculateStreakFromDates([daysAgo(0), daysAgo(0), daysAgo(1)]).currentStreak
+      calculateStreakFromDates([daysAgo(0), daysAgo(0), daysAgo(1)])
+        .currentStreak
     ).toBe(2);
   });
 });
@@ -78,13 +89,15 @@ describe("calculateStreakFromDates — longest streak", () => {
 
   it("handles unsorted input by sorting first", () => {
     expect(
-      calculateStreakFromDates(["2020-01-03", "2020-01-01", "2020-01-02"]).longestStreak
+      calculateStreakFromDates(["2020-01-03", "2020-01-01", "2020-01-02"])
+        .longestStreak
     ).toBe(3);
   });
 
   it("treats a fully broken history as max run of 1", () => {
     expect(
-      calculateStreakFromDates(["2020-01-01", "2020-01-05", "2020-01-09"]).longestStreak
+      calculateStreakFromDates(["2020-01-01", "2020-01-05", "2020-01-09"])
+        .longestStreak
     ).toBe(1);
   });
 });

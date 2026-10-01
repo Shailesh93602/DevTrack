@@ -19,7 +19,10 @@ export default function VerifyEmailPage() {
   async function handleResend(e: React.FormEvent) {
     e.preventDefault();
     if (!email) {
-      setStatus({ kind: "error", message: "Enter the email you signed up with." });
+      setStatus({
+        kind: "error",
+        message: "Enter the email you signed up with.",
+      });
       return;
     }
     setStatus({ kind: "sending" });
@@ -92,7 +95,10 @@ export default function VerifyEmailPage() {
               aria-busy={status.kind === "sending"}
             >
               {status.kind === "sending" && (
-                <Loader2 className="mr-2 size-4 animate-spin" aria-hidden="true" />
+                <Loader2
+                  className="mr-2 size-4 animate-spin"
+                  aria-hidden="true"
+                />
               )}
               Resend confirmation
             </Button>

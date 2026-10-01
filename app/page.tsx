@@ -31,9 +31,9 @@ export default async function RootPage() {
   }
 
   return (
-    <main id="main-content" className="min-h-dvh bg-background text-foreground">
+    <main id="main-content" className="bg-background text-foreground min-h-dvh">
       {/* Nav */}
-      <header className="border-b border-border/60">
+      <header className="border-border/60 border-b">
         <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-3 px-4 sm:px-6">
           <Link
             href="/"
@@ -41,7 +41,10 @@ export default async function RootPage() {
           >
             DevTrack
           </Link>
-          <nav className="flex items-center gap-2 text-sm sm:gap-4" aria-label="Primary">
+          <nav
+            className="flex items-center gap-2 text-sm sm:gap-4"
+            aria-label="Primary"
+          >
             <Link
               href="/login"
               className="text-muted-foreground hover:text-foreground inline-flex h-9 items-center rounded-md px-2 transition-colors sm:px-3"
@@ -61,17 +64,17 @@ export default async function RootPage() {
       {/* Hero */}
       <section className="mx-auto max-w-6xl px-6 py-20 md:py-28">
         <div className="max-w-2xl">
-          <p className="mb-4 inline-flex items-center rounded-full border border-border/60 bg-muted/40 px-3 py-1 text-xs font-medium text-muted-foreground">
+          <p className="border-border/60 bg-muted/40 text-muted-foreground mb-4 inline-flex items-center rounded-full border px-3 py-1 text-xs font-medium">
             Daily logs · DSA tracking · Realtime sync
           </p>
           <h1 className="text-4xl font-semibold tracking-tight md:text-5xl">
             Stop guessing what you&apos;ve learned this month.
           </h1>
-          <p className="mt-5 text-lg leading-relaxed text-muted-foreground">
-            DevTrack is a developer progress dashboard. Log what you
-            worked on, the problems you solved, the projects you
-            shipped — and see the pattern instead of a pile of
-            commits. Synced across every tab in real time.
+          <p className="text-muted-foreground mt-5 text-lg leading-relaxed">
+            DevTrack is a developer progress dashboard. Log what you worked on,
+            the problems you solved, the projects you shipped — and see the
+            pattern instead of a pile of commits. Synced across every tab in
+            real time.
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
             <Link
@@ -87,7 +90,7 @@ export default async function RootPage() {
               Sign in
             </Link>
           </div>
-          <p className="mt-4 text-xs text-muted-foreground">
+          <p className="text-muted-foreground mt-4 text-xs">
             Free for personal use · No credit card · Private by default
           </p>
         </div>
@@ -115,7 +118,7 @@ export default async function RootPage() {
       </section>
 
       {/* How it works */}
-      <section className="border-t border-border/60 bg-muted/20">
+      <section className="border-border/60 bg-muted/20 border-t">
         <div className="mx-auto max-w-6xl px-6 py-16">
           <h2 className="text-2xl font-semibold tracking-tight">
             How it works

@@ -34,9 +34,7 @@ test.describe("Streak System", () => {
     // Previously the fallback `content.includes("0")` satisfied the
     // assertion trivially — "0" appears in every rendered page. Scope
     // the check to the streak region so we actually detect milestones.
-    const streakRegion = page
-      .locator('div:has-text("Current Streak")')
-      .first();
+    const streakRegion = page.locator('div:has-text("Current Streak")').first();
     await expect(streakRegion).toBeVisible();
 
     // Streak card always renders *either* a numeric day count or a
@@ -54,9 +52,7 @@ test.describe("Streak System", () => {
   test("should display streak freeze information", async ({ page }) => {
     // Scope to the streak card so "week" / "freeze" in unrelated UI
     // can't provide false coverage.
-    const streakRegion = page
-      .locator('div:has-text("Current Streak")')
-      .first();
+    const streakRegion = page.locator('div:has-text("Current Streak")').first();
     await expect(streakRegion).toBeVisible();
     const text = (await streakRegion.textContent()) ?? "";
 

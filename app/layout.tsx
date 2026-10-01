@@ -13,7 +13,8 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://daily-dev-track.vercel.app";
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://daily-dev-track.vercel.app";
 const SITE_DESCRIPTION =
   "Log what you shipped, the DSA problems you solved, and the projects you moved forward — and watch the pattern emerge across weeks. Real-time sync across tabs.";
 

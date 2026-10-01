@@ -109,10 +109,7 @@ export function Header({ email }: HeaderProps) {
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="gap-2 sm:gap-2">
-            <Button
-              variant="outline"
-              onClick={() => setLogoutOpen(false)}
-            >
+            <Button variant="outline" onClick={() => setLogoutOpen(false)}>
               Stay signed in
             </Button>
             <form action={logout}>
