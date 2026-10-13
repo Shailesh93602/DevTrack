@@ -175,6 +175,11 @@ See `.env.example` for reference — it is committed via a `!.env.example` negat
 
 ## Session Notes
 
+**2026-10-13** — `lib/services/dashboard.ts` split by concern (516 → 199 lines), behaviour unchanged:
+
+- `dashboard-data.ts` — the one parallel Prisma batch (`fetchDashboardSnapshot`); `dashboard-metrics.ts` — pure difficulty/consistency/trend/peak-hour/days-since-last-log helpers; `weekly-progress.ts` — weekly buckets + `WeeklyDataPoint`; `pattern-analysis.ts` — pattern counting shared by the dashboard, `dsa-problem.analyzePatterns` and `insights.ts` (three copies of the same loop, plus a second copy of days-since-last-log in `insights.ts`, are gone).
+- Equivalence checked by a throwaway differential test against the previous implementations over 500 random inputs; new outcome tests for every pure helper (37 → 52 unit tests). Gate: lint, type-check, unit, format, build all green before and after.
+
 **2026-08-15** — Clone-and-run verification pass; setup blockers and RLS proof:
 
 - **Fixed — Prisma config was never loaded:** `prisma/prisma.config.ts` moved to the repo root. Prisma 7.8 only looks in the cwd, so `prisma migrate dev` / `db push` failed with "The datasource.url property is required in your Prisma config file" for anyone following the README.
