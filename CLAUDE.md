@@ -167,13 +167,20 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=
 DATABASE_URL=
 ```
 
-Optional: `DIRECT_URL` (Prisma CLI when `DATABASE_URL` is pooled), `SUPABASE_SERVICE_ROLE_KEY` (Playwright global-setup), `CRON_SECRET` (guards `/api/cron/keepalive` — unset means the endpoint is open), `RLS_TEST_DATABASE_URL` (`npm run test:rls`).
+Optional: `DIRECT_URL` (Prisma CLI when `DATABASE_URL` is pooled), `SUPABASE_SERVICE_ROLE_KEY` (Playwright global-setup), `CRON_SECRET` (guards every `/api/cron/*` route via `lib/utils/cron-auth.ts` — fails closed: 503 when unset, 401 on a wrong/missing bearer; must be set on Vercel or the keepalive stops), `RLS_TEST_DATABASE_URL` (`npm run test:rls`).
 
 See `.env.example` for reference — it is committed via a `!.env.example` negation in `.gitignore`, since `.env*` is otherwise ignored.
 
 ---
 
 ## Session Notes
+
+**2026-10-17** — DT-SEC-01 (cron fail-closed) + DT-DEP-01 (dependency advisories), uncommitted:
+
+- **Fixed — keepalive cron was open when `CRON_SECRET` was unset.** New `lib/utils/cron-auth.ts` (`authorizeCronRequest`): 503 when the secret is unset/empty, 401 on a missing/wrong bearer, sha256 + `timingSafeEqual` comparison, secret read per request (the old route captured it at module load). `lib/utils/cron-auth.test.ts` drives the real route handler (Prisma mocked) and asserts every `app/api/cron/**/route.ts` calls the guard. Against the old route 8/10 fail; a `startsWith` comparison mutant is caught.
+- **Deps:** `next`/`eslint-config-next` 16.3.4 → 16.3.8 (smallest fix for the 7 Next advisories incl. critical next/og RCE), `npm audit fix` (non-force), `shadcn` moved to devDependencies (CLI + build-time CSS only; its `braces` chain has no patched release). `npm audit --omit=dev`: 18 (2 critical, 14 high, 2 moderate) → 0. Dev-only remainder: `braces` (no fix) and `tinypool`/`@vitest/mocker` (needs vitest 3 → 5).
+- **Flagged, not changed:** the auth proxy sits at `lib/utils/proxy.ts`, which Next never loads (it must be root `proxy.ts`), so the "Auth Flow" middleware steps above are not active — dashboard layout and every API route still authenticate themselves. `@prisma/client`/`@prisma/adapter-pg` 7.5.0 lag the `prisma` CLI (7.10.x), pre-existing. The keepalive route calls Prisma directly (API Rules).
+- **Owner step:** confirm `CRON_SECRET` is set on the dev-track Vercel project, or the keepalive now returns 503 and Supabase can auto-pause.
 
 **2026-10-13** — `lib/services/dashboard.ts` split by concern (516 → 199 lines), behaviour unchanged:
 

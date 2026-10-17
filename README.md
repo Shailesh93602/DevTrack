@@ -194,7 +194,7 @@ Full rules live in [`CLAUDE.md`](CLAUDE.md).
 
 ## 🌐 Deployment
 
-Deployed on Vercel at [daily-dev-track.vercel.app](https://daily-dev-track.vercel.app). `vercel.json` registers a daily keepalive cron (`/api/cron/keepalive`, 09:00 UTC) so the free-tier Supabase project doesn't auto-pause; set `CRON_SECRET` or that endpoint accepts unauthenticated requests.
+Deployed on Vercel at [daily-dev-track.vercel.app](https://daily-dev-track.vercel.app). `vercel.json` registers a daily keepalive cron (`/api/cron/keepalive`, 09:00 UTC) so the free-tier Supabase project doesn't auto-pause; set `CRON_SECRET` in the Vercel project — the cron routes fail closed (503 when it is unset, 401 on a wrong or missing bearer).
 
 ```bash
 npm run build   # runs `npm run type-check && next build`
