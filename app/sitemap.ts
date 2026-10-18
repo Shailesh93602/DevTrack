@@ -2,7 +2,13 @@ import type { MetadataRoute } from "next";
 
 const BASE = "https://daily-dev-track.vercel.app";
 
-const PUBLIC_PATHS = ["/", "/auth", "/legal/privacy", "/legal/terms"];
+const PUBLIC_PATHS = [
+  "/",
+  "/login",
+  "/signup",
+  "/legal/privacy",
+  "/legal/terms",
+];
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();

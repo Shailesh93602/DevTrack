@@ -175,6 +175,8 @@ See `.env.example` for reference — it is committed via a `!.env.example` negat
 
 ## Session Notes
 
+**2026-10-18** — sitemap listed `/auth`, which is a 404 (the live smoke sweep caught it); it now lists `/login` and `/signup`, the real public auth routes under `app/(auth)/`. `app/auth/` holds only the `callback` and `confirm` handlers.
+
 **2026-10-17** — DT-SEC-01 (cron fail-closed) + DT-DEP-01 (dependency advisories), uncommitted:
 
 - **Fixed — keepalive cron was open when `CRON_SECRET` was unset.** New `lib/utils/cron-auth.ts` (`authorizeCronRequest`): 503 when the secret is unset/empty, 401 on a missing/wrong bearer, sha256 + `timingSafeEqual` comparison, secret read per request (the old route captured it at module load). `lib/utils/cron-auth.test.ts` drives the real route handler (Prisma mocked) and asserts every `app/api/cron/**/route.ts` calls the guard. Against the old route 8/10 fail; a `startsWith` comparison mutant is caught.
