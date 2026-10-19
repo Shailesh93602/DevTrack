@@ -9,11 +9,22 @@ import {
   Zap,
 } from "lucide-react";
 import { createServerSupabaseClient } from "@/lib/auth/supabase-server";
+import {
+  AUTHOR_NAME,
+  AUTHOR_URL,
+  LANDING_DESCRIPTION,
+  LANDING_FEATURES,
+  homeJsonLd,
+  jsonLdScript,
+} from "@/lib/seo/structured-data";
 
 export const metadata = {
   title: "DevTrack — developer progress dashboard",
   description:
     "Track your daily coding activity, DSA problems, and side-project progress in one place. Supabase-Realtime synced across tabs.",
+  // A canonical is a claim about ONE url, so it lives on each page, never on
+  // the root layout (every page without its own would inherit the home URL).
+  alternates: { canonical: "/" },
 };
 
 /**
@@ -32,6 +43,10 @@ export default async function RootPage() {
 
   return (
     <main id="main-content" className="bg-background text-foreground min-h-dvh">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLdScript(homeJsonLd) }}
+      />
       {/* Nav */}
       <header className="border-border/60 border-b">
         <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-3 px-4 sm:px-6">
@@ -71,10 +86,7 @@ export default async function RootPage() {
             Stop guessing what you&apos;ve learned this month.
           </h1>
           <p className="text-muted-foreground mt-5 text-lg leading-relaxed">
-            DevTrack is a developer progress dashboard. Log what you worked on,
-            the problems you solved, the projects you shipped — and see the
-            pattern instead of a pile of commits. Synced across every tab in
-            real time.
+            {LANDING_DESCRIPTION} Synced across every tab in real time.
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
             <Link
@@ -101,17 +113,17 @@ export default async function RootPage() {
         <div className="grid gap-6 md:grid-cols-3">
           <FeatureCard
             icon={Calendar}
-            title="Daily logs"
+            title={LANDING_FEATURES[0]}
             body="30 seconds a day. Pick a tag, write a sentence, attach a link. Search the index later when you forget which repo you fixed that bug in."
           />
           <FeatureCard
             icon={LineChart}
-            title="DSA tracking"
+            title={LANDING_FEATURES[1]}
             body="Log the problems you solved with difficulty + pattern tags. Dashboard shows what you're avoiding — the categories you haven't touched in 30 days."
           />
           <FeatureCard
             icon={Zap}
-            title="Realtime across tabs"
+            title={LANDING_FEATURES[2]}
             body="Your log on your phone shows up instantly on your laptop. No refresh. No stale counts on the streak widget."
           />
         </div>
@@ -154,7 +166,14 @@ export default async function RootPage() {
       <footer className="border-border/60 border-t pb-[env(safe-area-inset-bottom)]">
         <div className="text-muted-foreground mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-8 text-sm sm:px-6">
           <p>
-            © {new Date().getFullYear()} DevTrack. Built by Shailesh Chaudhari.
+            © {new Date().getFullYear()} DevTrack. Built by{" "}
+            <a
+              href={AUTHOR_URL}
+              className="hover:text-foreground underline-offset-4 transition-colors hover:underline"
+            >
+              {AUTHOR_NAME}
+            </a>
+            .
           </p>
           <div className="flex flex-wrap gap-4 sm:gap-6">
             <Link

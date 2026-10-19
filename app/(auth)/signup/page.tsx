@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   title: "Create account",
   description:
     "Create a free DevTrack account to log daily coding work, track DSA problems and projects, and see your progress over time.",
+  alternates: { canonical: "/signup" },
 };
 
 export default function SignupPage() {

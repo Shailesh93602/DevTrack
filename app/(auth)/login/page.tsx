@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   title: "Sign in",
   description:
     "Sign in to DevTrack to log today's work, track the DSA problems you solved and keep your streak going.",
+  alternates: { canonical: "/login" },
 };
 
 export default function LoginPage() {

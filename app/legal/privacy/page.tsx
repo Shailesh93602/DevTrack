@@ -4,6 +4,7 @@ import { ArrowLeft } from "lucide-react";
 export const metadata = {
   title: "Privacy Policy",
   description: "How DevTrack handles your data.",
+  alternates: { canonical: "/legal/privacy" },
 };
 
 export default function PrivacyPage() {

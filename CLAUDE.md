@@ -175,6 +175,8 @@ See `.env.example` for reference — it is committed via a `!.env.example` negat
 
 ## Session Notes
 
+**2026-10-19 (b)** — SEO/GEO gaps from `Development/TRACKERS/SEO_GEO_AEO_PLAN.md` §6: every sitemap page now declares its own canonical (`alternates.canonical` per page, never on the root layout, which every page would inherit); the home page renders WebSite + WebApplication + Person JSON-LD from `lib/seo/structured-data.ts`, mirroring only what it renders (feature-card titles, hero text, free) — "Realtime across tabs" is deliberately left out of `featureList` until the publication step is confirmed live; the footer's "Built by Shailesh Chaudhari" is now a link to https://shaileshchaudhari.vercel.app; `public/llms.txt` no longer links the 404 `/auth`, says Next.js 16 and names the real `DailyLog` table. `lib/seo/seo.test.ts` resolves canonicals with Next's `resolveAlternates` and reads the JSON-LD out of the rendered home page; each test was mutation-checked. robots.txt unchanged: one `*` group, so GPTBot/ClaudeBot/PerplexityBot/Bingbot etc. reach every public page.
+
 **2026-10-19** — live smoke D3: `/legal/privacy` and `/legal/terms` served "… — DevTrack — DevTrack" because their titles repeated the brand the root template (`%s — DevTrack`) already appends; `/login` and `/signup` had no metadata and showed the site default. Fixed; `lib/utils/page-titles.test.ts` resolves each page's real metadata with Next's `resolveTitle` and fails if either regresses.
 
 **2026-10-18** — sitemap listed `/auth`, which is a 404 (the live smoke sweep caught it); it now lists `/login` and `/signup`, the real public auth routes under `app/(auth)/`. `app/auth/` holds only the `callback` and `confirm` handlers.

@@ -4,6 +4,7 @@ import { ArrowLeft } from "lucide-react";
 export const metadata = {
   title: "Terms of Service",
   description: "The rules that apply to using DevTrack.",
+  alternates: { canonical: "/legal/terms" },
 };
 
 export default function TermsPage() {

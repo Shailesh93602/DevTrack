@@ -11,11 +11,11 @@ DevTrack is a side project by Shailesh Chaudhari (Software Engineer at ContextQA
 
 ## Why this exists
 
-Most "habit trackers" are clean but boring. Most "developer dashboards" lock you into one ecosystem (GitHub commits only, or Leetcode only). DevTrack lets you log free-text — "shipped Razorpay webhook idempotency", "solved 3 DP problems", "added auth to side project" — and aggregates the streak across kinds. The interesting build detail is the live multi-tab sync via Supabase Realtime postgres_changes subscription on `daily_logs`: edit on phone, see the desktop tab update sub-second.
+Most "habit trackers" are clean but boring. Most "developer dashboards" lock you into one ecosystem (GitHub commits only, or Leetcode only). DevTrack lets you log free-text — "shipped Razorpay webhook idempotency", "solved 3 DP problems", "added auth to side project" — and aggregates the streak across kinds. The interesting build detail is the live multi-tab sync via Supabase Realtime postgres_changes subscription on the `DailyLog` table, so another open tab updates from the change feed instead of polling.
 
 ## Tech stack
 
-- **Frontend**: Next.js 15 (App Router), React, Tailwind CSS, Recharts
+- **Frontend**: Next.js 16 (App Router), React, Tailwind CSS, Recharts
 - **Backend / data**: Supabase (Postgres + Realtime + Auth), Prisma ORM
 - **Realtime**: `postgres_changes` subscription scoped per-user → optimistic UI on the writing tab, pushed update on the reading tab
 - **Hosting**: Vercel
@@ -23,7 +23,10 @@ Most "habit trackers" are clean but boring. Most "developer dashboards" lock you
 ## Pages
 
 - [Home](https://daily-dev-track.vercel.app/)
-- [Sign in / Sign up](https://daily-dev-track.vercel.app/auth)
+- [Sign in](https://daily-dev-track.vercel.app/login)
+- [Create an account](https://daily-dev-track.vercel.app/signup)
+- [Privacy policy](https://daily-dev-track.vercel.app/legal/privacy)
+- [Terms of service](https://daily-dev-track.vercel.app/legal/terms)
 
 ## Author
 
