@@ -1,6 +1,13 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { AuthForm } from "@/components/shared/auth-form";
 import { Code2, ArrowLeft } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Sign in",
+  description:
+    "Sign in to DevTrack to log today's work, track the DSA problems you solved and keep your streak going.",
+};
 
 export default function LoginPage() {
   return (

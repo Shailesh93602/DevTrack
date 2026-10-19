@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
 export const metadata = {
-  title: "Terms of Service — DevTrack",
+  title: "Terms of Service",
   description: "The rules that apply to using DevTrack.",
 };
 

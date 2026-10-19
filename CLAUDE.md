@@ -175,6 +175,8 @@ See `.env.example` for reference — it is committed via a `!.env.example` negat
 
 ## Session Notes
 
+**2026-10-19** — live smoke D3: `/legal/privacy` and `/legal/terms` served "… — DevTrack — DevTrack" because their titles repeated the brand the root template (`%s — DevTrack`) already appends; `/login` and `/signup` had no metadata and showed the site default. Fixed; `lib/utils/page-titles.test.ts` resolves each page's real metadata with Next's `resolveTitle` and fails if either regresses.
+
 **2026-10-18** — sitemap listed `/auth`, which is a 404 (the live smoke sweep caught it); it now lists `/login` and `/signup`, the real public auth routes under `app/(auth)/`. `app/auth/` holds only the `callback` and `confirm` handlers.
 
 **2026-10-17** — DT-SEC-01 (cron fail-closed) + DT-DEP-01 (dependency advisories), uncommitted:

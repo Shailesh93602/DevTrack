@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
 export const metadata = {
-  title: "Privacy Policy — DevTrack",
+  title: "Privacy Policy",
   description: "How DevTrack handles your data.",
 };
 

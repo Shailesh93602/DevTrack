@@ -1,6 +1,13 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { AuthForm } from "@/components/shared/auth-form";
 import { ArrowLeft } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Create account",
+  description:
+    "Create a free DevTrack account to log daily coding work, track DSA problems and projects, and see your progress over time.",
+};
 
 export default function SignupPage() {
   return (
