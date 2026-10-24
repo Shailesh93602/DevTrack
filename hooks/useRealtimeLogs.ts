@@ -32,15 +32,18 @@ export function useRealtimeLogs(
   initialLogs: SerializedDailyLog[]
 ): UseRealtimeLogsResult {
   const [logs, setLogs] = useState<SerializedDailyLog[]>(initialLogs);
+  const [syncedInitialLogs, setSyncedInitialLogs] = useState(initialLogs);
   const [status, setStatus] = useState<RealtimeStatus>("connecting");
   const channelRef = useRef<ReturnType<
     ReturnType<typeof createClient>["channel"]
   > | null>(null);
 
-  // Keep logs in sync when parent re-fetches (server refresh)
-  useEffect(() => {
+  // A server refresh hands in new initialLogs: reset to them during render
+  // (React's "store the previous prop" pattern) rather than in an effect.
+  if (initialLogs !== syncedInitialLogs) {
+    setSyncedInitialLogs(initialLogs);
     setLogs(initialLogs);
-  }, [initialLogs]);
+  }
 
   useEffect(() => {
     const supabase = createClient();

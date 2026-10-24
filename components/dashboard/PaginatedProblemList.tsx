@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { DsaProblemList } from "@/components/dashboard/DsaProblemList";
 import type { DsaProblem } from "@/types/dsa-problem";
@@ -20,12 +20,17 @@ export function PaginatedProblemList({
     initialProblems.length === PROBLEMS_PER_PAGE
   );
   const [isLoading, setIsLoading] = useState(false);
+  const [syncedInitialProblems, setSyncedInitialProblems] =
+    useState(initialProblems);
 
-  useEffect(() => {
+  // New initialProblems from the server restart pagination. Reset during
+  // render (React's "store the previous prop" pattern), not in an effect.
+  if (initialProblems !== syncedInitialProblems) {
+    setSyncedInitialProblems(initialProblems);
     setProblems(initialProblems);
     setOffset(initialProblems.length);
     setHasMore(initialProblems.length === PROBLEMS_PER_PAGE);
-  }, [initialProblems]);
+  }
 
   const loadMore = useCallback(async () => {
     if (isLoading) return;

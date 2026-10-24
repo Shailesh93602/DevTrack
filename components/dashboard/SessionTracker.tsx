@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useSyncExternalStore } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -15,6 +15,10 @@ import {
 import { SessionWithActivities } from "@/types/session";
 import { toast } from "sonner";
 import { formatDistanceToNow } from "date-fns";
+import { formatElapsed } from "@/lib/utils/elapsed";
+
+// Nothing to subscribe to: the snapshot only differs between server and client.
+const subscribeToNothing = () => () => {};
 
 interface SessionTrackerProps {
   initialActiveSession: SessionWithActivities | null;
@@ -23,50 +27,28 @@ interface SessionTrackerProps {
 export function SessionTracker({ initialActiveSession }: SessionTrackerProps) {
   const [activeSession, setActiveSession] =
     useState<SessionWithActivities | null>(initialActiveSession);
-  const [elapsedTime, setElapsedTime] = useState<string>("00:00:00");
+  const [nowMs, setNowMs] = useState(() => Date.now());
   const [isEnding, setIsEnding] = useState(false);
   const [isStarting, setIsStarting] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
+  // false during SSR and hydration, true afterwards, so the clock and the
+  // session panel only render on the client.
+  const isMounted = useSyncExternalStore(
+    subscribeToNothing,
+    () => true,
+    () => false
+  );
 
+  // The interval only subscribes to the clock; the display is derived below.
   useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  const calculateElapsed = useCallback(() => {
-    if (!activeSession?.startedAt) return "00:00:00";
-
-    try {
-      const start = new Date(activeSession.startedAt).getTime();
-      const now = Date.now();
-      const diff = Math.max(0, now - start);
-
-      const hours = Math.floor(diff / 3600000);
-      const minutes = Math.floor((diff % 3600000) / 60000);
-      const seconds = Math.floor((diff % 60000) / 1000);
-
-      return [hours, minutes, seconds]
-        .map((v) => v.toString().padStart(2, "0"))
-        .join(":");
-    } catch (e) {
-      console.error("Timer calculation error:", e);
-      return "00:00:00";
-    }
+    if (!activeSession) return;
+    const interval = setInterval(() => setNowMs(Date.now()), 1000);
+    return () => clearInterval(interval);
   }, [activeSession]);
 
-  useEffect(() => {
-    if (!activeSession || !isMounted) {
-      setElapsedTime("00:00:00");
-      return;
-    }
-
-    setElapsedTime(calculateElapsed());
-
-    const interval = setInterval(() => {
-      setElapsedTime(calculateElapsed());
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [activeSession, calculateElapsed, isMounted]);
+  const elapsedTime =
+    isMounted && activeSession
+      ? formatElapsed(activeSession.startedAt, nowMs)
+      : "00:00:00";
 
   const handleStartSession = async () => {
     setIsStarting(true);
@@ -82,6 +64,7 @@ export function SessionTracker({ initialActiveSession }: SessionTrackerProps) {
 
       const result = await res.json();
       if (result.success) {
+        setNowMs(Date.now());
         setActiveSession(result.data);
         toast.success("Session started!");
       } else {
