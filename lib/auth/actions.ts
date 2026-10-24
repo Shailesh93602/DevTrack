@@ -95,8 +95,10 @@ export async function signup(
     return { error: translateAuthError(signUpError.message) };
   }
 
-  // Create user in local database if it doesn't exist
-  if (signUpData.user?.email) {
+  // A repeat signup for a confirmed email returns an obfuscated user (random
+  // id, no identities); ensureUserInDb would re-key the owner's row to it.
+  const isNewAccount = (signUpData.user?.identities?.length ?? 0) > 0;
+  if (isNewAccount && signUpData.user?.email) {
     try {
       await ensureUserInDb(signUpData.user.id, signUpData.user.email);
     } catch {
