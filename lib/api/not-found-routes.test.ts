@@ -11,6 +11,7 @@ vi.mock("@/lib/db/prisma", () => ({
   prisma: {
     $transaction: async (run: (client: typeof tx) => unknown) => run(tx),
     session: findNothing,
+    project: { deleteMany: async () => ({ count: 0 }) },
   },
 }));
 vi.mock("@/lib/auth/supabase-server", () => ({
@@ -22,6 +23,7 @@ vi.mock("@/lib/utils/logger", () => ({
   logger: { error: () => {}, warn: () => {}, info: () => {} },
 }));
 
+const project = await import("@/app/api/project/[id]/route");
 const milestones = await import("@/app/api/project/[id]/milestones/route");
 const milestone =
   await import("@/app/api/project/[id]/milestones/[milestoneId]/route");
@@ -43,6 +45,10 @@ const milestoneParams = {
 };
 
 const CASES: Array<[string, () => Promise<Response>]> = [
+  [
+    "DELETE /project/[id]",
+    () => project.DELETE(request("DELETE"), projectParams),
+  ],
   [
     "POST /project/[id]/milestones",
     () =>

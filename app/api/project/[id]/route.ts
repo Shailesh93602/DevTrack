@@ -4,6 +4,7 @@ import {
   successResponse,
   handleAuthError,
   handleApiError,
+  notFoundResponse,
 } from "@/lib/api/errors";
 import { deleteProject } from "@/lib/services/project";
 
@@ -23,6 +24,9 @@ export async function DELETE(
 
     const { id } = await params;
     const result = await deleteProject(user.id, id);
+    if (result.count === 0) {
+      return notFoundResponse("Project not found.");
+    }
 
     const { revalidatePath } = await import("next/cache");
     revalidatePath("/dashboard");
