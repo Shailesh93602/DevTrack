@@ -3,10 +3,10 @@ import { redirect } from "next/navigation";
 import {
   Calendar,
   CircleCheck,
+  FolderKanban,
   GitBranch,
   Keyboard,
   LineChart,
-  Zap,
 } from "lucide-react";
 import { createServerSupabaseClient } from "@/lib/auth/supabase-server";
 import {
@@ -21,7 +21,7 @@ import {
 export const metadata = {
   title: "DevTrack — developer progress dashboard",
   description:
-    "Track your daily coding activity, DSA problems, and side-project progress in one place. Supabase-Realtime synced across tabs.",
+    "Track your daily coding activity, DSA problems, and side-project progress in one place.",
   // A canonical is a claim about ONE url, so it lives on each page, never on
   // the root layout (every page without its own would inherit the home URL).
   alternates: { canonical: "/" },
@@ -80,13 +80,13 @@ export default async function RootPage() {
       <section className="mx-auto max-w-6xl px-6 py-20 md:py-28">
         <div className="max-w-2xl">
           <p className="border-border/60 bg-muted/40 text-muted-foreground mb-4 inline-flex items-center rounded-full border px-3 py-1 text-xs font-medium">
-            Daily logs · DSA tracking · Realtime sync
+            Daily logs · DSA tracking · Projects
           </p>
           <h1 className="text-4xl font-semibold tracking-tight md:text-5xl">
             Stop guessing what you&apos;ve learned this month.
           </h1>
           <p className="text-muted-foreground mt-5 text-lg leading-relaxed">
-            {LANDING_DESCRIPTION} Synced across every tab in real time.
+            {LANDING_DESCRIPTION}
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
             <Link
@@ -122,9 +122,9 @@ export default async function RootPage() {
             body="Log the problems you solved with difficulty + pattern tags. Dashboard shows what you're avoiding — the categories you haven't touched in 30 days."
           />
           <FeatureCard
-            icon={Zap}
+            icon={FolderKanban}
             title={LANDING_FEATURES[2]}
-            body="Your log on your phone shows up instantly on your laptop. No refresh. No stale counts on the streak widget."
+            body="Break a side project into milestones. Progress is recalculated from the ones you complete, and the project page shows its recent activity."
           />
         </div>
       </section>

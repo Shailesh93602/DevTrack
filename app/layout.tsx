@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://daily-dev-track.vercel.app";
 const SITE_DESCRIPTION =
-  "Log what you shipped, the DSA problems you solved, and the projects you moved forward — and watch the pattern emerge across weeks. Real-time sync across tabs.";
+  "Log what you shipped, the DSA problems you solved, and the projects you moved forward — and watch the pattern emerge across weeks.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

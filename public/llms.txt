@@ -1,6 +1,6 @@
 # DevTrack
 
-> Developer progress dashboard. Log what you shipped, the DSA problems you solved, and the projects you moved forward — and watch the pattern emerge across weeks. Real-time sync across tabs via Supabase Realtime.
+> Developer progress dashboard. Log what you shipped, the DSA problems you solved, and the projects you moved forward — and watch the pattern emerge across weeks.
 
 DevTrack is a side project by Shailesh Chaudhari (Software Engineer at ContextQA, Ahmedabad, India). Author portfolio: https://shaileshchaudhari.vercel.app.
 
@@ -11,13 +11,12 @@ DevTrack is a side project by Shailesh Chaudhari (Software Engineer at ContextQA
 
 ## Why this exists
 
-Most "habit trackers" are clean but boring. Most "developer dashboards" lock you into one ecosystem (GitHub commits only, or Leetcode only). DevTrack lets you log free-text — "shipped Razorpay webhook idempotency", "solved 3 DP problems", "added auth to side project" — and aggregates the streak across kinds. The interesting build detail is the live multi-tab sync via Supabase Realtime postgres_changes subscription on the `DailyLog` table, so another open tab updates from the change feed instead of polling.
+Most "habit trackers" are clean but boring. Most "developer dashboards" lock you into one ecosystem (GitHub commits only, or Leetcode only). DevTrack lets you log free-text — "shipped Razorpay webhook idempotency", "solved 3 DP problems", "added auth to side project" — and aggregates the streak across kinds.
 
 ## Tech stack
 
 - **Frontend**: Next.js 16 (App Router), React, Tailwind CSS, Recharts
-- **Backend / data**: Supabase (Postgres + Realtime + Auth), Prisma ORM
-- **Realtime**: `postgres_changes` subscription scoped per-user → optimistic UI on the writing tab, pushed update on the reading tab
+- **Backend / data**: Supabase (Postgres + Auth), Prisma ORM
 - **Hosting**: Vercel
 
 ## Pages

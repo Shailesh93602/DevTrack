@@ -53,8 +53,8 @@ export default function OG() {
           Developer progress dashboard
         </h1>
         <p style={{ fontSize: 30, margin: 0, opacity: 0.85, lineHeight: 1.3 }}>
-          Log what you shipped, DSA problems, and side projects. Real-time
-          multi-tab sync via Supabase Realtime.
+          Log what you shipped, the DSA problems you solved, and the side
+          projects you moved forward.
         </p>
       </div>
       <div style={{ fontSize: 22, opacity: 0.75 }}>

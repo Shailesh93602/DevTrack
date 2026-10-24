@@ -1,3 +1,6 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+
 import type { Metadata } from "next";
 import { resolveAlternates } from "next/dist/lib/metadata/resolvers/resolve-basics";
 import { renderToStaticMarkup } from "react-dom/server";
@@ -30,6 +33,8 @@ vi.mock("@/lib/auth/supabase-server", () => ({
     auth: { getUser: async () => ({ data: { user: null } }) },
   }),
 }));
+
+const ROOT = join(__dirname, "..", "..");
 
 type PageModule = { metadata?: Metadata; default?: () => unknown };
 
@@ -120,7 +125,7 @@ describe("home page JSON-LD", () => {
   it("the description is the text the hero renders", async () => {
     const html = await homeHtml();
     const site = jsonLdNodes(html).find((n) => n["@type"] === "WebSite");
-    expect(html).toContain(`>${site?.description as string} `);
+    expect(html).toContain(`>${site?.description as string}<`);
   });
 
   it("the author is the person the footer links to", async () => {
@@ -156,5 +161,42 @@ describe("robots.txt", () => {
       ).toBe(false);
     }
     expect(disallow).toContain("/dashboard/");
+  });
+});
+
+// Cross-tab sync depends on the DailyLog table being in the supabase_realtime
+// publication, a database setting the code cannot guarantee. Public copy must
+// not promise it; the README keeps the technical note instead.
+describe("no cross-tab sync claim in public copy", () => {
+  const SYNC_CLAIM = /real-?time|across (every )?tabs?|multi-tab|synced/i;
+
+  it("home page, metadata, manifest, OG image and llms.txt", async () => {
+    const { metadata: root } = (await import("@/app/layout")) as {
+      metadata: Metadata;
+    };
+    const { metadata: home } = (await PAGES["/"]()) as { metadata: Metadata };
+    const { default: manifest } = await import("@/app/manifest");
+    const surfaces: Record<string, string> = {
+      "home html": await homeHtml(),
+      "root description": String(root.description),
+      "home description": String(home.description),
+      manifest: String(manifest().description),
+      "opengraph-image": readFileSync(
+        join(ROOT, "app", "opengraph-image.tsx"),
+        "utf8"
+      ),
+      "llms.txt": readFileSync(join(ROOT, "public", "llms.txt"), "utf8"),
+    };
+    for (const [surface, text] of Object.entries(surfaces)) {
+      expect(text, surface).not.toMatch(SYNC_CLAIM);
+    }
+  });
+
+  it("the README says Realtime needs the publication step", () => {
+    const readme = readFileSync(join(ROOT, "README.md"), "utf8");
+    expect(readme).toContain(
+      'ALTER PUBLICATION supabase_realtime ADD TABLE "DailyLog";'
+    );
+    expect(readme).not.toMatch(/sync across tabs via Supabase Realtime/i);
   });
 });

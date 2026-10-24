@@ -5,7 +5,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: "DevTrack — developer progress dashboard",
     short_name: "DevTrack",
     description:
-      "Log what you shipped, DSA problems, and side projects. Real-time multi-tab sync via Supabase Realtime.",
+      "Log what you shipped, the DSA problems you solved, and the side projects you moved forward.",
     start_url: "/",
     display: "standalone",
     background_color: "#0a0a0a",

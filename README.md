@@ -66,7 +66,6 @@ Everything runs on the Node.js runtime on Vercel (server components + route hand
 - **Streaks** — current and longest, computed UTC-safe so a timezone change can't invent or break a streak.
 - **Developer score & recommendations** — sub-scores with caps and weights; a small rule engine that surfaces at most 3 suggestions.
 - **Per-user isolation** — RLS policies on all 8 user-owned tables (see below).
-- **Realtime** — daily-log inserts/updates/deletes sync across tabs via Supabase Realtime.
 - **Type safety** — TypeScript strict with no `any` in app code; Zod validation on every server action and route handler.
 
 ## 🛠 Tech Stack
@@ -151,6 +150,16 @@ RLS_TEST_DATABASE_URL=postgresql://localhost:5432/devtrack_rls npm run test:rls
 ```
 
 `prisma/rls/verify-rls.sql` stands up the pieces of Supabase the policies depend on (`auth.uid()`, the `authenticated`/`anon` roles), applies the real policy file, seeds two users, then asserts as user A that **every** cross-user read, update, delete, and forged insert is denied — and that an anonymous client sees nothing. Any leak raises and exits non-zero. The whole run is one transaction that rolls back, and the script refuses to run against a Supabase database.
+
+## 📡 Realtime log list
+
+`/dashboard/logs` renders the log list through `hooks/useRealtimeLogs.ts`, which subscribes to Supabase Realtime `postgres_changes` on `"DailyLog"`, filtered to `userId=eq.<id>`, and merges inserts, updates and deletes into the list. That only delivers anything if the table is in the `supabase_realtime` publication, which is a database setting, not code:
+
+```sql
+ALTER PUBLICATION supabase_realtime ADD TABLE "DailyLog";
+```
+
+Without it the channel still reports `SUBSCRIBED` (the indicator shows "Live") but no change events arrive, and other tabs update on their next refresh. Whether the live project has the table in the publication is unconfirmed, so the landing page, metadata and `llms.txt` make no cross-tab sync claim.
 
 ## 🧪 Testing
 

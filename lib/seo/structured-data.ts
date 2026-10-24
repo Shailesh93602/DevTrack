@@ -16,7 +16,7 @@ export const AUTHOR_URL = "https://shaileshchaudhari.vercel.app";
 export const LANDING_FEATURES = [
   "Daily logs",
   "DSA tracking",
-  "Realtime across tabs",
+  "Projects and milestones",
 ] as const;
 
 export const LANDING_DESCRIPTION =
@@ -44,11 +44,7 @@ export const homeJsonLd = {
       description: LANDING_DESCRIPTION,
       applicationCategory: "DeveloperApplication",
       operatingSystem: "Web",
-      // "Realtime across tabs" is rendered on the page but not repeated here:
-      // the subscription was pointed at the wrong table until 2026-08-15 and
-      // its live publication step is still unconfirmed (CLAUDE.md). Markup
-      // may say less than the page; it must never say more.
-      featureList: LANDING_FEATURES.filter((f) => f !== "Realtime across tabs"),
+      featureList: [...LANDING_FEATURES],
       offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
       author: { "@id": AUTHOR_ID },
     },
