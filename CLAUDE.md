@@ -175,6 +175,13 @@ See `.env.example` for reference — it is committed via a `!.env.example` negat
 
 ## Session Notes
 
+**2026-10-24 (c)** — the three items flagged in (b), one commit each (not pushed):
+
+- `ConflictError` in `lib/api/errors.ts`, mapped to 409 `CONFLICT` by `handleApiError`; `startSession` (already active) and `endSession` (already ended) throw it. `lib/api/conflict-routes.test.ts`.
+- `DELETE /api/project/[id]` returns 404 when `deleteMany` deleted nothing (missing or another user's project). Case added to `lib/api/not-found-routes.test.ts`.
+- `app/not-found.tsx` is a server component styled like `/auth/auth-code-error` (card, `shadow-none`, tokens only; no gradient, no `style`). `lib/utils/not-found-page.test.ts`. Unit tests 106 → 112.
+- **Flagged, not changed:** `addSessionActivity` on an ended session still throws a plain `Error` (500); it is the same conflict shape.
+
 **2026-10-24 (b)** — the four flagged items below plus the eslint-config-next upgrade, one commit each (not pushed):
 
 - `/auth/auth-code-error` page added (noindex, links to `/login`); `lib/auth/auth-code-error.test.ts` drives the callback and renders the page it lands on.
