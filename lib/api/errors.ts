@@ -10,6 +10,20 @@ export type ApiError = {
   details?: unknown;
 };
 
+/** Thrown by services when the record does not exist for this user. */
+export class NotFoundError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "NotFoundError";
+  }
+}
+
+export function notFoundResponse(
+  message: string
+): NextResponse<ApiResponse<never>> {
+  return errorResponse(message, 404, "NOT_FOUND");
+}
+
 export type ApiResponse<T> =
   | { success: true; data: T }
   | { success: false; error: ApiError };
@@ -33,6 +47,10 @@ export function errorResponse(
 export function handleApiError(
   error: unknown
 ): NextResponse<ApiResponse<never>> {
+  if (error instanceof NotFoundError) {
+    return notFoundResponse(error.message);
+  }
+
   if (error instanceof ZodError) {
     return errorResponse(
       "Validation failed",

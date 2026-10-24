@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/db/prisma";
 import { Prisma } from "@prisma/client";
+import { NotFoundError } from "@/lib/api/errors";
 import {
   StartSessionInput,
   EndSessionInput,
@@ -37,7 +38,7 @@ export async function endSession(
   });
 
   if (!session) {
-    throw new Error("Session not found.");
+    throw new NotFoundError("Session not found.");
   }
 
   if (session.endedAt) {
@@ -69,7 +70,7 @@ export async function addSessionActivity(
   });
 
   if (!session) {
-    throw new Error("Session not found.");
+    throw new NotFoundError("Session not found.");
   }
 
   if (session.endedAt) {

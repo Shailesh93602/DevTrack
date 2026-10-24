@@ -4,6 +4,7 @@ import {
   successResponse,
   handleAuthError,
   handleApiError,
+  notFoundResponse,
 } from "@/lib/api/errors";
 import { deleteMilestone } from "@/lib/services/milestone";
 
@@ -26,7 +27,7 @@ export async function DELETE(
     const result = await deleteMilestone(user.id, milestoneId);
 
     if (!result) {
-      return handleApiError(new Error("Milestone not found"));
+      return notFoundResponse("Milestone not found");
     }
 
     const { revalidatePath } = await import("next/cache");

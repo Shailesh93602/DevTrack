@@ -4,6 +4,7 @@ import {
   successResponse,
   handleAuthError,
   handleApiError,
+  notFoundResponse,
 } from "@/lib/api/errors";
 import { getSessionById, endSession } from "@/lib/services/session";
 import { sessionIdSchema, endSessionSchema } from "@/lib/validations";
@@ -28,7 +29,7 @@ export async function GET(
     const session = await getSessionById(user.id, id);
 
     if (!session) {
-      return handleApiError(new Error("Session not found"));
+      return notFoundResponse("Session not found");
     }
 
     return successResponse(session);

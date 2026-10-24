@@ -4,6 +4,7 @@ import {
   successResponse,
   handleAuthError,
   handleApiError,
+  notFoundResponse,
 } from "@/lib/api/errors";
 import { completeMilestone } from "@/lib/services/milestone";
 
@@ -25,9 +26,7 @@ export async function POST(
     const milestone = await completeMilestone(user.id, milestoneId);
 
     if (!milestone) {
-      return handleApiError(
-        new Error("Milestone not found or already completed")
-      );
+      return notFoundResponse("Milestone not found");
     }
 
     const { revalidatePath } = await import("next/cache");
