@@ -16,7 +16,7 @@ vi.mock("next/navigation", () => ({
   }),
 }));
 
-const { signup } = await import("@/lib/auth/actions");
+const { login, signup } = await import("@/lib/auth/actions");
 
 const EMAIL = "owner@example.com";
 
@@ -66,5 +66,43 @@ describe("signup with an email that already has an account", () => {
     await signup({}, signupForm());
 
     expect(ensureUserInDb).toHaveBeenCalledWith("new-user-id", EMAIL);
+  });
+});
+
+function credentialsForm(password: string): FormData {
+  const form = new FormData();
+  form.set("email", EMAIL);
+  form.set("password", password);
+  return form;
+}
+
+describe("password rules", () => {
+  beforeEach(() => {
+    signUp.mockReset();
+    signInWithPassword.mockReset();
+    signInWithPassword.mockResolvedValue({ error: null });
+  });
+
+  // Accounts created before the strength rules existed must still sign in.
+  it("login accepts a password that fails the signup strength rules", async () => {
+    await expect(login({}, credentialsForm("weak"))).rejects.toThrow(
+      "NEXT_REDIRECT"
+    );
+    expect(signInWithPassword).toHaveBeenCalledWith({
+      email: EMAIL,
+      password: "weak",
+    });
+  });
+
+  it("login still rejects an empty password", async () => {
+    const result = await login({}, credentialsForm(""));
+    expect(result.error).toBeTruthy();
+    expect(signInWithPassword).not.toHaveBeenCalled();
+  });
+
+  it("signup still enforces the strength rules", async () => {
+    const result = await signup({}, credentialsForm("weak"));
+    expect(result.error).toBeTruthy();
+    expect(signUp).not.toHaveBeenCalled();
   });
 });

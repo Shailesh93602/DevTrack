@@ -4,7 +4,7 @@ import { createServerSupabaseClient } from "@/lib/auth/supabase-server";
 import { ensureUserInDb } from "@/lib/services/user";
 import { redirect } from "next/navigation";
 
-import { authSchema, passwordSchema } from "@/lib/validations";
+import { authSchema, loginSchema, passwordSchema } from "@/lib/validations";
 
 export type AuthFormState = {
   error?: string;
@@ -52,7 +52,8 @@ export async function login(
   _prev: AuthFormState,
   formData: FormData
 ): Promise<AuthFormState> {
-  const parsed = authSchema.safeParse({
+  // Strength rules apply at signup only; an older, weaker password must still sign in.
+  const parsed = loginSchema.safeParse({
     email: formData.get("email"),
     password: formData.get("password"),
   });
