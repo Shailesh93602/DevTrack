@@ -51,6 +51,8 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
+  // Search Console URL-prefix property (owner's Google account).
+  verification: { google: "sp7HJsGIg1Tc-x6DyKtwZ3gVMhRcp3IK4xbaqO7TKG8" },
 };
 
 export default function RootLayout({
