@@ -175,6 +175,15 @@ See `.env.example` for reference — it is committed via a `!.env.example` negat
 
 ## Session Notes
 
+**2026-10-24 (b)** — the four flagged items below plus the eslint-config-next upgrade, one commit each (not pushed):
+
+- `/auth/auth-code-error` page added (noindex, links to `/login`); `lib/auth/auth-code-error.test.ts` drives the callback and renders the page it lands on.
+- Not-found → 404: `lib/api/errors.ts` has `NotFoundError` + `notFoundResponse`; milestone/project-milestone routes return 404 on a null service result, `endSession`/`addSessionActivity` throw `NotFoundError`. `lib/api/not-found-routes.test.ts` (6 handlers).
+- `login` uses `loginSchema` (non-empty password); `signup` keeps the strength rules. `lib/auth/actions.test.ts`.
+- Cross-tab sync claim removed from `/` (meta, badge, hero, third card → "Projects and milestones"), root meta, manifest, OG image and `llms.txt`; README has a "Realtime log list" section with the publication SQL. `lib/seo/seo.test.ts` guards every surface. **Owner:** run `ALTER PUBLICATION supabase_realtime ADD TABLE "DailyLog";` on the live project (or confirm it is there) before any sync claim returns. Note the live indicator says "Live" on `SUBSCRIBED` even when the table is not in the publication.
+- `eslint-config-next` 16.4.2 (exact pin): `react-hooks/set-state-in-effect` fixed without disabling — store-previous-prop in `useRealtimeLogs` and `PaginatedProblemList`, `useSyncExternalStore` + derived elapsed time in `SessionTracker` (`lib/utils/elapsed.ts`). `lib/utils/react-hooks-lint.test.ts` lints the files with the repo config.
+- **Flagged, not changed:** `app/not-found.tsx` uses a gradient and an inline `style` (Design Rules); `endSession` "already ended" and `startSession` "already active" still answer 500 (409 would fit); `DELETE /api/project/[id]` answers 200 with `count: 0` for a missing project.
+
 **2026-10-24** — adversarial audit (auth, RLS assumptions, cron, claims):
 
 - **Fixed — a repeat signup re-keyed the owner's data.** With email confirmation on, Supabase answers a signup for an already-confirmed email with an obfuscated user (random id, `identities: []`). `signup` passed it to `ensureUserInDb`, which upserts by email and sets `id` to the fake one; the FKs cascade on update, so anyone who knew an email could move that user's logs, problems and projects to an id nobody can sign in as (until the owner's next write moved them back). `signup` now calls `ensureUserInDb` only when `identities` is non-empty. `lib/auth/actions.test.ts`.

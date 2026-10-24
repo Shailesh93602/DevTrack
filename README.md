@@ -166,7 +166,7 @@ Without it the channel still reports `SUBSCRIBED` (the indicator shows "Live") b
 **Unit tests** (Vitest, no database or network needed) — this is what CI runs on every push and PR, together with `type-check` and `lint`:
 
 ```bash
-npm run test:unit          # 84 tests: date utils, streaks, scoring, recommendations, auth, SEO
+npm run test:unit          # 106 tests: date utils, streaks, scoring, recommendations, auth, API not-found, SEO, lint rules
 ```
 
 **RLS test** (local Postgres + psql) — see above:
