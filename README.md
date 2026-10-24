@@ -22,7 +22,7 @@
 
 Log what you did today, what DSA problems you solved and which patterns they used, and what your side projects are up to. DevTrack turns that into streaks, pattern strengths/weaknesses, a developer score, and a handful of recommendations.
 
-It is a single-developer product, so the interesting engineering is not the CRUD — it's that **one person's rows must never be reachable by another person**, and that this is enforced by Postgres row-level security rather than by remembering to write `where userId = …` in every query. See [Row-level security](#-row-level-security) for the policies and the test that proves they deny.
+It is a single-developer product, so the interesting engineering is not the CRUD — it's that **one person's rows must never be reachable by another person**, The app's own queries go through Prisma, which connects as the table owner and bypasses RLS, so they are isolated by the `userId` filter in every `lib/services/*` query; Postgres row-level security guards the paths that skip those services (Realtime, direct PostgREST access). See [Row-level security](#-row-level-security) for the policies and the test that proves they deny.
 
 ## 🏗 Architecture
 
@@ -157,7 +157,7 @@ RLS_TEST_DATABASE_URL=postgresql://localhost:5432/devtrack_rls npm run test:rls
 **Unit tests** (Vitest, no database or network needed) — this is what CI runs on every push and PR, together with `type-check` and `lint`:
 
 ```bash
-npm run test:unit          # 37 tests: date utils, streaks, scoring, recommendations
+npm run test:unit          # 84 tests: date utils, streaks, scoring, recommendations, auth, SEO
 ```
 
 **RLS test** (local Postgres + psql) — see above:
