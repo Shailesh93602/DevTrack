@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/db/prisma";
 import { Prisma } from "@prisma/client";
-import { NotFoundError } from "@/lib/api/errors";
+import { ConflictError, NotFoundError } from "@/lib/api/errors";
 import {
   StartSessionInput,
   EndSessionInput,
@@ -16,7 +16,9 @@ export async function startSession(userId: string, data: StartSessionInput) {
   // Check if user already has an active session
   const activeSession = await getActiveSession(userId);
   if (activeSession) {
-    throw new Error("You already have an active session. Please end it first.");
+    throw new ConflictError(
+      "You already have an active session. Please end it first."
+    );
   }
 
   return prisma.session.create({
@@ -42,7 +44,7 @@ export async function endSession(
   }
 
   if (session.endedAt) {
-    throw new Error("Session is already ended.");
+    throw new ConflictError("Session is already ended.");
   }
 
   const endedAt = new Date();

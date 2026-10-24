@@ -18,6 +18,14 @@ export class NotFoundError extends Error {
   }
 }
 
+/** Thrown by services when the request conflicts with the record's current state. */
+export class ConflictError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "ConflictError";
+  }
+}
+
 export function notFoundResponse(
   message: string
 ): NextResponse<ApiResponse<never>> {
@@ -49,6 +57,10 @@ export function handleApiError(
 ): NextResponse<ApiResponse<never>> {
   if (error instanceof NotFoundError) {
     return notFoundResponse(error.message);
+  }
+
+  if (error instanceof ConflictError) {
+    return errorResponse(error.message, 409, "CONFLICT");
   }
 
   if (error instanceof ZodError) {
