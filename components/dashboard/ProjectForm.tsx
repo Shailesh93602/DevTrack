@@ -68,7 +68,10 @@ export function ProjectForm({ project, onSuccess }: ProjectFormProps) {
     try {
       const result =
         isEditing && project
-          ? await updateProject(project.id, data)
+          ? await updateProject(project.id, {
+              ...data,
+              dueDate: data.dueDate ?? null,
+            })
           : await createProject(data);
 
       if (!result.success) {

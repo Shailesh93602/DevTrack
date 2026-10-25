@@ -175,6 +175,11 @@ See `.env.example` for reference — it is committed via a `!.env.example` negat
 
 ## Session Notes
 
+**2026-10-25 (d)** — a project due date can be cleared, not pushed:
+
+- `updateProjectSchema.dueDate` is `z.coerce.date().nullable()`: `null` clears, omitted leaves it unchanged (without `.nullable()`, coercion turned `null` into 1970-01-01). `ProjectForm` edit sends `dueDate: null` when the field is empty; the service already passes it through to Prisma.
+- `lib/api/project-update-route.test.ts`: null clears, omitted keeps, ISO string sets, invalid → 400 and unchanged. Mutation-checked: dropping `.nullable()` fails the clear test. Unit tests 166 → 170 (+1 skipped).
+
 **2026-10-25 (c)** — project edit was broken, not pushed:
 
 - `ProjectForm` edit → `PATCH /api/project/[id]`, which did not exist (405). Added the handler: write-bucket rate limit, `updateProjectSchema`, `updateProject` (scoped by `userId`), 404 on a missing or another user's project. Mutating handlers 14 → 15.

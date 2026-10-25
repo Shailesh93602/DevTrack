@@ -44,9 +44,14 @@ export const projectFormSchema = z.object({
 });
 
 // No defaults: zod 4 applies a default inside .partial(), so a PATCH that
-// omitted status or techStack would reset them.
+// omitted status or techStack would reset them. dueDate: null clears it,
+// omitted leaves it unchanged.
 export const updateProjectSchema = createProjectSchema
-  .extend({ status: projectStatusSchema, techStack: projectTechStackSchema })
+  .extend({
+    status: projectStatusSchema,
+    techStack: projectTechStackSchema,
+    dueDate: z.coerce.date().nullable(),
+  })
   .partial();
 
 export const projectIdSchema = z.object({

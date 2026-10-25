@@ -12,6 +12,7 @@ type ProjectRow = {
   description: string | null;
   status: string;
   techStack: string[];
+  dueDate: Date | null;
 };
 
 const rows = new Map<string, ProjectRow>();
@@ -89,6 +90,7 @@ beforeEach(() => {
     description: null,
     status: "ON_HOLD",
     techStack: ["Go"],
+    dueDate: new Date("2026-12-01T00:00:00.000Z"),
   });
   rows.set("p-other", {
     id: "p-other",
@@ -97,6 +99,7 @@ beforeEach(() => {
     description: null,
     status: "IN_PROGRESS",
     techStack: [],
+    dueDate: null,
   });
 });
 
@@ -127,6 +130,47 @@ describe("PATCH /api/project/[id]", () => {
       status: "ON_HOLD",
       techStack: ["Go"],
     });
+  });
+
+  it("clears the due date when the body sends dueDate: null", async () => {
+    const response = await patch("p-own", JSON.stringify({ dueDate: null }));
+
+    expect(response.status).toBe(200);
+    expect(rows.get("p-own")?.dueDate).toBeNull();
+  });
+
+  it("leaves the due date unchanged when dueDate is omitted", async () => {
+    const response = await patch("p-own", JSON.stringify({ name: "Renamed" }));
+
+    expect(response.status).toBe(200);
+    expect(rows.get("p-own")?.dueDate).toEqual(
+      new Date("2026-12-01T00:00:00.000Z")
+    );
+  });
+
+  it("sets a new due date from an ISO string", async () => {
+    const response = await patch(
+      "p-own",
+      JSON.stringify({ dueDate: "2027-01-15" })
+    );
+
+    expect(response.status).toBe(200);
+    expect(rows.get("p-own")?.dueDate).toEqual(
+      new Date("2027-01-15T00:00:00.000Z")
+    );
+  });
+
+  it("answers 400 for an invalid due date and keeps the old one", async () => {
+    const response = await patch(
+      "p-own",
+      JSON.stringify({ dueDate: "not-a-date" })
+    );
+
+    expect(response.status).toBe(400);
+    expect((await response.json()).error.code).toBe("VALIDATION_ERROR");
+    expect(rows.get("p-own")?.dueDate).toEqual(
+      new Date("2026-12-01T00:00:00.000Z")
+    );
   });
 
   it("answers 404 for another user's project and does not touch it", async () => {
