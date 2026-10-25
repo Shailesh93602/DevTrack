@@ -70,4 +70,20 @@ describe("auth proxy behaviour", async () => {
     const response = await proxy(request("/dashboard"));
     expect(response.cookies.get("sb-auth-token")?.value).toBe("rotated-pair");
   });
+
+  it.each([
+    ["a signed-in user redirected from /login", "/login", true],
+    ["a signed-out visitor redirected from /dashboard", "/dashboard", false],
+  ])(
+    "keeps the rotated cookies on the redirect for %s",
+    async (_case, path, isSignedIn) => {
+      currentUser = isSignedIn
+        ? { id: "user-1", email: "u@example.com" }
+        : null;
+      refreshedCookies = [{ name: "sb-auth-token", value: "rotated-pair" }];
+      const response = await proxy(request(path));
+      expect(response.status).toBe(307);
+      expect(response.cookies.get("sb-auth-token")?.value).toBe("rotated-pair");
+    }
+  );
 });
