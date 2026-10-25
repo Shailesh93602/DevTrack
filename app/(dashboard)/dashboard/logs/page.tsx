@@ -42,7 +42,7 @@ export default async function DailyLogsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-foreground text-lg font-semibold">Daily Logs</h2>
+        <h1 className="text-foreground text-lg font-semibold">Daily Logs</h1>
         <p className="text-muted-foreground text-sm">
           Track your coding activity day by day.
         </p>
@@ -67,7 +67,7 @@ export default async function DailyLogsPage() {
       </Card>
 
       <div>
-        <h3 className="text-foreground mb-4 text-sm font-semibold">History</h3>
+        <h2 className="text-foreground mb-4 text-sm font-semibold">History</h2>
         <Card className="border-border rounded-lg border shadow-none">
           <CardContent className="px-6 py-0">
             <RealtimeLogList userId={user.id} initialLogs={historyLogs} />

@@ -6,7 +6,7 @@ test.describe("Project Feature", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/dashboard/projects");
     await expect(
-      page.getByRole("heading", { name: "Projects", level: 2 })
+      page.getByRole("heading", { name: "Projects", level: 1 })
     ).toBeVisible();
   });
 

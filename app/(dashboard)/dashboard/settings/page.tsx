@@ -24,7 +24,7 @@ export default async function SettingsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-foreground text-lg font-semibold">Settings</h2>
+        <h1 className="text-foreground text-lg font-semibold">Settings</h1>
         <p className="text-muted-foreground text-sm">
           Manage your account and preferences.
         </p>

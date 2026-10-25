@@ -50,9 +50,9 @@ export default async function ProjectDetailPage({
       <div>
         <div className="flex items-center gap-3">
           <FolderKanban className="text-primary h-6 w-6" />
-          <h2 className="text-foreground text-xl font-semibold">
+          <h1 className="text-foreground text-xl font-semibold">
             {project.name}
-          </h2>
+          </h1>
           <Badge variant={status.variant}>
             <div className={`mr-1.5 h-2 w-2 rounded-full ${status.dotClass}`} />
             {status.label}

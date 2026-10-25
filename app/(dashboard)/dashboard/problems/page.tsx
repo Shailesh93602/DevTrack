@@ -36,7 +36,7 @@ export default async function DsaProblemsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-foreground text-lg font-semibold">DSA Problems</h2>
+        <h1 className="text-foreground text-lg font-semibold">DSA Problems</h1>
         <p className="text-muted-foreground text-sm">
           Track the problems you solve and patterns you learn. ({total} total)
         </p>
@@ -56,9 +56,9 @@ export default async function DsaProblemsPage() {
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <div className="lg:col-span-2">
-          <h3 className="text-foreground mb-4 text-sm font-semibold">
+          <h2 className="text-foreground mb-4 text-sm font-semibold">
             Problems
-          </h3>
+          </h2>
           <Card className="border-border rounded-lg border shadow-none">
             <CardContent className="px-6 py-0">
               <PaginatedProblemList initialProblems={serializedProblems} />
@@ -67,9 +67,9 @@ export default async function DsaProblemsPage() {
         </div>
 
         <div>
-          <h3 className="text-foreground mb-4 text-sm font-semibold">
+          <h2 className="text-foreground mb-4 text-sm font-semibold">
             Pattern Insights
-          </h3>
+          </h2>
           <PatternIntelligencePanel analysis={patternAnalysis} />
         </div>
       </div>

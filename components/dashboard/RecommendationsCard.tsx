@@ -25,8 +25,8 @@ const urgencyConfig: Record<
     label: "Focus now",
   },
   high: {
-    border: "border-l-4 border-l-amber-500",
-    badge: "bg-amber-500/10 text-amber-600 dark:text-amber-400",
+    border: "border-l-4 border-l-warning",
+    badge: "bg-warning/10 text-foreground",
     label: "High priority",
   },
   medium: {
@@ -81,7 +81,7 @@ function RecommendationItem({ rec }: { rec: Recommendation }) {
           </p>
 
           {rec.metric && (
-            <p className="text-muted-foreground/80 text-[11px] font-medium">
+            <p className="text-muted-foreground text-[11px] font-medium">
               {rec.metric.label}:{" "}
               <span className="text-foreground font-bold">
                 {rec.metric.value}

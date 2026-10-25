@@ -33,7 +33,7 @@ function ProblemItem({
     return (
       <div className="py-4">
         <div className="mb-4 flex items-center justify-between">
-          <h4 className="text-foreground font-medium">Edit Problem</h4>
+          <h3 className="text-foreground font-medium">Edit Problem</h3>
           <Button variant="ghost" size="sm" onClick={() => onEdit(problem)}>
             Cancel
           </Button>

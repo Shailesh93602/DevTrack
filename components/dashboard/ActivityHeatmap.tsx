@@ -83,12 +83,11 @@ export function ActivityHeatmap({ data }: ActivityHeatmapProps) {
                 {week.map((day, di) => (
                   <div
                     key={day ? day.date : `empty-${wi}-${di}`}
-                    role="gridcell"
+                    role={day ? "img" : undefined}
                     aria-label={
-                      day
-                        ? `${day.count} activity on ${day.date}`
-                        : "No activity"
+                      day ? `${day.count} activity on ${day.date}` : undefined
                     }
+                    aria-hidden={day ? undefined : true}
                     className={cn(
                       "h-3 w-3 rounded-[2px]",
                       day ? getColor(day.count) : "bg-transparent opacity-0"

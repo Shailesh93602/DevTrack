@@ -19,7 +19,19 @@ import { useSyncExternalStore } from "react";
 const NOOP_UNSUBSCRIBE = () => {};
 const subscribe = () => NOOP_UNSUBSCRIBE;
 
-function getClientSnapshot(): { tz: string; offset: string } | null {
+type DetectedZone = { tz: string; offset: string } | null;
+
+// getSnapshot must return the same value until the store changes: a fresh
+// object per call made React re-render forever (error #185) and the
+// settings page fell into its error boundary.
+let cachedSnapshot: DetectedZone | undefined;
+
+export function getClientSnapshot(): DetectedZone {
+  if (cachedSnapshot === undefined) cachedSnapshot = detectZone();
+  return cachedSnapshot;
+}
+
+function detectZone(): DetectedZone {
   try {
     const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
     const mins = new Date().getTimezoneOffset();
@@ -33,7 +45,7 @@ function getClientSnapshot(): { tz: string; offset: string } | null {
   }
 }
 
-function getServerSnapshot(): { tz: string; offset: string } | null {
+function getServerSnapshot(): DetectedZone {
   return null;
 }
 

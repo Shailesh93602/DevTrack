@@ -126,7 +126,11 @@ export function MilestoneList({ projectId, milestones }: MilestoneListProps) {
             <span className="text-muted-foreground">Progress</span>
             <span className="font-medium">{progress}%</span>
           </div>
-          <Progress value={progress} className="h-2" />
+          <Progress
+            value={progress}
+            className="h-2"
+            aria-label={`Milestone progress: ${progress}%`}
+          />
         </div>
       </CardHeader>
       <CardContent className="space-y-3">

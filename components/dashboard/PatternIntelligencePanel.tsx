@@ -56,6 +56,7 @@ export function PatternIntelligencePanel({
                 <Progress
                   value={masteryProgress[p.pattern] ?? 0}
                   className="h-2"
+                  aria-label={`${p.pattern} mastery: ${masteryProgress[p.pattern] ?? 0}%`}
                 />
                 <div className="flex gap-1 text-xs">
                   {p.easyCount > 0 && (

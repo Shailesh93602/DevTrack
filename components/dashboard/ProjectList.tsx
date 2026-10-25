@@ -91,7 +91,7 @@ export function ProjectList({ projects }: ProjectListProps) {
             {editingId === project.id ? (
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <h4 className="text-foreground font-medium">Edit Project</h4>
+                  <h3 className="text-foreground font-medium">Edit Project</h3>
                   <Button
                     variant="ghost"
                     size="sm"
@@ -122,9 +122,9 @@ export function ProjectList({ projects }: ProjectListProps) {
                     <div
                       className={`h-2 w-2 rounded-full ${status.dotClass}`}
                     />
-                    <h4 className="text-foreground font-medium">
+                    <h3 className="text-foreground font-medium">
                       {project.name}
-                    </h4>
+                    </h3>
                     <Badge variant={status.variant} className="text-xs">
                       <StatusIcon className="mr-1 h-3 w-3" />
                       {status.label}
@@ -138,7 +138,10 @@ export function ProjectList({ projects }: ProjectListProps) {
                       asChild
                       className="text-muted-foreground hover:text-foreground"
                     >
-                      <Link href={`/dashboard/projects/${project.id}`}>
+                      <Link
+                        href={`/dashboard/projects/${project.id}`}
+                        aria-label={`Open ${project.name}`}
+                      >
                         <ArrowRight className="h-4 w-4" />
                       </Link>
                     </Button>
@@ -198,7 +201,11 @@ export function ProjectList({ projects }: ProjectListProps) {
                     <span className="text-muted-foreground">Progress</span>
                     <span className="font-medium">{project.progress}%</span>
                   </div>
-                  <Progress value={project.progress} className="h-2" />
+                  <Progress
+                    value={project.progress}
+                    className="h-2"
+                    aria-label={`${project.name} progress: ${project.progress}%`}
+                  />
                 </div>
 
                 {project.techStack.length > 0 && (
