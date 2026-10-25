@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
 import { createServerSupabaseClient } from "@/lib/auth/supabase-server";
+import { enforceRateLimit } from "@/lib/api/rate-limit";
 import {
   successResponse,
   handleAuthError,
@@ -19,6 +20,11 @@ export async function POST(request: NextRequest) {
 
     if (!user) {
       throw new Error("UNAUTHORIZED");
+    }
+
+    const rateLimited = await enforceRateLimit(user.id, "create");
+    if (rateLimited) {
+      return rateLimited;
     }
 
     // Guard the Project.userId foreign key: if the Supabase auth row exists

@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
 import { createServerSupabaseClient } from "@/lib/auth/supabase-server";
+import { enforceRateLimit } from "@/lib/api/rate-limit";
 import {
   successResponse,
   handleAuthError,
@@ -20,6 +21,11 @@ export async function POST(
 
     if (!user) {
       throw new Error("UNAUTHORIZED");
+    }
+
+    const rateLimited = await enforceRateLimit(user.id, "create");
+    if (rateLimited) {
+      return rateLimited;
     }
 
     const { id } = await params;

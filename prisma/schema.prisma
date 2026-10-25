@@ -142,6 +142,15 @@ model SessionEvent {
   @@index([sessionId, createdAt])
 }
 
+model RateLimit {
+  userId      String
+  bucket      String // "write" | "create" (lib/services/rate-limit.ts)
+  windowStart DateTime
+  count       Int      @default(0)
+
+  @@id([userId, bucket, windowStart])
+}
+
 // ─── Enums ────────────────────────────────────────────────────────────────────
 
 enum Difficulty {

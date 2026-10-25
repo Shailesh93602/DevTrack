@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
 import { createServerSupabaseClient } from "@/lib/auth/supabase-server";
+import { enforceRateLimit } from "@/lib/api/rate-limit";
 import {
   successResponse,
   handleAuthError,
@@ -21,6 +22,11 @@ export async function DELETE(
 
     if (!user) {
       throw new Error("UNAUTHORIZED");
+    }
+
+    const rateLimited = await enforceRateLimit(user.id, "write");
+    if (rateLimited) {
+      return rateLimited;
     }
 
     const { milestoneId } = await params;

@@ -161,12 +161,32 @@ ALTER PUBLICATION supabase_realtime ADD TABLE "DailyLog";
 
 Without it the channel still reports `SUBSCRIBED` (the indicator shows "Live") but no change events arrive, and other tabs update on their next refresh. Whether the live project has the table in the publication is unconfirmed, so the landing page, metadata and `llms.txt` make no cross-tab sync claim.
 
+## 🚦 Rate limits
+
+Every mutating API route (14 handlers: POST/PUT/PATCH/DELETE under `app/api/`, cron excluded) spends from a per-user budget before it touches data: **120 writes per 10 minutes**, and routes that create a row also spend from **30 creates per 10 minutes**. Over either budget the route answers `429` with `Retry-After` (seconds to the end of the window) and code `RATE_LIMITED`.
+
+- **Store:** the `RateLimit` table in the same Postgres, keyed by `(userId, bucket, windowStart)` — fixed 10-minute windows, no Redis or paid service. One `INSERT … ON CONFLICT DO UPDATE SET count = count + 1 RETURNING` statement increments both buckets atomically, so concurrent requests cannot overshoot (`lib/services/rate-limit.ts`).
+- **Cleanup:** the first request of a new window deletes that user's older windows, so each user holds at most one row per bucket.
+- **Fails open:** if the check itself errors, the request is allowed and the error is logged. The write that follows needs the same database, so failing closed would only turn an outage into 429s, and a limiter fault must not lock anyone out of their own data.
+- **Schema:** `prisma/migrations/20261025000000_add_rate_limit/migration.sql` creates the table and enables RLS with no policies (only the server, as table owner, uses it). Builds do not run migrations — apply it by hand (`psql "$DIRECT_URL" -f …` or the Supabase SQL editor). Until it is applied the limiter fails open and logs on every write.
+
+Real-Postgres concurrency test (160 parallel requests → exactly 120 allowed, count exact, stale window pruned), against a throwaway local database:
+
+```bash
+createdb devtrack_ratelimit_e2e
+psql -d devtrack_ratelimit_e2e -f prisma/migrations/20261025000000_add_rate_limit/migration.sql
+RATE_LIMIT_TEST_DATABASE_URL=postgresql://localhost:5432/devtrack_ratelimit_e2e npx vitest run lib/services/rate-limit.pg.test.ts
+dropdb devtrack_ratelimit_e2e
+```
+
+It refuses any host other than localhost and any database not ending `_e2e`, and is skipped when the variable is unset.
+
 ## 🧪 Testing
 
 **Unit tests** (Vitest, no database or network needed) — this is what CI runs on every push and PR, together with `type-check` and `lint`:
 
 ```bash
-npm run test:unit          # 134 tests: date utils, streaks, scoring, recommendations, auth, API not-found/conflict/bad-input, 404 page, SEO, dashboard a11y, lint rules
+npm run test:unit          # 158 tests (+1 skipped without Postgres): date utils, streaks, scoring, recommendations, auth, API not-found/conflict/bad-input, rate limits, 404 page, SEO, dashboard a11y, lint rules
 ```
 
 **RLS test** (local Postgres + psql) — see above:

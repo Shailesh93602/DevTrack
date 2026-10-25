@@ -175,6 +175,12 @@ See `.env.example` for reference — it is committed via a `!.env.example` negat
 
 ## Session Notes
 
+**2026-10-25 (b)** — per-user write rate limits (the first item flagged below), not pushed:
+
+- `lib/services/rate-limit.ts` + `lib/api/rate-limit.ts` (`enforceRateLimit`): Postgres fixed-window limiter, no new service. `RateLimit` table `(userId, bucket, windowStart)`; one `INSERT … ON CONFLICT DO UPDATE SET count = count + 1 RETURNING` via `$queryRaw`. 120 writes / 10 min on all 14 mutating handlers, plus 30 creates / 10 min on the 6 create routes; over → 429 `RATE_LIMITED` + `Retry-After`. The first hit of a new window deletes the user's older windows. **Fails open** (logged) on a DB error — deliberate, see README "Rate limits".
+- Migration `prisma/migrations/20261025000000_add_rate_limit/` (table + RLS enabled, no policies). **Builds do not run migrations; owner applies it by hand on the live project.** Until then the limiter fails open and logs on each write.
+- Tests: `lib/services/rate-limit.test.ts` (mocked `$queryRaw`), `lib/api/rate-limit-routes.test.ts` (walks `app/api`, every mutating handler → 429 before any Prisma call, right bucket), `lib/services/rate-limit.pg.test.ts` (real Postgres, skipped unless `RATE_LIMIT_TEST_DATABASE_URL` is a local `_e2e` DB: 160 parallel → exactly 120 allowed). Unit tests 134 → 158 (+1 skipped).
+
 **2026-10-25** — fresh-eyes audit (500s, proxy session, input validation, claims, dashboard a11y), not pushed:
 
 - `addSessionActivity` on an ended session throws `ConflictError` → 409 (case added to `lib/api/conflict-routes.test.ts`).

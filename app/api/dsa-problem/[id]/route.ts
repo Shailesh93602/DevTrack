@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
 import { createServerSupabaseClient } from "@/lib/auth/supabase-server";
+import { enforceRateLimit } from "@/lib/api/rate-limit";
 import {
   successResponse,
   errorResponse,
@@ -26,6 +27,11 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
 
     if (!user) {
       throw new Error("UNAUTHORIZED");
+    }
+
+    const rateLimited = await enforceRateLimit(user.id, "write");
+    if (rateLimited) {
+      return rateLimited;
     }
 
     const { id } = await params;
@@ -67,6 +73,11 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
 
     if (!user) {
       throw new Error("UNAUTHORIZED");
+    }
+
+    const rateLimited = await enforceRateLimit(user.id, "write");
+    if (rateLimited) {
+      return rateLimited;
     }
 
     const { id } = await params;
