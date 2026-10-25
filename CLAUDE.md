@@ -175,6 +175,16 @@ See `.env.example` for reference — it is committed via a `!.env.example` negat
 
 ## Session Notes
 
+**2026-10-25** — fresh-eyes audit (500s, proxy session, input validation, claims, dashboard a11y), not pushed:
+
+- `addSessionActivity` on an ended session throws `ConflictError` → 409 (case added to `lib/api/conflict-routes.test.ts`).
+- `handleApiError`: a malformed JSON body (`SyntaxError` from `request.json()`) is 400 `INVALID_JSON`, not 500; 500s no longer echo `error.message` (a dead DB answered with `Can't reach database server at <host>`), the logger still gets it. `/api/dsa-problem/patterns?limit=-3` is 400 not 500. `PUT /api/daily-log/[id]` wrote raw `body.topics` over the validated (trimmed) ones. `/auth/callback?next=` appended to `origin`, so `next=@evil.test` or `.evil.test` left the site; only same-origin paths are honoured now. `lib/api/request-boundary.test.ts`.
+- `proxy.ts`: the two redirects were fresh responses, so cookies Supabase rotated (or cleared) during `getUser()` were dropped and the browser kept a spent refresh token. Both redirects copy them now. `lib/auth/proxy.test.ts`.
+- Dashboard a11y, found with axe on a production build signed in through a stub Supabase auth server (`/auth/v1/user`) and a throwaway local Postgres (`devtrack_axe`, schema from `prisma migrate diff --from-empty`): 21 violations across 6 pages × light/dark → 0. Heatmap `gridcell`s with no `row` (now `img`), unnamed progress bars (label carries the % because `components/ui/progress.tsx` does not forward `value` to Radix; primitive left untouched per rules), icon-only project link, amber badge with hardcoded colours + `dark:` (now `warning` token) and `text-muted-foreground/80` at 11 px (3.59:1), no `h1` on five pages (page titles h2 → h1, sections h3 → h2, list items h4 → h3). `lib/utils/dashboard-a11y.test.ts`; e2e heading level for "Projects" updated.
+- **Fixed — `/dashboard/settings` crashed for every signed-in user.** `DetectedTimezoneRow`'s `getClientSnapshot` returned a new object per call, so `useSyncExternalStore` re-rendered forever (React #185) and the page showed its error boundary. The snapshot is cached once. Test in `lib/utils/dashboard-a11y.test.ts` (same reference on repeat calls).
+- README: headline said isolation is "enforced in the database"; it is the `userId` filter, with RLS as backstop. Unit tests 112 → 134.
+- **Flagged, not changed:** no rate limits on any API route (Supabase limits auth only; a signed-in account can create unbounded rows; needs a shared store such as Upstash); milestone routes ignore the `[id]` project segment (same-user only, so not a leak); `Progress` primitive never sets `aria-valuenow`; whether `prisma/rls/001_enable_rls.sql` is applied on the live project is unverified.
+
 **2026-10-24 (c)** — the three items flagged in (b), one commit each (not pushed):
 
 - `ConflictError` in `lib/api/errors.ts`, mapped to 409 `CONFLICT` by `handleApiError`; `startSession` (already active) and `endSession` (already ended) throw it. `lib/api/conflict-routes.test.ts`.

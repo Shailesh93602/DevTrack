@@ -1,6 +1,6 @@
 <div align="center">
   <h1>DevTrack</h1>
-  <p><strong>A developer progress tracker: daily logs, DSA practice, side projects — with per-user data isolation enforced in the database.</strong></p>
+  <p><strong>A developer progress tracker: daily logs, DSA practice, side projects — with every query scoped to the signed-in user and row-level security as the database backstop.</strong></p>
 
   <p>
     <a href="https://daily-dev-track.vercel.app"><strong>Live app →</strong></a>
@@ -65,7 +65,7 @@ Everything runs on the Node.js runtime on Vercel (server components + route hand
 - **Projects & milestones** — progress recalculated from completed milestones, with an activity-log audit trail.
 - **Streaks** — current and longest, computed UTC-safe so a timezone change can't invent or break a streak.
 - **Developer score & recommendations** — sub-scores with caps and weights; a small rule engine that surfaces at most 3 suggestions.
-- **Per-user isolation** — RLS policies on all 8 user-owned tables (see below).
+- **Per-user isolation** — every service query filters by `userId`; RLS policies on all 8 user-owned tables cover the paths that bypass those services (see below).
 - **Type safety** — TypeScript strict with no `any` in app code; Zod validation on every server action and route handler.
 
 ## 🛠 Tech Stack
@@ -166,7 +166,7 @@ Without it the channel still reports `SUBSCRIBED` (the indicator shows "Live") b
 **Unit tests** (Vitest, no database or network needed) — this is what CI runs on every push and PR, together with `type-check` and `lint`:
 
 ```bash
-npm run test:unit          # 112 tests: date utils, streaks, scoring, recommendations, auth, API not-found/conflict, 404 page, SEO, lint rules
+npm run test:unit          # 134 tests: date utils, streaks, scoring, recommendations, auth, API not-found/conflict/bad-input, 404 page, SEO, dashboard a11y, lint rules
 ```
 
 **RLS test** (local Postgres + psql) — see above:
