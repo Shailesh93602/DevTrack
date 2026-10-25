@@ -7,18 +7,18 @@ import {
   TOPIC_MAX_LENGTH,
 } from "@/lib/constants";
 
+const projectStatusSchema = z.enum(["IN_PROGRESS", "COMPLETED", "ON_HOLD"]);
+const projectTechStackSchema = z
+  .array(z.string().trim().min(1).max(TOPIC_MAX_LENGTH))
+  .max(PROJECT_TECH_STACK_MAX_COUNT);
+
 // Server-side schema (for API/DB operations)
 export const createProjectSchema = z.object({
   name: z.string().trim().min(1).max(100),
   description: z.string().trim().max(PROJECT_DESCRIPTION_MAX_LENGTH).optional(),
-  status: z
-    .enum(["IN_PROGRESS", "COMPLETED", "ON_HOLD"])
-    .default("IN_PROGRESS"),
+  status: projectStatusSchema.default("IN_PROGRESS"),
   dueDate: z.coerce.date().optional(),
-  techStack: z
-    .array(z.string().trim().min(1).max(TOPIC_MAX_LENGTH))
-    .max(PROJECT_TECH_STACK_MAX_COUNT)
-    .default([]),
+  techStack: projectTechStackSchema.default([]),
 });
 
 // Client-side form schema (for React Hook Form) - no defaults, required fields
@@ -43,7 +43,11 @@ export const projectFormSchema = z.object({
     .max(PROJECT_TECH_STACK_MAX_COUNT),
 });
 
-export const updateProjectSchema = createProjectSchema.partial();
+// No defaults: zod 4 applies a default inside .partial(), so a PATCH that
+// omitted status or techStack would reset them.
+export const updateProjectSchema = createProjectSchema
+  .extend({ status: projectStatusSchema, techStack: projectTechStackSchema })
+  .partial();
 
 export const projectIdSchema = z.object({
   id: z.string().uuid(),

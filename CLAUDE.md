@@ -175,6 +175,13 @@ See `.env.example` for reference — it is committed via a `!.env.example` negat
 
 ## Session Notes
 
+**2026-10-25 (c)** — project edit was broken, not pushed:
+
+- `ProjectForm` edit → `PATCH /api/project/[id]`, which did not exist (405). Added the handler: write-bucket rate limit, `updateProjectSchema`, `updateProject` (scoped by `userId`), 404 on a missing or another user's project. Mutating handlers 14 → 15.
+- **Fixed — `updateProjectSchema` reset fields.** zod 4 still applies `.default()` inside `.partial()`, so a PATCH omitting `status`/`techStack` wrote `IN_PROGRESS`/`[]`. The update schema now has no defaults.
+- `lib/api/project-update-route.test.ts` (in-memory Prisma that honours `where`): 200 + changed fields, omitted fields untouched, other user's → 404 and untouched, missing → 404, 400 `VALIDATION_ERROR`, 400 `INVALID_JSON`, 429. Mutation-checked: dropping the `userId` scope, restoring `.partial()` defaults, or removing the rate-limit call each fail a test.
+- **Flagged, not changed:** a due date cannot be cleared through PATCH (the form drops `undefined` from the JSON body).
+
 **2026-10-25 (b)** — per-user write rate limits (the first item flagged below), not pushed:
 
 - `lib/services/rate-limit.ts` + `lib/api/rate-limit.ts` (`enforceRateLimit`): Postgres fixed-window limiter, no new service. `RateLimit` table `(userId, bucket, windowStart)`; one `INSERT … ON CONFLICT DO UPDATE SET count = count + 1 RETURNING` via `$queryRaw`. 120 writes / 10 min on all 14 mutating handlers, plus 30 creates / 10 min on the 6 create routes; over → 429 `RATE_LIMITED` + `Retry-After`. The first hit of a new window deletes the user's older windows. **Fails open** (logged) on a DB error — deliberate, see README "Rate limits".

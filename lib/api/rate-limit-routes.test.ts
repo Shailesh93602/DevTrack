@@ -69,7 +69,7 @@ beforeEach(() => {
 
 describe("mutating API routes are rate limited", () => {
   it("finds every mutating handler", () => {
-    expect(CASES).toHaveLength(14);
+    expect(CASES).toHaveLength(15);
   });
 
   it.each(CASES)(
