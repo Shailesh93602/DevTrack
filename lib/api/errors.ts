@@ -63,6 +63,11 @@ export function handleApiError(
     return errorResponse(error.message, 409, "CONFLICT");
   }
 
+  // request.json() on a malformed body
+  if (error instanceof SyntaxError) {
+    return errorResponse("Request body is not valid JSON", 400, "INVALID_JSON");
+  }
+
   if (error instanceof ZodError) {
     return errorResponse(
       "Validation failed",
@@ -94,11 +99,7 @@ export function handleApiError(
     }
 
     logger.error(`Database Error (${error.code})`, error);
-    return errorResponse(
-      `Database error: ${error.message}`,
-      500,
-      `PRISMA_${error.code}`
-    );
+    return errorResponse("Database error", 500, `PRISMA_${error.code}`);
   }
 
   if (error instanceof Prisma.PrismaClientValidationError) {
@@ -112,7 +113,7 @@ export function handleApiError(
 
   if (error instanceof Error) {
     logger.error("Internal API Error", error);
-    return errorResponse(error.message, 500, "INTERNAL_ERROR");
+    return errorResponse("Internal server error", 500, "INTERNAL_ERROR");
   }
 
   logger.error("Unexpected API Error", error);

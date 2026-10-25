@@ -42,10 +42,11 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     const body = await request.json();
     const validatedData = updateDailyLogSchema.parse(body);
 
-    const updatedLog = await updateDailyLog(user.id, validatedId.id, {
-      ...validatedData,
-      topics: body.topics, // Only update topics if provided in body
-    });
+    const updatedLog = await updateDailyLog(
+      user.id,
+      validatedId.id,
+      validatedData
+    );
 
     if (!updatedLog) {
       return errorResponse("Failed to update daily log", 500, "UPDATE_FAILED");

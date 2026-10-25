@@ -76,7 +76,7 @@ export async function addSessionActivity(
   }
 
   if (session.endedAt) {
-    throw new Error("Cannot add activity to an ended session.");
+    throw new ConflictError("Cannot add activity to an ended session.");
   }
 
   return prisma.sessionEvent.create({

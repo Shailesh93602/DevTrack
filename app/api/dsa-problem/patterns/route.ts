@@ -3,6 +3,7 @@ import { z } from "zod";
 import { createServerSupabaseClient } from "@/lib/auth/supabase-server";
 import {
   successResponse,
+  errorResponse,
   handleAuthError,
   handleApiError,
 } from "@/lib/api/errors";
@@ -39,8 +40,10 @@ export async function GET(request: NextRequest) {
       return handleAuthError(error);
     }
     if (error instanceof Error && error.message === "INVALID_LIMIT") {
-      return handleApiError(
-        new Error("Invalid limit parameter. Must be a positive integer.")
+      return errorResponse(
+        "Invalid limit parameter. Must be a positive integer.",
+        400,
+        "VALIDATION_ERROR"
       );
     }
     return handleApiError(error);

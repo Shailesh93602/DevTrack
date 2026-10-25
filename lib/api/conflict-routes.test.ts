@@ -22,6 +22,7 @@ vi.mock("@/lib/db/prisma", () => ({
       create: neverWrite,
       update: neverWrite,
     },
+    sessionEvent: { create: neverWrite },
   },
 }));
 vi.mock("@/lib/auth/supabase-server", () => ({
@@ -36,6 +37,7 @@ vi.mock("next/cache", () => ({ revalidatePath: () => {} }));
 
 const sessions = await import("@/app/api/session/route");
 const session = await import("@/app/api/session/[id]/route");
+const activity = await import("@/app/api/session/[id]/activity/route");
 
 function request(method: string, body: object) {
   return new NextRequest("http://localhost/api/x", {
@@ -57,6 +59,14 @@ const CASES: Array<[string, () => Promise<Response>, string]> = [
         params: Promise.resolve({ id: "s1" }),
       }),
     "Session is already ended.",
+  ],
+  [
+    "POST /session/[id]/activity on an ended session",
+    () =>
+      activity.POST(request("POST", { activityType: "READING" }), {
+        params: Promise.resolve({ id: "s1" }),
+      }),
+    "Cannot add activity to an ended session.",
   ],
 ];
 
